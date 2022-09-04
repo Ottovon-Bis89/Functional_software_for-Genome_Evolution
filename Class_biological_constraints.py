@@ -21,4 +21,4 @@ class Biological_constraints:
         return intergenic_region
 
     def proximity_of_DNA_segments(self):
-        if
+        pass

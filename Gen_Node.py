@@ -255,6 +255,8 @@ class Node:
                         else:
                             pass
                     else:
+                        #incomplete
+                        pass
                         
 
         return list_of_legal_operations
