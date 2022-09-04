@@ -1,3 +1,6 @@
+import Gen_xtremities
+
+
 class Node:
 
     def __init__(self, state=None):
@@ -13,86 +16,9 @@ class Node:
         get_chromosomes = Node.find_chromosomes(self, self.state)
         self.linear_chromosomes = get_chromosomes
 
-    def find_next_extremity(self, current, next_extremity):
-        if current[0] == next_extremity:
-            if current[1] % 1 == 0:
-                next_extremity = current[1] + 0.5
-            else:
-                next_extremity = current[1] - 0.5
-        else:
-            if current[0] % 1 == 0:
-                next_extremity = current[0] + 0.5
-            else:
-                next_extremity = current[0] - 0.5
-        return next_extremity
 
-    def find_next_adjacency(self, next_extremity, chromosome, telomers):
-        telomers = []
-        for element in telomers:
-            if telomers[0] == next_extremity or telomers[1] == next_extremity:
-                current = element
-                chromosome.append(current)
-                telomers.remove(current)
-                next_extremity = Node.find_next_extremity(self, current, next_extremity)
-            return next_extremity, chromosome, telomers
-        return [next_extremity]
-
-    def find_adjacency_cycle(self, next_extremity, chromosome, telomers):
-
-        next_adjacency = Node.find_next_adjacency(self, next_extremity, chromosome, telomers)
-
-        while len(next_adjacency) != 1:
-            next_extremity = next_adjacency[0]
-            next_adjacency = Node.find_next_adjacency(self, next_extremity, chromosome, telomers)
-        else:
-            next_extremity = next_adjacency[1]
-
-        return next_extremity, chromosome, telomers
-
-        # The function finds the chromosomes and telomeres  in the genome
-
-    def find_chromosomes(self, adjacencies):
-        telomers = [element for element in adjacencies if type(element) is not tuple]
-        linear_chromosomes = []
-        chromosome = []
-        i = 0
-        # Find and return linear chromosomes in case there is a mixture of
-        # linear and circular chromosomes
-        while len(telomers) > 0:
-            i += 1
-            current = telomers[0]
-
-            telomers.remove(current)
-            chromosome.append(current)
-
-            if current % 1 == 0:
-                next_extremity = current + 0.5
-            else:
-                next_extremity = current - 0.5
-
-            # if the chromosome found has only one gene
-            if next_extremity in telomers:
-
-                chromosome = []
-                current = next_extremity
-                telomers.remove(current)
-                chromosome.append(current)
-                linear_chromosomes.append(chromosome)
-
-            # find the next adjacency cycle
-            else:
-                adjacency_cycle = Node.find_next_adjacency(self, next_extremity, chromosome, telomers)
-                next_extremity = adjacency_cycle[0]
-
-                if next_extremity in telomers:
-                    current = next_extremity
-                    telomers.remove(current)
-                    chromosome.append(current)
-                    linear_chromosomes.append(chromosome)
-
-        return linear_chromosomes, telomers, chromosome
-        # The function returns a list  of the operations needed to transform the genomes the
-        # source  genome to the target genome
+    # The function returns a list  of the operations needed to transform the genomes the
+    # source  genome to the target genome
 
     def get_legal_operations(self, adjacenciesB):
         list_of_legal_operations = []
@@ -353,3 +279,8 @@ class Node:
         sort = telomers + adjs
 
         return sort, telomers, adjs
+
+
+# if __name__ == '__main__':
+#     gen_ex_obj = Gen_xtremities.Xtremities()
+#     genome_gene_extremities = gen_ex_obj.gene_extremity()

@@ -9,7 +9,6 @@ Created on Sun Feb 27 02:48:36 2022
 class Xtremities:
 
     def __init__(self):
-
         pass
 
     def gene_extremity(self, genome):  # find gene extremities in genome for downward action
@@ -64,6 +63,14 @@ class Xtremities:
         adjacencies_sorted = telomers + adjacencies
         return adjacencies_sorted, adjacencies, telomers
 
+    '''
+    Function : find_next_extremity
+    Parameters:
+        @current :  holds the genome extremities as signed integers in a list
+        @next_extremity : holds the next extremity as signed inetgers in a list
+    Purpose:
+        Provides extremities for each gene in the genome
+    '''
     def find_next_extremity(self, current, next_extremity):
         if current[0] == next_extremity:
             if current[1] % 1 == 0:
@@ -136,7 +143,7 @@ class Xtremities:
                     linear_chromosomes.append(chromosome)
                     chromosome = []
 
-        return linear_chromosomes
+        return linear_chromosomes, telomers, chromosome
 
     def adjacencies_to_genome(self, adjacencies):
         genome = []
