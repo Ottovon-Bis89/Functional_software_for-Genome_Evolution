@@ -58,6 +58,14 @@ if __name__ == '__main__':
 
 
     #Write data to file
+    ele = ''
     with open('Generated_data.txt', 'w') as f:
         for i in range(len(list_of_genome_with_intergenic)):
-            f.write(str(list_of_genome_with_intergenic[i])+'\n')
+            for j in range(len(list_of_genome_with_intergenic[i])):
+                element = list_of_genome_with_intergenic[i]
+                if j == len(list_of_genome_with_applicable_intergenic[i])-1:
+                    ele += str(element[j])
+                else:
+                    ele += str(element[j]) + ','
+            f.write(ele+"\n")
+            ele = ''

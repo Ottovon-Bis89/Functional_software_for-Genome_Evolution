@@ -6,6 +6,9 @@ Created on Sun Feb 27 02:48:36 2022
 """
 
 
+import string
+
+
 class Xtremities:
 
     def __init__(self):
@@ -16,12 +19,15 @@ class Xtremities:
         for chromosome in genome:
             chromosome_gene_extremity = []
             for element in chromosome:
-                if int(element) >= 0:
-                    chromosome_gene_extremity.append(element)
-                    chromosome_gene_extremity.append(element + 0.5)
+                if '*' not in element:
+                    if int(element) >= 0:
+                        chromosome_gene_extremity.append(int(element))
+                        chromosome_gene_extremity.append(int(element) + 0.5)
+                    else:
+                        chromosome_gene_extremity.append(abs(int(element)) + 0.5)
+                        chromosome_gene_extremity.append(abs(int(element)))
                 else:
-                    chromosome_gene_extremity.append(abs(element) + 0.5)
-                    chromosome_gene_extremity.append(abs(element))
+                    chromosome_gene_extremity.append(((element)))
             genome_gene_extremity.append(chromosome_gene_extremity)
 
         return genome_gene_extremity
@@ -31,15 +37,30 @@ class Xtremities:
     def create_adjacencyList(self, genome):
         adjacencies = []
         gene_extremity = Xtremities.gene_extremity(self, genome)
+        # print(gene_extremity)
         for chromosome in gene_extremity:
             i = 0
+            chrom = []
             while i < len(chromosome):
-                if chromosome[i] == chromosome[0] or chromosome[i] == chromosome[-1]:
-                    adjacencies.append(chromosome[i])
+                if(isinstance(chromosome[i], str) == True):
+                    # print(chromosome[i])
+                    chrom.append(chromosome[i])
                     i += 1
+                elif chromosome[i] == chromosome[0] or chromosome[i] == chromosome[-1]:
+                    chrom.append(chromosome[i])
+                    i += 1
+                elif i < len(chromosome) - 3 and isinstance(chromosome[i+1], str) == True: 
+                    chrom.append((chromosome[i], chromosome[i + 2]))
+                    i += 1
+                elif(isinstance(chromosome[i+1], str) == False):
+                    chrom.append((chromosome[i], chromosome[i + 1]))
+                    i+=1
                 else:
-                    adjacencies.append((chromosome[i], chromosome[i + 1]))
-                    i += 2
+                    print("problem occurred")
+            adjacencies.append(chrom)
+            chrom = []
+                    
+                   
 
         return adjacencies
 
@@ -47,43 +68,66 @@ class Xtremities:
 
     def adjacencies_ordered_and_sorted(self, genome):
         adjacencies = []
+        c_adj = []
         telomers = []
+        c_tel = []
         sorted_adjacencies = Xtremities.create_adjacencyList(self, genome)
         for element in sorted_adjacencies:
-            if type(element) is tuple:
-                if int(element[0]) < int(element[1]):
-                    adjacencies.append(element)
-                else:
-                    adjacencies.append((element[1], element[0]))
+            # print(type(element))
+            for i in range(len(element)):
+                if type(element[i]) is tuple:
+                    # print(element[i])
+                    tup = element[i]
+                    if int(tup[0]) < int(tup[1]):
+                        c_adj.append(tup)
+                    else:
+                        c_adj.append((tup[1], tup[0]))
 
-            else:
-                telomers.append(element)
-        adjacencies.sort()
-        telomers.sort()
+                else:
+                    c_tel.append(str(element[i]))
+            c_adj.sort()
+            adjacencies.append(c_adj)
+            c_adj = []
+            c_tel.sort()
+            telomers.append(c_tel)
+            c_tel = []
+        # adjacencies.sort()
+        # telomers.sort()
         adjacencies_sorted = telomers + adjacencies
         return adjacencies_sorted, adjacencies, telomers
 
     '''
     Function : find_next_extremity
     Parameters:
-        @current :  holds the genome extremities as signed integers in a list
+        @current :  holds the genome extremities as signed integers in a list(tuples)
         @next_extremity : holds the next extremity as signed inetgers in a list
     Purpose:
         Provides extremities for each gene in the genome
     '''
-    def find_next_extremity(self, current, next_extremity):
-        if current[0] == next_extremity:
-            if current[1] % 1 == 0:
-                next_extremity = (current[1] + [0.5])
-            else:
-                next_extremity = (current[1] - [0.5])
-        else:
-            if current[0][0] % 1 == 0:
-                next_extremity = (current[0] + [0.5])
-            else:
-                next_extremity = (current[0] - [0.5])
+    def find_next_extremity(self, current):
+        next_extremity = []
+        c_next = []
+        # if current[0] == next_extremity:
+        for sub in current:
+            for cur in sub:
+                left = cur[0]
+                right = cur[1]
+                c_next.append((left-0.5, right+0.5))
+            next_extremity.append(c_next)
+            c_next  = []
+            # if cur[1] % 1 == 0:
+            #     next_extremity.append(cur[1] + 0.5)
+            # else:
+            #     next_extremity.append(cur[1] - 0.5)
+            # # else:
+            # if current[0][0] % 1 == 0:
+            #     next_extremity.append(cur[0] + 0.5)
+            # else:
+            #     next_extremity.append(cur[0] - 0.5)
         return next_extremity
 
+
+    #Next to functions fpr checks and validation - no functionality changes
     def find_next_adjacency(self, next_extremity, chromosome, telomers):
         for element in telomers:
             if element == next_extremity:
@@ -104,9 +148,12 @@ class Xtremities:
         return next_extremity, chromosome, telomers
 
         # find the chromosomes in the genomes
-
+    '''
+    Figure out purpose of find_chromosome and adjacencies_to_genome
+    and then code functionality
+    '''
     def find_chromosome(self, adjacencies):
-        telomers = [element for element in adjacencies if type(element) is not tuple]
+        telomers = [element for element in adjacencies if type(element) is not tuple and type(element) is not string]
         linear_chromosomes = []
         chromosome = []
         i = 0
@@ -114,6 +161,7 @@ class Xtremities:
         while len(telomers) > 0:
             i += 1
             current = telomers[0]
+            print(current)
             telomers.remove(current)
             chromosome.append(current)
 
