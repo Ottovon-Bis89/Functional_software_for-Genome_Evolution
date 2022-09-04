@@ -19,7 +19,7 @@ class Node:
 
     # The function returns a list  of the operations needed to transform the genomes the
     # source  genome to the target genome
-
+    "returns random legal options that can be applied to A, called recursively until A can be transformed to B"
     def get_legal_operations(self, adjacenciesB):
         list_of_legal_operations = []
         adjacenciesA = self.state
@@ -187,6 +187,9 @@ class Node:
 
         return list_of_legal_operations
 
+    '''
+    Does the mutation
+    '''
     def take_action(self, operation):
         state_copy = self.state.copy()
         operation_type = []
@@ -233,6 +236,9 @@ class Node:
 
         return ordered_and_sorted, operation_type
 
+    '''
+    Checks if the transformed genome A is equal to the target genome B
+    '''
     def is_equivalent(self, adjacenciesB):
         adjacenciesA = self.state.copy()
         adjacenciesB = adjacenciesB
@@ -254,6 +260,9 @@ class Node:
                 return False
         return True
 
+    '''
+    take the source (with transformation) genome and orders and sorts the genes in the source genome for the target genome
+    '''
     def order_and_sort(self, adjacencies):
         telomers = []
         adjs = []
