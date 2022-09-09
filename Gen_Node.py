@@ -23,6 +23,8 @@ class Node:
     # The function returns a list  of the operations needed to transform the genomes the
     # source  genome to the target genome
     "returns random legal options that can be applied to A, called recursively until A can be transformed to B"
+    #TODO:
+    #for this to work with foreign dna, this function has to take the source and target genomes
     def get_legal_operations(self, adjacenciesB):
         list_of_legal_operations = []
         adjacenciesA = self.state
@@ -197,8 +199,16 @@ class Node:
                     pass
                     #mutate without foreign dna
                 else:
-                    pass
+                    for_dna = self.foreign_dna_pool([], [])
+                    #Need to randomly choose a foreign dna from pool
+                    for_dna_len = len(for_dna)
+                    choice_for_dna = randint(0, for_dna_len-1)
+                    chosen = for_dna[choice_for_dna]
                     #add foreign dna and then call mutation function
+                    #TODO:
+                    #create the mutation function that tries to find a series of mutations from A to B
+                    #if mutation returns blank then switch is false
+                    #if mutation returns list of length greater than 0 then switch needs to be true
             else:
                 pass
                 #mutate without foreign dna but still have had done the DCJ
@@ -206,6 +216,35 @@ class Node:
 
         return list_of_legal_operations
 
+    def mutation_legal_ops(self, source_genome, target_genome):
+        #This function decides if mutations, any series of mutations, can take genome A to genome B
+        pass
+
+    def do_mutation(self, source_genome):
+        #Picks a mutation and calls a functions (delete, duplicate, insert) to act on it
+        #uses source_genome with approved intergenic regions
+
+
+        # Count number of applicable intergenic regions to associate to number of mutations
+        count_applicable_regions = 0
+        for genes_with_intergenic_approved in source_genome:
+            for i in genes_with_intergenic_approved:
+                if len(i) > 1 and '*' in i:
+                    count_applicable_regions += 1
+
+
+        pass
+
+    def insertion(self, source_genome):
+        pass
+
+    def deletion(self, source_genome):
+        pass
+
+    def duplication(self, source_genome):
+        # tandom and transpositional
+        # randomly choose between either
+        pass
 
     def foreign_dna_pool(self, source, target):
         #Check what genes are not in source that is in target
