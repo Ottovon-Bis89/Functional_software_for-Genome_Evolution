@@ -94,7 +94,7 @@ class Xtremities:
         # adjacencies.sort()
         # telomers.sort()
         adjacencies_sorted = telomers + adjacencies
-        return adjacencies_sorted, adjacencies, telomers
+        return adjacencies_sorted, adjacencies, telomers #Telomers arent actually telomers but end point genes and intergenic regions
 
     '''
     Function : find_next_extremity
@@ -145,57 +145,43 @@ class Xtremities:
         else:
             next_extremity = next_adjacency[1]
 
-        return next_extremity, chromosome, telomers
+        return next_extremity, chromosome, telomers#Telomers arent actually telomers but end point genes and intergenic regions
+
 
         # find the chromosomes in the genomes
+
+
     '''
-    Figure out purpose of find_chromosome and adjacencies_to_genome
-    and then code functionality
+    Gives only linear chromosomes from a genome, due to mixture of both circular and linear chromosomes
     '''
-    def find_chromosome(self, adjacencies):
-        telomers = [element for element in adjacencies if type(element) is not tuple and type(element) is not string]
+    def find_chromosome_type(self, adjacencies):
         linear_chromosomes = []
-        chromosome = []
-        i = 0
-        # find linear chromosomes in case there circular chromosomes
-        while len(telomers) > 0:
-            i += 1
-            current = telomers[0]
-            print(current)
-            telomers.remove(current)
-            chromosome.append(current)
-
-            if current % 1 == 0:
-                next_extremity = current + 0.5
-            else:
-                next_extremity = current - 0.5
-
-        # if the chromosome has a single gene
-            if next_extremity in telomers:
-                current = next_extremity
-
-                telomers.remove(current)
-                chromosome.append(current)
-                linear_chromosomes.append(chromosome)
-                chromosome = []
-
-        # find the adjacency cycle
-            else:
-                adjacency_cycle = Xtremities.find_next_adjacency(self, next_extremity, chromosome, telomers)
-                next_extremity = adjacency_cycle[0]
-
-                if next_extremity in telomers:
-                    current = next_extremity
-                    telomers.remove(current)
-                    chromosome.append(current)
+        circular_chromosomes = []
+        genome = []
+        genome = [element for element in adjacencies if type(element) is not tuple and type(element) is not string]
+        for chromosome in genome:
+            # print(chromosome[0])
+            # print(chromosome[len(chromosome)-1])
+            if type(chromosome[0]) is not tuple and type(chromosome[len(chromosome)-1]) is not str:
+                if chromosome[0] < 0:
+                    #circular
+                    circular_chromosomes.append(chromosome)
+                    genome.append(chromosome)
+                elif (chromosome[0] > 0 and chromosome[len(chromosome)-1] < 0) or (chromosome[0] > 0 and chromosome[len(chromosome)-1] > 0):
+                    #linear 
+                    chromosome.insert(0, 'o')
+                    chromosome.append('o')
                     linear_chromosomes.append(chromosome)
-                    chromosome = []
+                    genome.append(chromosome)
+        return linear_chromosomes, circular_chromosomes, genome
 
-        return linear_chromosomes, telomers, chromosome
 
+    '''
+    takes linear chromosomes and outputs the genome (signed integers per chromosome)
+    
     def adjacencies_to_genome(self, adjacencies):
         genome = []
-        chromosomes = Xtremities.find_chromosome(self, adjacencies)
+        chromosomes = Xtremities.find_chromosome_type(adjacencies)
         linear_chromosomes = chromosomes[0]
 
         for chromosome in linear_chromosomes:
@@ -223,4 +209,5 @@ class Xtremities:
             genome.append(chromosome)
 
         return genome
+    '''
 
