@@ -262,13 +262,13 @@ class Node:
                 if '*' not in chromosome[i]:
                     target_genome.append(int(chromosome[i]))
         
-        print(source_genome)
-        print(target_genome)
+        # print(source_genome)
+        # print(target_genome)
 
 
         #Find the difference between source and target
         difference = list(set(target_genome) - set(source_genome))
-        print(difference)
+        # print(difference)
         if len(difference) > 0:
             #define the ratio (1/5)
             number_of_random_ints = (len(difference)*5)-(len(difference)) #change ratio here (5)
@@ -296,8 +296,50 @@ class Node:
                     if gene not in for_dna:
                         for_dna.append(gene)
                         count += 1
+            
+            #Use for_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
+            number_of_frags = randint(0,99)
+            len_frags = (len(difference))+2
 
-            return (for_dna)
+            #choose randomly from for_dna list to add to frags
+            list_of_frags = []
+            frag = []
+            for j in range(number_of_frags):
+                for i in range(len_frags):
+                    choice = randint(0,len(for_dna)-1)
+                    frag.append(for_dna[choice])
+                #Ensure unique fragments in list
+                if j > 0 and frag not in list_of_frags:
+                    list_of_frags.append(frag)
+                else:
+                    j -= 1
+                frag = []
+
+            #Check for the difference in genes within atleast one fragment in list
+            check = True
+            for f in list_of_frags:
+                if difference in f:
+                    check = False
+            print(check)
+            if check == True:
+                print(difference)
+                final_frag = difference[:]
+                #add a fragment that does contain the difference
+                #Check that the gene does not already exist in the fragment
+                while len(final_frag) <= len(difference)+1:
+                    c =  for_dna[randint(0, len(for_dna)-1)]
+                    if c not in final_frag:
+                        final_frag.append(c)
+                # print(final_frag)
+                list_of_frags.append(final_frag)
+
+            #Tag foreign DNA
+            for i in list_of_frags:
+                frag = i
+                for j in range(len(frag)):
+                    frag[j] = str(frag[j])+"_"
+
+            return (list_of_frags)
         else:
             return []
 
