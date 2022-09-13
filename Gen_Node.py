@@ -19,18 +19,18 @@ class Node:
         get_chromosomes = gen_x.find_chromosome_type(self.state)
         self.linear_chromosomes = get_chromosomes
 
-
     # The function returns a list  of the operations needed to transform the genomes the
     # source  genome to the target genome
     "returns random legal options that can be applied to A, called recursively until A can be transformed to B"
-    #TODO:
-    #for this to work with foreign dna, this function has to take the source and target genomes
+
+    # TODO:
+    # for this to work with foreign dna, this function has to take the source and target genomes
     def get_legal_operations(self, adjacenciesB):
         list_of_legal_operations = []
         adjacenciesA = self.state
         adjacenciesB = adjacenciesB
         switch = False
-        loop_counter = 0 #No foreign DNA in first iteration of mutations
+        loop_counter = 0  # No foreign DNA in first iteration of mutations
 
         while switch:
             for element in adjacenciesB:
@@ -188,42 +188,57 @@ class Node:
                                 list_of_legal_operations.append(operation)
                             else:
                                 pass
+                        # if the element in the adjacencies is a foreign dna
                         else:
-                            #incomplete
-                            pass
-                            
+                            for marker in adjacenciesA_copy:
+                                if type(marker) is tuple:
+                                    if marker[0] != x or marker[1] != x:
+                                        fdna = marker
+                                    else:
+                                        if marker[0] != y or marker[1] != y:
+                                            fdna = marker
+                                            adjacenciesA_copy.append(fdna[0])
+                                            adjacenciesA_copy.append(fdna[1])
+                                            operation = (fdna, (fdna[0]), (fdna[1]))
+                                            if operation not in list_of_legal_operations:
+                                                list_of_legal_operations.append(operation)
+                                            else:
+                                                pass
+
+                                                # incomplete
+                                                pass
+
             if loop_counter >= 1:
-                #randomly choose to insert foreign dna
-                choose = randint(0,1)
-                if choose == 0 :
+                # randomly choose to insert foreign dna
+                choose = randint(0, 1)
+                if choose == 0:
                     pass
-                    #mutate without foreign dna
+                    # mutate without foreign dna
                 else:
                     for_dna = self.foreign_dna_pool([], [])
-                    #Need to randomly choose a foreign dna from pool
+                    # Need to randomly choose a foreign dna from pool
                     for_dna_len = len(for_dna)
-                    choice_for_dna = randint(0, for_dna_len-1)
+                    choice_for_dna = randint(0, for_dna_len - 1)
                     chosen = for_dna[choice_for_dna]
-                    #add foreign dna and then call mutation function
-                    #TODO:
-                    #create the mutation function that tries to find a series of mutations from A to B
-                    #if mutation returns blank then switch is false
-                    #if mutation returns list of length greater than 0 then switch needs to be true
+                    # add foreign dna and then call mutation function
+                    # TODO:
+                    # create the mutation function that tries to find a series of mutations from A to B
+                    # if mutation returns blank then switch is false
+                    # if mutation returns list of length greater than 0 then switch needs to be true
             else:
                 pass
-                #mutate without foreign dna but still have had done the DCJ
-            loop_counter+=1
+                # mutate without foreign dna but still have had done the DCJ
+            loop_counter += 1
 
         return list_of_legal_operations
 
     def mutation_legal_ops(self, source_genome, target_genome):
-        #This function decides if mutations, any series of mutations, can take genome A to genome B
+        # This function decides if mutations, any series of mutations, can take genome A to genome B
         pass
 
     def do_mutation(self, source_genome):
-        #Picks a mutation and calls a functions (delete, duplicate, insert) to act on it
-        #uses source_genome with approved intergenic regions
-
+        # Picks a mutation and calls a functions (delete, duplicate, insert) to act on it
+        # uses source_genome with approved intergenic regions
 
         # Count number of applicable intergenic regions to associate to number of mutations
         count_applicable_regions = 0
@@ -231,7 +246,6 @@ class Node:
             for i in genes_with_intergenic_approved:
                 if len(i) > 1 and '*' in i:
                     count_applicable_regions += 1
-
 
         pass
 
@@ -241,16 +255,17 @@ class Node:
     def deletion(self, source_genome):
         pass
 
-    def duplication(self, source_genome):
+    def duplication(self, source_genome, option):
         # tandom and transpositional
         # randomly choose between either
+        # remember that the mutation function for get_legal_op needs to retrun which option worked.
         pass
 
     def foreign_dna_pool(self, source, target):
-        #Check what genes are not in source that is in target
+        # Check what genes are not in source that is in target
         source_genome = []
         target_genome = []
-        #create master lists
+        # create master lists
 
         for chromosome in source:
             for i in range(len(chromosome)):
@@ -261,38 +276,36 @@ class Node:
             for i in range(len(chromosome)):
                 if '*' not in chromosome[i]:
                     target_genome.append(int(chromosome[i]))
-        
+
         print(source_genome)
         print(target_genome)
 
-
-        #Find the difference between source and target
+        # Find the difference between source and target
         difference = list(set(target_genome) - set(source_genome))
         print(difference)
         if len(difference) > 0:
-            #define the ratio (1/5)
-            number_of_random_ints = (len(difference)*5)-(len(difference)) #change ratio here (5)
+            # define the ratio (1/5)
+            number_of_random_ints = (len(difference) * 5) - (len(difference))  # change ratio here (5)
 
-            #create foreign dna
+            # create foreign dna
             for_dna = []
             count = 0
             while count < (number_of_random_ints):
-                gene = randint(0,99)
+                gene = randint(0, 99)
                 if len(for_dna) >= 1:
                     if gene not in for_dna:
                         for_dna.append(gene)
                         count += 1
                 else:
                     for_dna.append(gene)
-            
 
-            #add difference to foreign dna and check duplicates and add foreign DNA if necessary
+            # add difference to foreign dna and check duplicates and add foreign DNA if necessary
             for_dna = difference + for_dna
             for_dna = list(set(for_dna))
-            if len(for_dna) < ((len(difference))*5): #change ratio here (5)
+            if len(for_dna) < ((len(difference)) * 5):  # change ratio here (5)
                 count = len(for_dna)
-                while (len(for_dna)< ((len(difference))*5)):
-                    gene = randint(0,99)
+                while (len(for_dna) < ((len(difference)) * 5)):
+                    gene = randint(0, 99)
                     if gene not in for_dna:
                         for_dna.append(gene)
                         count += 1
@@ -301,12 +314,10 @@ class Node:
         else:
             return []
 
-
-
-                        
     '''
     Does the mutation
     '''
+
     def take_action(self, operation):
         state_copy = self.state.copy()
         operation_type = []
@@ -327,8 +338,8 @@ class Node:
             # else it is another structural event
         elif len(operation) == 2:
             if type(operation[0][0]) is tuple and type(operation[0][1]) is tuple:
-                state_copy.append(operation[0][0])
-                state_copy.append(operation[1][0])
+                state_copy.append(operation[0][0] * 2)
+                state_copy.append(operation[1][0] * 2)
                 operation_type = "dup_"
 
             elif type(operation[0][0]) is not tuple or type(operation[0][1]) is not tuple:
@@ -356,6 +367,7 @@ class Node:
     '''
     Checks if the transformed genome A is equal to the target genome B
     '''
+
     def is_equivalent(self, adjacenciesB):
         adjacenciesA = self.state.copy()
         adjacenciesB = adjacenciesB
@@ -380,6 +392,7 @@ class Node:
     '''
     take the source (with transformation) genome and orders and sorts the genes in the source genome for the target genome
     '''
+
     def order_and_sort(self, adjacencies):
         telomers = []
         adjs = []
@@ -405,7 +418,6 @@ class Node:
         sort = telomers + adjs
 
         return sort, telomers, adjs
-
 
 # if __name__ == '__main__':
 #     gen_ex_obj = Gen_xtremities.Xtremities()
