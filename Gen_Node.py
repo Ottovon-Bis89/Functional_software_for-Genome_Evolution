@@ -303,7 +303,8 @@ class Node:
                             duplication_genome.remove(dup)
         
         #step 3: checking if all these necessary mutations can occur at once
-
+        #first check that insert and del positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
+        #Check that intergenic regions exist for insert, del, and dup.
         pass
     
 
