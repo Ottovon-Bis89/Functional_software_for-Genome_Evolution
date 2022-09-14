@@ -205,28 +205,40 @@ class Node:
                                             else:
                                                 pass
 
-                                                # incomplete
-                                                pass
-
             if loop_counter >= 1:
                 # randomly choose to insert foreign dna
                 choose = randint(0, 1)
                 if choose == 0:
-                    pass
+                    series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
+                    if series_of_mutation is []:
+                        switch = False
+                    else:
+                        switch = True
                     # mutate without foreign dna
                 else:
-                    for_dna = self.foreign_dna_pool([], [])
+                    #Here is list of foreign dna where fragments are sublists
+                    for_dna = self.foreign_dna_pool(adjacenciesA, adjacenciesB)
                     # Need to randomly choose a foreign dna from pool
                     for_dna_len = len(for_dna)
                     choice_for_dna = randint(0, for_dna_len - 1)
                     chosen = for_dna[choice_for_dna]
+                    # TODO:
                     # add foreign dna and then call mutation function
                     # TODO:
                     # create the mutation function that tries to find a series of mutations from A to B
+                    series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
+                    if series_of_mutation is []:
+                        switch = False
+                    else:
+                        switch = True
                     # if mutation returns blank then switch is false
                     # if mutation returns list of length greater than 0 then switch needs to be true
             else:
-                pass
+                series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
+                if series_of_mutation is []:
+                    switch = False
+                else:
+                    switch = True
                 # mutate without foreign dna but still have had done the DCJ
             loop_counter += 1
 
@@ -234,7 +246,77 @@ class Node:
 
     def mutation_legal_ops(self, source_genome, target_genome):
         # This function decides if mutations, any series of mutations, can take genome A to genome B
+        # check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
+        # Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
+        #check signed integers(genes) between target and source
+        #Duplication - look at the target; if two of same signed integer next to each other -> tandom duplicatio
+        # if two of same signed ints in chromosome but not next to each other then -> transpositional
+        
+        #step 1, check genes per chromosome between target and source [number of chromosomes should always be the same]
+        #1.1 in target and not in source [CREATE in list that contains tuples of (position,gene)]
+        in_genome = []
+        in_target = []
+        for chromosome in source_genome:
+            for t_chrom in target_genome:
+                for i in range(len(t_chrom)):
+                    if t_chrom[i] not in chromosome:
+                        in_target.append((i,t_chrom[i]))
+            in_genome.append(in_target)
+
+        #1.2 in source and not in target[CREATE out list that contains tuples of (position,gene)]
+        out_genome = []
+        out_target = []
+        for chromosome in source_genome:
+            for t_chrom in target_genome:
+                for i in range(len(chromosome)):
+                    if chromosome[i] not in t_chrom:
+                        out_target.append((i,chromosome[i]))
+            out_genome.append(out_target)
+
+        #step 2: duplication; check target for duplication [note position, gene and type of duplication]
+        duplication_genome = []
+        t_duplication = []
+        dup_genes = []
+        for chromosome in target_genome:
+            for i in range(len(chromosome)):
+                if chromosome.count(chromosome[i]) > 1 and chromosome[i] not in dup_genes:
+                    if chromosome[i] == chromosome[i+1] or chromosome[i] == chromosome[i-1]:
+                        type = "tandem"
+                    else:
+                        type = "transpositional"
+                    dup_genes.append(chromosome[i])
+                    t_duplication.append([i, self.getIndex(chromosome, chromosome[i]),chromosome[i], type])
+            duplication_genome.append(t_duplication)
+            dup_genes = []
+        
+        #step 2.1: check if the duplication is already present in source, if yes remove from list, otherwise cause mutation
+        for chromosome in source_genome:
+            for sub in duplication_genome:
+                for i in range(len(sub)):
+                    dup = sub[i]
+                    duplicated =  dup[2]
+                    #check if gene exists
+                    if duplicated in chromosome:
+                        occurances = chromosome.count(duplicated)
+                        if occurances == 2:
+                            #remove from list
+                            duplication_genome.remove(dup)
+        
+        #step 3: checking if all these necessary mutations can occur at once
+
         pass
+    
+
+    #Function for finding second occurance of element within list
+    def getIndex(self, int_list, num):
+        count = 0
+        for i, n in enumerate(int_list):
+            if n == num:
+                count += 1
+            if count == 2:
+                return i
+        else:
+            return 0
 
     def do_mutation(self, source_genome):
         # Picks a mutation and calls a functions (delete, duplicate, insert) to act on it
@@ -250,9 +332,13 @@ class Node:
         pass
 
     def insertion(self, source_genome):
+        #insertion of gene
+        #insertion of chromosome
         pass
 
     def deletion(self, source_genome):
+        #deletion of gene
+        #deletion of chromosome (depends on number of chromosomes)
         pass
 
     def duplication(self, source_genome, option):
