@@ -237,6 +237,8 @@ class Node:
                 series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                 if series_of_mutation is []:
                     switch = False
+                    #random mutation
+                    #check numbver of applicale region, if 0 then create 
                 else:
                     switch = True
                 # mutate without foreign dna but still have had done the DCJ
