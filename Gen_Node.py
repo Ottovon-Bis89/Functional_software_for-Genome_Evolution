@@ -304,7 +304,85 @@ class Node:
         
         #step 3: checking if all these necessary mutations can occur at once
         #first check that insert and del positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
+        for i in range(len(out_genome)):
+            out_chromosome = out_genome[i]
+            in_chromosome = in_genome[i]
+            for j in range(len(out_chromosome)):
+                tup = out_chromosome[j]
+                for tup_in in in_chromosome:
+                    if tup_in[0] == tup[0]:
+                        return []            
         #Check that intergenic regions exist for insert, del, and dup.
+        # get position indexes [only] from in_genome
+        in_pos = []
+        in_pos_genome = []
+        for chromosome in in_genome:
+            for i in range(len(chromosome)):
+                tup = chromosome[i]
+                in_pos.append(tup[0])
+            in_pos_genome.append(in_pos)
+        # get position indexes [only] from out_genome
+        out_pos = []
+        out_pos_genome = []
+        for chromosome in out_genome:
+            for i in range(len(chromosome)):
+                tup = chromosome[i]
+                out_pos.append(tup[0])
+            out_pos_genome.append(out_pos)
+        # get position for duplication
+        dup_pos = []
+        dup_pos_genome = []
+        for chromosome in duplication_genome:
+            for i in range(len(chromosome)):
+                tup = chromosome[i]
+                dup_pos.append(tup[1])
+            dup_pos_genome.append(dup_pos)
+        # get number of applicable intergenic regions
+        no_app_region = 0
+        app_reg_chrom = []
+        app_reg_genome = []
+        for chromosome in source_genome:
+            for j in range(len(chromosome)):
+            # for gene in chromosome:
+                if (type(chromosome[j])==str and len(chromosome[j])>1 and '*' in chromosome[j]):
+                    no_app_region += 1
+                    app_reg_chrom.append(j+1)
+                app_reg_genome.append(app_reg_chrom)
+        #check number of applicable regions against number of total mutations
+        #count positions for each mutation
+        insert_count = 0
+        for chromosome in in_pos_genome:
+            for gene in chromosome:
+                insert_count += 1
+        del_count = 0
+        for chromosome in out_pos_genome:
+            for gene in chromosome:
+                del_count += 1
+        dup_count = 0
+        for chromosome in dup_pos_genome:
+            for gene in chromosome:
+                dup_count += 1
+        
+        if (no_app_region < (dup_count+insert_count+del_count)):
+            return []
+        
+        #check that the positions for mutations have applicable intergenic regions
+        #check insertion
+        for i in range(len(app_reg_genome)):
+            in_chrom = in_pos_genome[i]
+            out_chrom = out_pos_genome[i]
+            dup_chrom = dup_pos_genome[i]
+            applicable_regions_chrom = app_reg_genome[i]
+            total_positions = []
+            total_positions = in_chrom+out_chrom+dup_chrom
+            for j in range(len(total_positions)):
+                if (total_positions[j] not in applicable_regions_chrom):
+                    return []
+            
+            # return list of mutations
+            return in_genome, out_genome, duplication_genome
+
+
         pass
     
 
