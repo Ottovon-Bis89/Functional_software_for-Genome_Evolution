@@ -239,9 +239,10 @@ class Node:
                     switch = False
                     #random mutation
                     #check numbver of applicale region, if 0 then create 
+                    
                 else:
                     switch = True
-                # mutate without foreign dna but still have had done the DCJ
+                # mutate without foreign dna but still have had done the DCJ (random mutation[do_mutation function])
             loop_counter += 1
 
         return list_of_legal_operations
@@ -400,33 +401,91 @@ class Node:
             return 0
 
     def do_mutation(self, source_genome):
+        list_of_mutations = []
         # Picks a mutation and calls a functions (delete, duplicate, insert) to act on it
         # uses source_genome with approved intergenic regions
 
         # Count number of applicable intergenic regions to associate to number of mutations
         count_applicable_regions = 0
+        list_of_mutation_points = []
+        list_of_mutation_points_genome = []
         for genes_with_intergenic_approved in source_genome:
             for i in genes_with_intergenic_approved:
                 if len(i) > 1 and '*' in i:
                     count_applicable_regions += 1
+                    list_of_mutation_points.append(i+1)
+            list_of_mutation_points_genome.append(list_of_mutation_points)
+        
+        #get a random int from 0 to count_applicable_regions (how many mutations)
+        rand_int_muations = randint(0, count_applicable_regions)
+        
+        #randomly allocate mutations to the picked applicable regions
+        for i in range(rand_int_muations):
+            rand_chrom = randint(0,len(list_of_mutation_points_genome))
+            position_app_reg_chrom = list_of_mutation_points_genome[rand_chrom]
+            source_chrom = source_genome[rand_chrom]
 
-        pass
+            #randomly pick a position from position_app_reg_chrom to position
+            rand_pos = randint(0,len(position_app_reg_chrom))
+            position = position_app_reg_chrom[rand_pos]
 
-    def insertion(self, source_genome):
+            #randomly pick a mutation
+            mutation_type = randint(0, 2)
+            if mutation_type == 0:
+                #insertion
+                mutated = self.insertion(source_chrom, position)
+                list_of_mutations.append("insert", rand_chrom, position)
+                #replace orginal with mutated
+                source_genome[rand_chrom] = mutated
+                pass
+            elif mutation_type == 1:
+                #deletion
+                mutated = self.deletion(source_chrom, position)
+                list_of_mutations.append("deletion", rand_chrom, position)
+                #replace orginal with mutated
+                source_genome[rand_chrom] = mutated
+                pass
+            else:
+                #pick position to insert duplication
+                pos = randint(0, len(position_app_reg_chrom))
+                pos_f = position_app_reg_chrom[pos]
+                if (pos_f+1==position) or (pos_f-1==position):
+                    type = 0
+                else:
+                    type = 1
+                #duplicatiom
+                mutated = self.duplication(source_chrom, position, pos_f)
+                list_of_mutations.append("duplication", rand_chrom, position, pos_f, type)
+                #replace orginal with mutated
+                source_genome[rand_chrom] = mutated
+
+
+        #enact mutations and return mutated genome (to enact, need to complete 3 mutation functions)
+
+        return source_genome, list_of_mutations
+
+    def insertion(self, source_chromosome, position_app_region):
         #insertion of gene
-        #insertion of chromosome
-        pass
+        gene = randint(0,99)
+        source_chromosome[position_app_region-1] = gene
+        
+        return source_chromosome
 
-    def deletion(self, source_genome):
+    def deletion(self, source_chromosome, position_app_region):
         #deletion of gene
-        #deletion of chromosome (depends on number of chromosomes)
-        pass
+        del source_chromosome[position_app_region]
+        del source_chromosome[position_app_region-1]
+        # source_chromosome.pop(position_app_region)
+        # source_chromosome.pop(position_app_region-1)
+        
+        return source_chromosome
 
-    def duplication(self, source_genome, option):
-        # tandom and transpositional
-        # randomly choose between either
-        # remember that the mutation function for get_legal_op needs to retrun which option worked.
-        pass
+    def duplication(self, source_chromosome, position_app_region, insertion_position):
+        #duplication of a gene
+        gene_to_duplicate = source_chromosome[position_app_region]
+        source_chromosome[insertion_position-1] = gene_to_duplicate
+
+        return source_chromosome
 
     def foreign_dna_pool(self, source, target):
         # Check what genes are not in source that is in target
