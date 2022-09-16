@@ -1,5 +1,6 @@
 from random import randint
 import Gen_xtremities
+import Data_generator
 
 
 class Node:
@@ -222,30 +223,74 @@ class Node:
                     for_dna_len = len(for_dna)
                     choice_for_dna = randint(0, for_dna_len - 1)
                     chosen = for_dna[choice_for_dna]
-                    # TODO:
-                    # add foreign dna and then call mutation function
-                    # TODO:
-                    # create the mutation function that tries to find a series of mutations from A to B
+
+                    # add foreign dna 
+                    adjacenciesA = self.add_for_dna(adjacenciesA, chosen)
                     series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                     if series_of_mutation is []:
                         switch = False
                     else:
                         switch = True
-                    # if mutation returns blank then switch is false
-                    # if mutation returns list of length greater than 0 then switch needs to be true
             else:
                 series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                 if series_of_mutation is []:
                     switch = False
                     #random mutation
-                    #check numbver of applicale region, if 0 then create 
+                    src_genome, mutation_list = self.do_mutation(adjacenciesA)
+                    adjacenciesA = src_genome[:]
+                    list_of_legal_operations.append(mutation_list)
                     
+                    #TODO: check numbver of applicale region, if 0 then create 
+                    count_app = 0
+                    for chromosome in adjacenciesA:
+                        for i in range(len(chromosome)):
+                            if '*' in chromosome[i] and len(chromosome[i]) > 1 :
+                                count_app += 1
+                    
+                    clean_chrom = []
+                    clean_genome = []
+                    if count_app == 0:
+                        #remove all unapplicable intergenic regions and call intergenerator
+                        for chromosome in adjacenciesA:
+                            for i in range(len(chromosome)):
+                                if '*' not in chromosome[i]:
+                                    clean_chrom.append(chromosome[i])
+                            clean_genome.append(clean_chrom)
+                        
+                        gen_obj = Data_generator.Data_generator()
+                        normal_i_reg = gen_obj.intergenerator(clean_genome)
+                        adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                 else:
                     switch = True
                 # mutate without foreign dna but still have had done the DCJ (random mutation[do_mutation function])
             loop_counter += 1
 
         return list_of_legal_operations
+    
+    def add_for_dna(self, source_genome, frag):
+        # Count number of applicable intergenic regions to associate to number of mutations
+        list_of_mutation_points = []
+        list_of_mutation_points_genome = []
+        for genes_with_intergenic_approved in source_genome:
+            for i in genes_with_intergenic_approved:
+                if len(i) > 1 and '*' in i:
+                    list_of_mutation_points.append(i+1)
+            list_of_mutation_points_genome.append(list_of_mutation_points)
+        
+        rand_chrom = randint(0,len(list_of_mutation_points_genome))
+        position_app_reg_chrom = list_of_mutation_points_genome[rand_chrom]
+        source_chrom = source_genome[rand_chrom]
+        
+        #randomly pick a position from position_app_reg_chrom to position
+        rand_pos = randint(0,len(position_app_reg_chrom))
+        position = position_app_reg_chrom[rand_pos]
+
+        mutated = []
+        mutated = source_chrom[0:position-2] + frag + source_chrom[position:]
+
+        source_genome[rand_chrom] = mutated
+
+        return source_genome
 
     def mutation_legal_ops(self, source_genome, target_genome):
         # This function decides if mutations, any series of mutations, can take genome A to genome B
@@ -468,7 +513,7 @@ class Node:
         #insertion of gene
         gene = randint(0,99)
         source_chromosome[position_app_region-1] = gene
-        
+
         return source_chromosome
 
     def deletion(self, source_chromosome, position_app_region):
@@ -584,7 +629,7 @@ class Node:
                 for j in range(len(frag)):
                     frag[j] = str(frag[j])+"_"
 
-            return (list_of_frags)
+            return list_of_frags
         else:
             return []
 
