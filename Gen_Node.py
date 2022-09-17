@@ -205,7 +205,7 @@ class Node:
                                                 list_of_legal_operations.append(operation)
                                             else:
                                                 pass
-
+    
             if loop_counter >= 1:
                 # randomly choose to insert foreign dna
                 choose = randint(0, 1)
@@ -791,7 +791,7 @@ class Node:
         # order and sort
         ordered_and_sorted = Node.order_and_sort(self, state_copy)
 
-        return ordered_and_sorted, operation_type
+        return ordered_and_sorted, operation_type, list_of_legal_operations
 
     '''
     Checks if the transformed genome A is equal to the target genome B
