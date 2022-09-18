@@ -385,20 +385,20 @@ class Node:
 
             # else it is another structural event
         elif len(operation) == 2:
-            if type(operation[0][0]) is tuple and type(operation[0][1]) is tuple:
-                state_copy.append(operation[0][0] * 2)
+            if type(operation[0][1]) is tuple and type(operation[1][0]) is tuple:
+                state_copy.append(operation[0][1] * 2)
                 state_copy.append(operation[1][0] * 2)
                 operation_type = "dup_"
 
-            elif type(operation[0][0]) is not tuple or type(operation[0][1]) is not tuple:
-                state_copy.remove(operation[0][0])
+            elif type(operation[0][1]) is not tuple or type(operation[1][0]) is not tuple:
                 state_copy.remove(operation[0][1])
+                state_copy.remove(operation[1][0])
                 operation_type = "del_"
 
         elif len(operation) == 3:
-            if type(operation[0][1][2]) is tuple and type(operation[1][0][2]) is tuple:
+            if type(operation[0][1][2]) is tuple and type(operation[0][2][1]) is tuple:
                 state_copy.append(operation[0][2])
-                state_copy.append(operation[2][2])
+                state_copy.append(operation[2][1])
                 state_copy.remove(operation[0][1])
                 state_copy.remove(operation[0][0])
                 operation_type = "fDNA"
