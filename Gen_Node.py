@@ -1,3 +1,4 @@
+
 from random import randint
 import Gen_xtremities
 import Data_generator
@@ -179,6 +180,7 @@ class Node:
                                     w = marker
                         if w == 0:
                             w = x
+                            print("oops")
 
                         # if w is not a telomere:
                         if w != x:
@@ -216,63 +218,65 @@ class Node:
                     if series_of_mutation == []:
                         print("Couldnt get to b from a yet")
                         src_genome, mutation_list = self.do_mutation(adjacenciesA)
-                        print("so we randomly mutated and below is the mutation list")
-                        print(mutation_list)
-                        print(src_genome)
+                        #print("so we randomly mutated and below is the mutation list")
+                        #print(mutation_list)
+                        #print(src_genome)
                         adjacenciesA = src_genome[:]
-                        print(adjacenciesA)
+                        #print(adjacenciesA)
                         list_of_legal_operations.append(mutation_list)
                         switch = True
+                        print("problem starts here")
                     else:
                         print("could find solution")
-                        print(series_of_mutation)
+                        #print(series_of_mutation)
                         list_of_legal_operations.append(series_of_mutation)
                         switch = False
                     # mutate without foreign dna
                 else:
-                    print("loop counter >= 1 and mutate with foreign dna")
+                    #print("loop counter >= 1 and mutate with foreign dna")
                     #Here is list of foreign dna where fragments are sublists
                     for_dna = self.foreign_dna_pool(adjacenciesA, adjacenciesB)
                     # Need to randomly choose a foreign dna from pool
                     for_dna_len = len(for_dna) -1
-                    print("source of error seems to be an insufficient length")
-                    print(for_dna)
-                    print(for_dna_len)
+                    #print("source of error seems to be an insufficient length")
+                    #print(for_dna)
+                    #print(for_dna_len)
                     choice_for_dna = randint(0, for_dna_len)
                     chosen = for_dna[choice_for_dna]
                     print("stcuk after this point")
                     # add foreign dna [bad line]
                     adjacenciesA = self.add_for_dna(adjacenciesA, chosen)
-                    
+                    print("error here")
                     series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                     if series_of_mutation == []:
                         src_genome, mutation_list = self.do_mutation(adjacenciesA)
-                        print("so we randomly mutated and below is the mutation list")
-                        print(mutation_list)
-                        print(src_genome)
-                        adjacenciesA = src_genome[:]
-                        print(adjacenciesA)
+                        #print("so we randomly mutated and below is the mutation list")
+                        #print(mutation_list)
+                        #print(src_genome)
+                        #adjacenciesA = src_genome[:]
+                        #print(adjacenciesA)
                         list_of_legal_operations.append(mutation_list)
-                        switch = True
+                        switch = False
+        
                     else:
                         print("could find solution")
-                        print(series_of_mutation)
+                        #print(series_of_mutation)
                         list_of_legal_operations.append(series_of_mutation)
-                        switch = False
+                        switch = True
             else:
-                print("entered the else statement so loop counter is 0")
+                #print("entered the else statement so loop counter is 0")
                 series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
-                print(series_of_mutation)
+                #print(series_of_mutation)
                 if series_of_mutation == []:
-                    print("loop counter 0 and cannot get to target")
+                    #print("loop counter 0 and cannot get to target")
                     switch = True
                     #random mutation
                     src_genome, mutation_list = self.do_mutation(adjacenciesA)
-                    print("so we randomly mutated and below is the mutation list")
-                    print(mutation_list)
-                    print(src_genome)
-                    adjacenciesA = src_genome[:]
-                    print(adjacenciesA)
+                    #print("so we randomly mutated and below is the mutation list")
+                    #print(mutation_list)
+                    #print(src_genome)
+                    #adjacenciesA = src_genome[:]
+                    #print(adjacenciesA)
                     list_of_legal_operations.append(mutation_list)
                     
                     #TODO: check numbver of applicale region, if 0 then create 
@@ -326,7 +330,7 @@ class Node:
             source_chrom = source_genome[rand_chrom]
         
         #randomly pick a position from position_app_reg_chrom to position
-        print(position_app_reg_chrom)
+        #print(position_app_reg_chrom)
         rand_pos = randint(0,len(position_app_reg_chrom)-1)
         position = position_app_reg_chrom[rand_pos]
         # print(position)
@@ -394,7 +398,7 @@ class Node:
             dup_genes = []
         
         #step 2.1: check if the duplication is already present in source, if yes remove from list, otherwise cause mutation
-        duplications_to_remove =[]
+        duplications_to_remove = []
         for j in range(len(source_genome)):
             chromosome = source_genome[j]
             sub = duplication_genome[j]
@@ -846,8 +850,8 @@ class Node:
 
         # order and sort
         ordered_and_sorted = Node.order_and_sort(self, state_copy)
-        pass
-        # return ordered_and_sorted, operation_type, list_of_legal_operations
+
+        return ordered_and_sorted, operation_type
 
     '''
     Checks if the transformed genome A is equal to the target genome B
