@@ -210,10 +210,42 @@ class Node:
                                                 pass
     
             if loop_counter >= 1:
+                #TODO: check numbver of applicale region, if 0 then create 
+                count_app = 0
+                for chromosome in adjacenciesA:
+                    for i in range(len(chromosome)):
+                        if isinstance(chromosome[i], str) and '*' in chromosome[i] and len(chromosome[i]) > 1 :
+                            count_app += 1
+                
+                clean_chrom = []
+                clean_genome = []
+                print("adjacencies a before removing unapplicable intergenic regions")
+                print(adjacenciesA)
+                if count_app == 0:
+                    print(count_app)
+                    #remove all unapplicable intergenic regions and call intergenerator
+                    for chromosome in adjacenciesA:
+                        for i in range(len(chromosome)):
+                            if isinstance(chromosome[i],str) and '*' not in chromosome[i]:
+                                print(chromosome[i])
+                                clean_chrom.append(chromosome[i])
+                            elif isinstance(chromosome[i], int):
+                                clean_chrom.append(chromosome[i])
+                        print(clean_chrom)
+                        clean_genome.append(clean_chrom)
+                        clean_chrom = []
+                    print("adjacencies a after removing unapplicable intergenic regions")
+                    print(clean_genome)
+                    gen_obj = Data_generator.Data_generator()
+                    normal_i_reg = gen_obj.intergenerator(clean_genome)
+                    adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
+                    print("adjacencies A at beginning under outer while")
+                    print(adjacenciesA)
                 # randomly choose to insert foreign dna
                 choose = randint(0, 1)
                 if choose == 0:
                     print("loop counter >= 1 and mutate without foreign dna")
+                    print(adjacenciesA)
                     series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                     if series_of_mutation == []:
                         print("Couldnt get to b from a yet")
@@ -256,13 +288,13 @@ class Node:
                         #adjacenciesA = src_genome[:]
                         #print(adjacenciesA)
                         list_of_legal_operations.append(mutation_list)
-                        switch = False
+                        switch = True
         
                     else:
                         print("could find solution")
                         #print(series_of_mutation)
                         list_of_legal_operations.append(series_of_mutation)
-                        switch = True
+                        switch = False
             else:
                 #print("entered the else statement so loop counter is 0")
                 series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
@@ -310,12 +342,14 @@ class Node:
     
     def add_for_dna(self, source_genome, frag):
         # Count number of applicable intergenic regions to associate to number of mutations
+        print("entered add for_dna")
         list_of_mutation_points = []
         list_of_mutation_points_genome = []
         for genes_with_intergenic_approved in source_genome:
             for i in range(len(genes_with_intergenic_approved)):
                 if isinstance(genes_with_intergenic_approved[i], str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
                     list_of_mutation_points.append(i+1)
+                    print(genes_with_intergenic_approved[i])
             list_of_mutation_points_genome.append(list_of_mutation_points)
             list_of_mutation_points = []
         
@@ -324,6 +358,8 @@ class Node:
         position_app_reg_chrom = []
         source_chrom = []
         while len(position_app_reg_chrom) == 0 :
+            # print("entered while loop in add_for_dna")
+            # print((list_of_mutation_points_genome))
             rand_chrom = randint(0,len(list_of_mutation_points_genome)-1)
             # print(rand_chrom)
             position_app_reg_chrom = list_of_mutation_points_genome[rand_chrom]
@@ -399,18 +435,24 @@ class Node:
         
         #step 2.1: check if the duplication is already present in source, if yes remove from list, otherwise cause mutation
         duplications_to_remove = []
-        for j in range(len(source_genome)):
-            chromosome = source_genome[j]
-            sub = duplication_genome[j]
-            for i in range(len(sub)):
-                    dup = sub[i]
-                    duplicated =  dup[2]
-                    #check if gene exists
-                    if duplicated in chromosome:
-                        occurances = chromosome.count(duplicated)
-                        if occurances == 2:
-                            n_sub = sub.remove(dup)
-                            duplication_genome[j] = n_sub
+        print(source_genome)
+        print(duplication_genome)
+        empty_dup_genome = False
+        #Check that duplication genome is not empty
+        if not any(duplication_genome):
+            print("elements exist")
+            for j in range(len(source_genome)):
+                chromosome = source_genome[j]
+                sub = duplication_genome[j]
+                for i in range(len(sub)):
+                        dup = sub[i]
+                        duplicated =  dup[2]
+                        #check if gene exists
+                        if duplicated in chromosome:
+                            occurances = chromosome.count(duplicated)
+                            if occurances == 2:
+                                n_sub = sub.remove(dup)
+                                duplication_genome[j] = n_sub
         # for chromosome in source_genome:
         #     for sub in duplication_genome:
         #         for i in range(len(sub)):
