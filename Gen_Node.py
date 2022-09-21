@@ -1,3 +1,4 @@
+
 from random import randint
 import Gen_xtremities
 import Data_generator
@@ -26,14 +27,15 @@ class Node:
 
     # TODO:
     # for this to work with foreign dna, this function has to take the source and target genomes
-    def get_legal_operations(self, adjacenciesB):
+    def get_legal_operations(self,src, adjacenciesB):
         list_of_legal_operations = []
-        adjacenciesA = self.state
+        adjacenciesA = src
         adjacenciesB = adjacenciesB
-        switch = False
+        switch = True
         loop_counter = 0  # No foreign DNA in first iteration of mutations
 
         while switch:
+            print("enter outer most while")
             for element in adjacenciesB:
                 if element in adjacenciesA:
                     pass
@@ -178,6 +180,7 @@ class Node:
                                     w = marker
                         if w == 0:
                             w = x
+                            print("oops")
 
                         # if w is not a telomere:
                         if w != x:
@@ -207,44 +210,112 @@ class Node:
                                                 pass
     
             if loop_counter >= 1:
+                #TODO: check numbver of applicale region, if 0 then create 
+                count_app = 0
+                for chromosome in adjacenciesA:
+                    for i in range(len(chromosome)):
+                        if isinstance(chromosome[i], str) and '*' in chromosome[i] and len(chromosome[i]) > 1 :
+                            count_app += 1
+                
+                clean_chrom = []
+                clean_genome = []
+                print("adjacencies a before removing unapplicable intergenic regions")
+                print(adjacenciesA)
+                if count_app == 0:
+                    print(count_app)
+                    #remove all unapplicable intergenic regions and call intergenerator
+                    for chromosome in adjacenciesA:
+                        for i in range(len(chromosome)):
+                            if isinstance(chromosome[i],str) and '*' not in chromosome[i]:
+                                print(chromosome[i])
+                                clean_chrom.append(chromosome[i])
+                            elif isinstance(chromosome[i], int):
+                                clean_chrom.append(chromosome[i])
+                        print(clean_chrom)
+                        clean_genome.append(clean_chrom)
+                        clean_chrom = []
+                    print("adjacencies a after removing unapplicable intergenic regions")
+                    print(clean_genome)
+                    gen_obj = Data_generator.Data_generator()
+                    normal_i_reg = gen_obj.intergenerator(clean_genome)
+                    adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
+                    print("adjacencies A at beginning under outer while")
+                    print(adjacenciesA)
                 # randomly choose to insert foreign dna
                 choose = randint(0, 1)
                 if choose == 0:
+                    print("loop counter >= 1 and mutate without foreign dna")
+                    print(adjacenciesA)
                     series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
-                    if series_of_mutation is []:
-                        switch = False
-                    else:
+                    if series_of_mutation == []:
+                        print("Couldnt get to b from a yet")
+                        src_genome, mutation_list = self.do_mutation(adjacenciesA)
+                        #print("so we randomly mutated and below is the mutation list")
+                        #print(mutation_list)
+                        #print(src_genome)
+                        adjacenciesA = src_genome[:]
+                        #print(adjacenciesA)
+                        list_of_legal_operations.append(mutation_list)
                         switch = True
+                        print("problem starts here")
+                    else:
+                        print("could find solution")
+                        #print(series_of_mutation)
+                        list_of_legal_operations.append(series_of_mutation)
+                        switch = False
                     # mutate without foreign dna
                 else:
+                    #print("loop counter >= 1 and mutate with foreign dna")
                     #Here is list of foreign dna where fragments are sublists
                     for_dna = self.foreign_dna_pool(adjacenciesA, adjacenciesB)
                     # Need to randomly choose a foreign dna from pool
-                    for_dna_len = len(for_dna)
-                    choice_for_dna = randint(0, for_dna_len - 1)
+                    for_dna_len = len(for_dna) -1
+                    #print("source of error seems to be an insufficient length")
+                    #print(for_dna)
+                    #print(for_dna_len)
+                    choice_for_dna = randint(0, for_dna_len)
                     chosen = for_dna[choice_for_dna]
-
-                    # add foreign dna 
+                    print("stcuk after this point")
+                    # add foreign dna [bad line]
                     adjacenciesA = self.add_for_dna(adjacenciesA, chosen)
+                    print("error here")
                     series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
-                    if series_of_mutation is []:
-                        switch = False
-                    else:
+                    if series_of_mutation == []:
+                        src_genome, mutation_list = self.do_mutation(adjacenciesA)
+                        #print("so we randomly mutated and below is the mutation list")
+                        #print(mutation_list)
+                        #print(src_genome)
+                        #adjacenciesA = src_genome[:]
+                        #print(adjacenciesA)
+                        list_of_legal_operations.append(mutation_list)
                         switch = True
+        
+                    else:
+                        print("could find solution")
+                        #print(series_of_mutation)
+                        list_of_legal_operations.append(series_of_mutation)
+                        switch = False
             else:
+                #print("entered the else statement so loop counter is 0")
                 series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
-                if series_of_mutation is []:
-                    switch = False
+                #print(series_of_mutation)
+                if series_of_mutation == []:
+                    #print("loop counter 0 and cannot get to target")
+                    switch = True
                     #random mutation
                     src_genome, mutation_list = self.do_mutation(adjacenciesA)
-                    adjacenciesA = src_genome[:]
+                    #print("so we randomly mutated and below is the mutation list")
+                    #print(mutation_list)
+                    #print(src_genome)
+                    #adjacenciesA = src_genome[:]
+                    #print(adjacenciesA)
                     list_of_legal_operations.append(mutation_list)
                     
                     #TODO: check numbver of applicale region, if 0 then create 
                     count_app = 0
                     for chromosome in adjacenciesA:
                         for i in range(len(chromosome)):
-                            if '*' in chromosome[i] and len(chromosome[i]) > 1 :
+                            if isinstance(chromosome[i], str) and '*' in chromosome[i] and len(chromosome[i]) > 1 :
                                 count_app += 1
                     
                     clean_chrom = []
@@ -253,7 +324,7 @@ class Node:
                         #remove all unapplicable intergenic regions and call intergenerator
                         for chromosome in adjacenciesA:
                             for i in range(len(chromosome)):
-                                if '*' not in chromosome[i]:
+                                if isinstance(chromosome[i],str) and '*' not in chromosome[i]:
                                     clean_chrom.append(chromosome[i])
                             clean_genome.append(clean_chrom)
                         
@@ -261,7 +332,9 @@ class Node:
                         normal_i_reg = gen_obj.intergenerator(clean_genome)
                         adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                 else:
-                    switch = True
+                    print("loop counter 0 and got to target")
+                    list_of_legal_operations.append(series_of_mutation)
+                    switch = False
                 # mutate without foreign dna but still have had done the DCJ (random mutation[do_mutation function])
             loop_counter += 1
 
@@ -269,25 +342,35 @@ class Node:
     
     def add_for_dna(self, source_genome, frag):
         # Count number of applicable intergenic regions to associate to number of mutations
+        print("entered add for_dna")
         list_of_mutation_points = []
         list_of_mutation_points_genome = []
         for genes_with_intergenic_approved in source_genome:
             for i in range(len(genes_with_intergenic_approved)):
-                if len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
+                if isinstance(genes_with_intergenic_approved[i], str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
                     list_of_mutation_points.append(i+1)
+                    print(genes_with_intergenic_approved[i])
             list_of_mutation_points_genome.append(list_of_mutation_points)
             list_of_mutation_points = []
-    
-        rand_chrom = randint(0,len(list_of_mutation_points_genome))
-        print(rand_chrom)
-        position_app_reg_chrom = list_of_mutation_points_genome[rand_chrom]
-        source_chrom = source_genome[rand_chrom]
+        
+
+        #TODO: ACCOUNT FOR CHROMOSOMES WITHOUT INTERGENIC REGIONS
+        position_app_reg_chrom = []
+        source_chrom = []
+        while len(position_app_reg_chrom) == 0 :
+            # print("entered while loop in add_for_dna")
+            # print((list_of_mutation_points_genome))
+            rand_chrom = randint(0,len(list_of_mutation_points_genome)-1)
+            # print(rand_chrom)
+            position_app_reg_chrom = list_of_mutation_points_genome[rand_chrom]
+            source_chrom = source_genome[rand_chrom]
         
         #randomly pick a position from position_app_reg_chrom to position
-        rand_pos = randint(0,len(position_app_reg_chrom))
+        #print(position_app_reg_chrom)
+        rand_pos = randint(0,len(position_app_reg_chrom)-1)
         position = position_app_reg_chrom[rand_pos]
-        print(position)
-        print(position_app_reg_chrom)
+        # print(position)
+        # print(position_app_reg_chrom)
 
         mutated = []
         mutated = source_chrom[0:position-1] + frag + source_chrom[position:]
@@ -314,11 +397,11 @@ class Node:
             chromosome = source_genome[j]
             t_chrom = target_genome[j]
             for i in range(len(t_chrom)):
-                if t_chrom[i] not in chromosome:
+                if str(t_chrom[i]) not in chromosome:
                     in_target.append((i,t_chrom[i]))
             in_genome.append(in_target)
             in_target = []
-        print(in_genome)
+        # print(in_genome)
         #1.2 in source and not in target[CREATE out list that contains tuples of (position,gene)]
         out_genome = []
         out_target = []
@@ -332,9 +415,8 @@ class Node:
                     out_target.append((i,chromosome[i]))
             out_genome.append(out_target)
             out_target = []
-        print(out_genome)
+        # print(out_genome)
         #step 2: duplication; check target for duplication [note position, gene and type of duplication]
-        #TODO: CHECK THIS ERROR WITH FINDING POSSIBLE LOCATIONS OF DUPLICATION.
         duplication_genome = []
         t_duplication = []
         dup_genes = []
@@ -352,19 +434,25 @@ class Node:
             dup_genes = []
         
         #step 2.1: check if the duplication is already present in source, if yes remove from list, otherwise cause mutation
-        duplications_to_remove =[]
-        for j in range(len(source_genome)):
-            chromosome = source_genome[j]
-            sub = duplication_genome[j]
-            for i in range(len(sub)):
-                    dup = sub[i]
-                    duplicated =  dup[2]
-                    #check if gene exists
-                    if duplicated in chromosome:
-                        occurances = chromosome.count(duplicated)
-                        if occurances == 2:
-                            n_sub = sub.remove(dup)
-                            duplication_genome[j] = n_sub
+        duplications_to_remove = []
+        print(source_genome)
+        print(duplication_genome)
+        empty_dup_genome = False
+        #Check that duplication genome is not empty
+        if not any(duplication_genome):
+            print("elements exist")
+            for j in range(len(source_genome)):
+                chromosome = source_genome[j]
+                sub = duplication_genome[j]
+                for i in range(len(sub)):
+                        dup = sub[i]
+                        duplicated =  dup[2]
+                        #check if gene exists
+                        if duplicated in chromosome:
+                            occurances = chromosome.count(duplicated)
+                            if occurances == 2:
+                                n_sub = sub.remove(dup)
+                                duplication_genome[j] = n_sub
         # for chromosome in source_genome:
         #     for sub in duplication_genome:
         #         for i in range(len(sub)):
@@ -414,9 +502,9 @@ class Node:
                         #we know its not consecutive
                         if '*' in item and '*' in item_c:
                             out_genome[k] = chromosome.remove(tuple_to_remove)
-                elif (len(chromosome) == 1 and '*' in item ):
+                elif (len(chromosome) == 1 and isinstance(item, str) and '*' in item ):
                     out_genome[k] = []
-        print(out_genome)
+        # print(out_genome)
         #step 3: checking if all these necessary mutations can occur at once
         #first check that insert and del positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
         for i in range(len(out_genome)):
@@ -426,7 +514,7 @@ class Node:
                 tup = out_chromosome[j]
                 for tup_in in in_chromosome:
                     if tup_in[0] == tup[0]:
-                        print("retruned because overlap")
+                        # print("retruned because overlap")
                         return []            
         #Check that intergenic regions exist for insert, del, and dup.
         # get position indexes [only] from in_genome
@@ -455,7 +543,7 @@ class Node:
         # get position for duplication
         dup_pos = []
         dup_pos_genome = []
-        print(duplication_genome)
+        # print(duplication_genome)
         for chromosome in duplication_genome:
             for i in range(len(chromosome)):
                 tup = chromosome[i]
@@ -488,7 +576,7 @@ class Node:
             for gene in chromosome:
                 dup_count += 1
         if (no_app_region < (dup_count+insert_count+del_count)):
-            print("returned at line 481")
+            # print("returned at line 481")
             return []
         
         #check that the positions for mutations have applicable intergenic regions
@@ -498,18 +586,31 @@ class Node:
             out_chrom = out_pos_genome[i]
             dup_chrom = dup_pos_genome[i]
             applicable_regions_chrom = app_reg_genome[i]
-            print(applicable_regions_chrom)
+            # print(applicable_regions_chrom)
             total_positions = []
             total_positions = in_chrom+out_chrom+dup_chrom
-            print("tot_pos")
-            print(total_positions)
+            # print("tot_pos")
+            # print(total_positions)
             for j in range(len(total_positions)):
                 if (total_positions[j]+1 not in applicable_regions_chrom):
-                    print("final resting place")
+                    # print("final resting place")
                     return []
-            
+
+            mutation_insert = {}
+            #TODO: COMPLETE FORMAT CHANGE FOR MUTATION DISPLAY
+            #write code to take elements of lists and place in dictionary [for loop]
+            for i in range(len(in_genome)):
+                if len(in_genome[i]) > 0:
+                    mutation_insert["insertion chromosome"] = i+1
+                    chrom_interest =in_genome[i]
+                    for i in range(len(chrom_interest)):
+                        instance = chrom_interest[i]
+                        mutation_insert["insertion position"] = instance[0]
+                        mutation_insert["insertion gene"] = instance[1]
+
+
             # return list of mutations
-            return in_genome, out_genome, duplication_genome
+            return mutation_insert, out_genome, duplication_genome
 
 
         return []
@@ -537,7 +638,8 @@ class Node:
         list_of_mutation_points_genome = []
         for genes_with_intergenic_approved in source_genome:
             for i in range(len(genes_with_intergenic_approved)):
-                if len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
+                # print(genes_with_intergenic_approved)
+                if isinstance(genes_with_intergenic_approved[i],str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
                     count_applicable_regions += 1
                     list_of_mutation_points.append(i+1)
             list_of_mutation_points_genome.append(list_of_mutation_points)
@@ -650,17 +752,17 @@ class Node:
 
         for chromosome in source:
             for i in range(len(chromosome)):
-                if '*' not in chromosome[i]:
+                if isinstance(chromosome[i],int):
                     source_genome.append(int(chromosome[i]))
-
+        # and '*' not in chromosome[i]
         for chromosome in target:
             for i in range(len(chromosome)):
-                if '*' not in chromosome[i]:
+                if isinstance(chromosome[i],int):
                     target_genome.append(int(chromosome[i]))
 
 
-        print(source_genome)
-        print(target_genome)
+        # print(source_genome)
+        # print(target_genome)
 
         
         # print(source_genome)
@@ -698,7 +800,7 @@ class Node:
                         count += 1
             
             #Use for_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
-            number_of_frags = randint(0,99)
+            number_of_frags = randint(1,99)
             len_frags = (len(difference))+2
 
             #choose randomly from for_dna list to add to frags
@@ -791,7 +893,7 @@ class Node:
         # order and sort
         ordered_and_sorted = Node.order_and_sort(self, state_copy)
 
-        return ordered_and_sorted, operation_type, list_of_legal_operations
+        return ordered_and_sorted, operation_type
 
     '''
     Checks if the transformed genome A is equal to the target genome B

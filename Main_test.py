@@ -4,16 +4,16 @@ import Gen_Node
 # data_target = []
 # data_source = []
 # with open("Generated_data.txt") as f:
-#     lines = f.readlines()
-#     for l in lines:
-#         k = l.strip('\n').split(',')
-#         data_source.append(k)
+#      lines = f.readlines()
+#      for l in lines:
+#          k = l.strip('\n').split(',')
+#          data_source.append(k)
 
 # with open("Generated_data_B.txt") as f:
-#     lines = f.readlines()
-#     for l in lines:
-#         k = l.strip('\n').split(',')
-#         data_target.append(k)
+#      lines = f.readlines()
+#      for l in lines:
+#          k = l.strip('\n').split(',')
+#          data_target.append(k)
 
 # print(data_source)
 # print(data_target)
@@ -78,9 +78,10 @@ gen_n_obj = Gen_Node.Node()
 # print(list_of_mutations)
 # print(mutated_genome)
 data_source = [[1, '*6', 4,'*', 5, '*',6], [10, '*10', 22, '*9', 33]]
-data_target = [[1,3,4,'*',5, '*',6], [10,'*9', 33]]
-in_g, out, dup = gen_n_obj.mutation_legal_ops(data_source, data_target)
-print(in_g)
-print(out)
-print(dup)
-# print(data_source)
+data_target = [[1,3,4,'*',5, '*',6], [10,11,'*9', 33]]
+# in_g, out, dup = gen_n_obj.mutation_legal_ops(data_source, data_target)
+# print(in_g)
+# print(out)
+# print(dup)
+list_of_legal  = gen_n_obj.get_legal_operations(data_source, data_target)
+#print(list_of_legal)
