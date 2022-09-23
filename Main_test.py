@@ -1,19 +1,19 @@
 import Gen_xtremities
 import Gen_Node
 
-# data_target = []
-# data_source = []
-# with open("Generated_data.txt") as f:
-#      lines = f.readlines()
-#      for l in lines:
-#          k = l.strip('\n').split(',')
-#          data_source.append(k)
+data_target = []
+data_source = []
+with open("Generated_data.txt") as f:
+     lines = f.readlines()
+     for l in lines:
+         k = l.strip('\n').split(',')
+         data_source.append(k)
 
-# with open("Generated_data_B.txt") as f:
-#      lines = f.readlines()
-#      for l in lines:
-#          k = l.strip('\n').split(',')
-#          data_target.append(k)
+with open("Generated_data_B.txt") as f:
+     lines = f.readlines()
+     for l in lines:
+         k = l.strip('\n').split(',')
+         data_target.append(k)
 
 # print(data_source)
 # print(data_target)
@@ -77,8 +77,8 @@ gen_n_obj = Gen_Node.Node()
 # mutated_genome, list_of_mutations = gen_n_obj.do_mutation(data_source)
 # print(list_of_mutations), [10,11,'*9', 33]
 # print(mutated_genome) , [10, '*10', 22, '*9', 33]
-data_source = [[1, '*6', 5,'*6', 4, '*6',3], [10, '*10', 22, '*9', 33]]
-data_target = [[1,'*',4,'*',5, '*',6], [10,'*9', 33, 33]]
+# data_source = [[1, '*6', 5,'*6', 4, '*6',3], [10, '*10', 22, '*9', 33]]
+# data_target = [[1,'*',4,'*',5, '*',6], [10,'*9', 33, 33]]
 # in_g, out, dup = gen_n_obj.mutation_legal_ops(data_source, data_target)
 # print(in_g)
 # print(out)

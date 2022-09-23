@@ -320,7 +320,7 @@ class Node:
                 print("first Iteration")
                 series_of_mutation = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                 print("series of mutation_legal_ops is: " + str(series_of_mutation))
-                sys.exit(0)
+                # sys.exit(0)
                 #print(series_of_mutation)
                 if series_of_mutation == []:
                     #print("loop counter 0 and cannot get to target")
@@ -589,7 +589,7 @@ class Node:
                     print("pos_c = " + str(position_c))
                     if position + 1 == position_c:
                         #we know its not consecutive
-                        if (isinstance(item_c, int) or '*' not in item_c) and '*' in item:
+                        if (isinstance(item_c, int) or '*' not in item_c) and (isinstance(item_c, str) and '*' in item):
                             print("we here")
                             print(tuple_to_remove)
                             out_c.append(tuple_to_remove)
@@ -826,41 +826,43 @@ class Node:
                 # loop += 1
             # sys.exit(0)
 
+            #edited
             #randomly pick a position from position_app_reg_chrom to position
             if len(position_app_reg_chrom) > 1:
                 rand_pos = randint(0,len(position_app_reg_chrom)-1)
-            else:
-                rand_pos = 0
+            # else:
+            #     rand_pos = 0
 
-            position = position_app_reg_chrom[rand_pos]
+                position = position_app_reg_chrom[rand_pos]
 
-            #randomly pick a mutation
-            mutation_type = randint(0, 3)
-            if mutation_type == 0:
-                #insertion
-                mutated = self.insertion(source_chrom, position)
-                list_of_mutations.append(["insert", rand_chrom, position])
-                #replace orginal with mutated
-                source_genome[rand_chrom] = mutated
-            elif mutation_type ==1 or mutation_type == 2:
-                #deletion
-                mutated = self.deletion(source_chrom, position)
-                list_of_mutations.append(["deletion", rand_chrom, position])
-                #replace orginal with mutated
-                source_genome[rand_chrom] = mutated
-            else:
-                #pick position to insert duplication
-                pos = randint(0, len(position_app_reg_chrom)-1)
-                pos_f = position_app_reg_chrom[pos]
-                if (pos_f+2==position) or (pos_f==position):
-                    type = 0
+                #randomly pick a mutation
+                mutation_type = randint(0, 11)
+                
+                if mutation_type <= 2:
+                    #insertion
+                    mutated = self.insertion(source_chrom, position)
+                    list_of_mutations.append(["insert", rand_chrom, position])
+                    #replace orginal with mutated
+                    source_genome[rand_chrom] = mutated
+                elif mutation_type > 2 or mutation_type <= 8:
+                    #deletion
+                    mutated = self.deletion(source_chrom, position)
+                    list_of_mutations.append(["deletion", rand_chrom, position])
+                    #replace orginal with mutated
+                    source_genome[rand_chrom] = mutated
                 else:
-                    type = 1
-                #duplicatiom
-                mutated = self.duplication(source_chrom, position, pos_f)
-                list_of_mutations.append(["duplication", rand_chrom, position, pos_f, type])
-                #replace orginal with mutated
-                source_genome[rand_chrom] = mutated
+                    #pick position to insert duplication
+                    pos = randint(0, len(position_app_reg_chrom)-1)
+                    pos_f = position_app_reg_chrom[pos]
+                    if (pos_f+2==position) or (pos_f==position):
+                        type = 0
+                    else:
+                        type = 1
+                    #duplicatiom
+                    mutated = self.duplication(source_chrom, position, pos_f)
+                    list_of_mutations.append(["duplication", rand_chrom, position, pos_f, type])
+                    #replace orginal with mutated
+                    source_genome[rand_chrom] = mutated
 
 
         #enact mutations and return mutated genome (to enact, need to complete 3 mutation functions)
