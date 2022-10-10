@@ -65,7 +65,7 @@ class Data_generator():
 
 if __name__ == '__main__':
     genomeA = []
-    with open("genA0.txt") as csv:
+    with open("genB0.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
         for element in line:
             element = list(map(int, element))
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     #Write data to file
     ele = ''
-    with open('Generated_data.txt', 'w') as f:
+    with open('Generated_data_B.txt', 'w') as f:
         for i in range(len(list_of_genome_with_intergenic)):
             for j in range(len(list_of_genome_with_intergenic[i])):
                 element = list_of_genome_with_intergenic[i]
