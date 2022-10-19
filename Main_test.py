@@ -87,4 +87,4 @@ data_target = [['*', '1', '*6', '2', '*', '3', '*', '4', '*', '5', '*', '6', '*'
 # print(out)
 # print(dup)
 list_of_legal  = gen_n_obj.get_legal_operations(data_source, data_target)
-#print(list_of_legal)
+#print(list_of_legal

@@ -21,7 +21,7 @@ def foreign_dna(source_genome, target_genome):
     # into the target_genome. in the process it will produce Genome_A1, which will be sorted back to Genome_A
     
     Gen_b_obj = Gen_Node.Node()
-    Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_oops(Genome_A, Genome_B1)
+    Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(Genome_A, Genome_B1)
     #return Genome_A1
 
     # Check Genome_A1 for genes present in Genome_B but absent in Genome_A. Remove such genes from Genome_A1 to produce Genome_A which has been transformed into Genome_B with foreign_DNA inserted.
