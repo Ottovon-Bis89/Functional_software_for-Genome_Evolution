@@ -13,8 +13,8 @@ def foreign_dna(source_genome, target_genome):
         Genome_A = source_genome[j]
         Genome_B = target_genome[j]
         for i in range(len(Genome_A)):
-            if Genome_A(i) not in Genome_B:
-                Genome_B.append(i, Genome_A(i))
+            if Genome_A[i] not in Genome_B:
+                Genome_B.append(Genome_A[i])
             Genome_B1.append(Genome_B)
         return Genome_B1
     # Let Genome_B1 undergo evolutionary events(insertions, deletions and duplications) via normal DCJ operations( call "Do mutations" function) to sort the "new source genome"(Genome_B1)
@@ -28,7 +28,7 @@ def foreign_dna(source_genome, target_genome):
     Genome_A2 = []
     for j in range(len(Genome_A1)):
             if Genome_A1[j] in Genome_B and Genome_A1[j] not in source_genome:
-                Genome_A1.remove(j)
+                Genome_A1.remove[j]
             Genome_A2.append(Genome_A1)
             
     return Genome_A1, Genome_A2
