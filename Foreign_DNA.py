@@ -39,7 +39,7 @@ def foreign_dna(source_genome, target_genome):
     Genome_A2 = []
     for j in range(len(Genome_A1)):
             if Genome_A1[j] in Genome_B and Genome_A1[j] not in source_genome:
-                Genome_A1.remove(j)
+                Genome_A1.remove[j]
             Genome_A2.append(Genome_A1)
             
     return Genome_A1, Genome_A2
