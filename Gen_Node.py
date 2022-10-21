@@ -27,8 +27,6 @@ class Node:
     # source  genome to the target genome
     "returns random legal options that can be applied to A, called recursively until A can be transformed to B"
 
-    # TODO:
-    # for this to work with foreign dna, this function has to take the source and target genomes
     def get_legal_operations(self,src, adjacenciesB):
         list_of_legal_operations = []
         adjacenciesA = src
@@ -36,9 +34,9 @@ class Node:
         switch = True
         loop_counter = 0  # No foreign DNA in first iteration of mutations
 
+        #accomodate more than one solution -> modify while loop
         while switch:
             print("loop counter: " +str(loop_counter))
-            print("enter outer most while")
             for element in adjacenciesB:
                 if element in adjacenciesA:
                     pass
@@ -519,6 +517,7 @@ class Node:
 
         return list_of_legal_operations
     
+    # change to new fdna func
     def add_for_dna(self, source_genome, frag):
         # print(source_genome)
         
@@ -625,7 +624,12 @@ class Node:
         in_target = []
         # for chromosome in source_genome:
         #     for t_chrom in target_genome:
+        print(len(source_genome))
+        print(len(target_genome))
+        #Take note o differing length of genomes where this condition does not hold
         for j in range(len(target_genome)):
+            print(j)
+            in_target = []
             chromosome = source_genome[j]
             t_chrom = target_genome[j]
             # print(chromosome)
@@ -634,7 +638,7 @@ class Node:
                 if '*' not in str(t_chrom[i]) and (t_chrom[i]) not in chromosome:
                     in_target.append((i,t_chrom[i]))
             in_genome.append(in_target)
-            in_target = []
+        
         print("in_genome")
         print(in_genome)
         #1.2 in source and not in target[CREATE out list that contains tuples of (position,gene)]
