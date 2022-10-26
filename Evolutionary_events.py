@@ -379,16 +379,14 @@ class Eve:
                 elif ((isinstance(chrom[i], str) and '*' in chrom[i])):
                     chromo.append((chrom[i]))
             source_genome.append(chromo)
-            print("HELLO_______" + chromo)
             chromo = []
-
+            
         #step 1, check genes per chromosome between target and source [number of chromosomes should always be the same]
         #1.1 in target and not in source [CREATE in list that contains tuples of (position,gene)]
         in_genome = []
         in_target = []
 
-        print(len(source_genome))
-        print("HELLo")
+        # print(len(source_genome))
         #print(len(target_genome))
         #Take note o differing length of genomes where this condition does not hold
         # for k in range(len(target_genome)):
