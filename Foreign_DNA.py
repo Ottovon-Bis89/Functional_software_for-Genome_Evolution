@@ -1,18 +1,15 @@
 import sys
 import Gen_Node
 import Gen_xtremities
-
-
-
 import Evolutionary_events
 import copy
 
-#This function is called to insert foreign DNA into a source_genome and transform it into a target_genome using DCJ_indels and duplications. It shows the evolutionary pathway of the foreign DNA fragments in the source genome transformation process.
+#This function inserts foreign DNA into a source_genome and transform it into a target_genome using DCJ_indels and duplications. It shows the evolutionary pathway of the foreign DNA fragments in the source genome transformation process.
 def foreign_dna(source_genome, target_genome):
     trgt = copy.deepcopy(target_genome)
     #print(trgt)
-    # source_genome = []
-    # target_genome = []
+    #source_genome = []
+    #target_genome = []
     # Genome_A = []
     Genome_A1 = []
     Genome_B1 = []
@@ -20,12 +17,12 @@ def foreign_dna(source_genome, target_genome):
     # check for genes present in Genome_A(source_genome) but absent from Genome_B(target_genome) and insert them into
     # Genome_B to produce Genome_B1
     for j in range(len(source_genome)):
-        Genome_A = source_genome[j]
-        Genome_B = target_genome[j]
+        Genome_A = source_genome[:]
+        Genome_B = target_genome[:]
         for i in range(len(Genome_A)):
             if Genome_A[i] not in Genome_B and "*" not in Genome_A:
                 Genome_B.append(str(Genome_A[i])+"_")
-        Genome_A1.append(Genome_B)
+        Genome_B1.append(Genome_B)
         # genome_b1_tot.append(Genome_B1)
         # Genome_B1 = []
         # return Genome_B1
