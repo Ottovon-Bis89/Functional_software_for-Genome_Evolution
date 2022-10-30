@@ -25,7 +25,7 @@ class Eve:
         master_list = []
         repeat_counter = 0
 
-        while repeat_counter <= 100:
+        while repeat_counter <= 50:
             print("enter outer while")
             for element in adjacenciesB:
                 if element in adjacenciesA:
@@ -226,7 +226,7 @@ class Eve:
                     gen_obj = Data_generator.Data_generator()
                     normal_i_reg = gen_obj.intergenerator(clean_genome)
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
-                    #print(adjacenciesA)
+                    print(adjacenciesA)
                 series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                 if series_of_mutation == []:
                     src_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
@@ -279,7 +279,7 @@ class Eve:
                         if mutation_required ==():
                             break
                         # print(src_genome)
-                    print(adjacenciesA) 
+                    #print(adjacenciesA) 
             #at the end clean for check
             #TODO: Check against master and increment(or not) the repeat_counter and if not present append to master
             solution = [adjacenciesA, list_of_legal_operations]
@@ -386,8 +386,9 @@ class Eve:
         in_genome = []
         in_target = []
 
-        # print(len(source_genome))
+        #print(len(source_genome))
         #print(len(target_genome))
+
         #Take note o differing length of genomes where this condition does not hold
         # for k in range(len(target_genome)):
 

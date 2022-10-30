@@ -17,12 +17,12 @@ def foreign_dna(source_genome, target_genome):
     # check for genes present in Genome_A(source_genome) but absent from Genome_B(target_genome) and insert them into
     # Genome_B to produce Genome_B1
     for j in range(len(source_genome)):
-        Genome_A = source_genome[:]
-        Genome_B = target_genome[:]
-        for i in range(len(Genome_A)):
-            if Genome_A[i] not in Genome_B and "*" not in Genome_A:
-                Genome_B.append(str(Genome_A[i])+"_")
-        Genome_B1.append(Genome_B)
+        Genome_A = source_genome[j]
+        Genome_B = target_genome[j]
+        for i in range(len(source_genome)):
+            if Genome_A[j] not in target_genome and "*" not in source_genome:
+                Genome_B.append(str(Genome_A[i])+ "_")
+        Genome_B1.append(target_genome)
         # genome_b1_tot.append(Genome_B1)
         # Genome_B1 = []
         # return Genome_B1
@@ -51,7 +51,7 @@ def foreign_dna(source_genome, target_genome):
                 Genome_A1.remove[j]
             Genome_A2.append(Genome_A1)
             
-    return Genome_A1, Genome_A2
+    return Genome_A1, Genome_A2, Genome_A
         
         
     

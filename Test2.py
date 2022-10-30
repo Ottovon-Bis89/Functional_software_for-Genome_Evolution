@@ -9,5 +9,5 @@ target_genome= [['*', '1', '*6', '2', '*', '3', '*', '4', '*', '5', '*', '6', '*
 
 fdna_1, fdna_2  = Foreign_DNA.foreign_dna(source_genome, target_genome)
 
-print(fdna_1)
+print(fdna_1) 
 print(fdna_2)
