@@ -25,7 +25,7 @@ class Eve:
         master_list = []
         repeat_counter = 0
 
-        while repeat_counter <= 50:
+        while repeat_counter <= 100:
             print("enter outer while")
             for element in adjacenciesB:
                 if element in adjacenciesA:
@@ -201,7 +201,7 @@ class Eve:
             clean_src, clean_trgt = self.genome_cleaner(adjacenciesA, adjacenciesB)
             print(clean_src, clean_trgt)
             
-            while clean_src != clean_trgt:
+            while list(map(sorted,clean_src)) != list(map(sorted,clean_trgt)):
                 print("enter solution creation while")
                 #TODO: check number of applicale region, if 0 then create 
                 count_app = 0
@@ -270,21 +270,26 @@ class Eve:
                         normal_i_reg = gen_obj.intergenerator(clean_genome)
                         adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                         print("src before mutation legal ops")
-                        print(adjacenciesA)  
+                        #print(adjacenciesA)  
                         series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                         print("within while loop and series of mutation checks")
                         print(series_of_mutation,mutation_required)
                         print(any(series_of_mutation))
-                        print(adjacenciesA)  
+                        #print(adjacenciesA)  
                         if mutation_required ==():
                             break
+
+                clean_src, clean_trgt = self.genome_cleaner(adjacenciesA, adjacenciesB)
+                print(list(map(sorted,clean_src)))
+                print(list(map(sorted,clean_trgt)))
+                # sys.exit(0)       
                         # print(src_genome)
                     #print(adjacenciesA) 
             #at the end clean for check
             #TODO: Check against master and increment(or not) the repeat_counter and if not present append to master
             solution = [adjacenciesA, list_of_legal_operations]
             print(solution)
-            sys.exit(0)
+            
             if len(master_list)>0:
                 if solution in master_list:
                     repeat_counter += 1
@@ -293,8 +298,9 @@ class Eve:
             else:
                 master_list.append(solution)
             list_of_legal_operations = []
-            clean_src, clean_trgt = self.genome_cleaner(adjacenciesA, adjacenciesB)
+        print(repeat_counter)
         return master_list
+        
 
     def genome_cleaner(self, src, target):
         print("enter genome_cleaner")
@@ -345,7 +351,7 @@ class Eve:
                 if isinstance(chrom[i], str) and '_' in chrom[i]:
                     if len(chrom[i])==3:
                         gene = chrom[i]
-                        chromo.append(int(gene[:2]))
+                        chromo.append(int(gene[:1]))
                     elif len(chrom[i])==2:
                         gene = chrom[i]
                         # print((gene[:1]))
@@ -542,7 +548,7 @@ class Eve:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_ops insert_3')
+                        #print('inside mutation_legal_ops insert_3')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])

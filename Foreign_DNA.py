@@ -13,16 +13,19 @@ def foreign_dna(source_genome, target_genome):
     # Genome_A = []
     Genome_A1 = []
     Genome_B1 = []
-    genome_b1_tot = []
+    #Genome_B1 =[]
+    #genome_b1_tot = []
     # check for genes present in Genome_A(source_genome) but absent from Genome_B(target_genome) and insert them into
     # Genome_B to produce Genome_B1
     for j in range(len(source_genome)):
         Genome_A = source_genome[j]
         Genome_B = target_genome[j]
-        for i in range(len(source_genome)):
-            if Genome_A[j] not in target_genome and "*" not in source_genome:
-                Genome_B.append(str(Genome_A[i])+ "_")
-        Genome_B1.append(target_genome)
+        for i in range(len(Genome_A)):
+            if isinstance(Genome_A[j], str) not in Genome_B and "*" not in Genome_A[j]:
+                Genome_B.append((Genome_A[j])+ "_")
+            elif isinstance(Genome_A[j], int):
+                    Genome_B.append(Genome_A[j]+ "_")
+        Genome_B1.append(Genome_B)
         # genome_b1_tot.append(Genome_B1)
         # Genome_B1 = []
         # return Genome_B1
@@ -37,7 +40,7 @@ def foreign_dna(source_genome, target_genome):
     #print(trgt)
     #rint(trgt)
     # sys.exit(0)
-    Genome_A1, list_of_mutations = eve_obj.get_legal_operations(source_genome, target_genome)
+    Genome_B1, list_of_mutations = eve_obj.get_legal_operations(source_genome, target_genome) 
     # Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, Genome_B1)
     #print("g a1")
     #print(Genome_A1)
@@ -46,12 +49,12 @@ def foreign_dna(source_genome, target_genome):
     # Check Genome_A1 for genes present in Genome_B but absent in Genome_A. 
     # Remove such genes from Genome_A1 to produce Genome_A which has been transformed into Genome_B with foreign_DNA inserted.
     Genome_A2 = []
-    for j in range(len(Genome_A1)):
-            if Genome_A1[j] in Genome_B and Genome_A1[j] not in source_genome[j]:
-                Genome_A1.remove[j]
-            Genome_A2.append(Genome_A1)
+    for j in range(len(Genome_B1)):
+            if Genome_B1[j] in Genome_B and Genome_B1[j] not in source_genome:
+                Genome_B1.remove[j]
+            Genome_A2.append(Genome_B1)
             
-    return Genome_A1, Genome_A2, Genome_A
+    return Genome_A1, Genome_A2, Genome_B1, list_of_mutations
         
         
     
