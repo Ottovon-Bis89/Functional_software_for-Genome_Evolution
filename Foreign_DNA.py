@@ -34,14 +34,13 @@ def foreign_dna(source_genome, target_genome):
     # Let Genome_B1 undergo evolutionary events(insertions, deletions and duplications) via normal DCJ operations( call "Do mutations" function) 
     # to sort the "new source genome"(Genome_B1)
     # into the target_genome. in the process it will produce Genome_A1, which will be sorted back to Genome_A
-<<<<<<< HEAD
     Gen_b_obj = Gen_Node.Node()
     print("src")
     print(source_genome)
     Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, target_genome)
     print("g a1")
     print(Genome_A1)
-=======
+
     # Gen_b_obj = Gen_Node.Node()
     eve_obj = Evolutionary_events.Eve()
     #print("trgt")
@@ -52,7 +51,6 @@ def foreign_dna(source_genome, target_genome):
     # Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, Genome_B1)
     #print("g a1")
     #print(Genome_A1)
->>>>>>> 1bce2bd3ab677786b206b808669feb3e6ef1d4ab
     #return Genome_A1
 
     # Check Genome_A1 for genes present in Genome_B but absent in Genome_A. 
