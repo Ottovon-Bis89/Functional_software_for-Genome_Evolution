@@ -15,10 +15,10 @@ class Data_generator():
             # print(chrom)
             for j in range(len(chrom)):
                 if j == 0 :
-                    random_bp = random.randint(0,10)
+                    random_bp = random.randint(6,10)
                     region = '*' + str(random_bp)
                     genes_with_intergenic_chrom.append(region)
-                random_bp = random.randint(0,10)
+                random_bp = random.randint(6,10)
                 start = chrom[j]
                 region = '*' + str(random_bp)
                 genes_with_intergenic_chrom.append(start)
@@ -58,8 +58,8 @@ class Data_generator():
                         value = region[2]+region[2]
                     else:
                         value = region[1]
-                    if int(value) <= 5:
-                        genes_with_intergenic[i] = '*'
+                    #if int(value) <= 5:
+                        #genes_with_intergenic[i] = '*'
         # print(genes_with_intergenic_genome)
         return genes_with_intergenic_genome
 
@@ -70,12 +70,12 @@ if __name__ == '__main__':
         for element in line:
             element = list(map(int, element))
             genomeA.append(element)
-    print(genomeA)
+    #print(genomeA)
     data_gen_obj = Data_generator()
     list_of_genome_with_intergenic = data_gen_obj.intergenerator(genomeA)
-    print(list_of_genome_with_intergenic)
-    list_of_genome_with_applicable_intergenic = data_gen_obj.intergenic_regions(list_of_genome_with_intergenic)
-    print(list_of_genome_with_applicable_intergenic)
+    #print(list_of_genome_with_intergenic)
+    #list_of_genome_with_applicable_intergenic = data_gen_obj.intergenic_regions(list_of_genome_with_intergenic)
+    #print(list_of_genome_with_applicable_intergenic)
     # for i in range(len(genomeA)):
     #     print(genomeA[i])
     #     data_with_intergenic = data_gen_obj.intergenerator(genomeA[i])
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         for i in range(len(list_of_genome_with_intergenic)):
             for j in range(len(list_of_genome_with_intergenic[i])):
                 element = list_of_genome_with_intergenic[i]
-                if j == len(list_of_genome_with_applicable_intergenic[i])-1:
+                if j == len(list_of_genome_with_intergenic[i])-1:
                     ele += str(element[j])
                 else:
                     ele += str(element[j]) + ','
