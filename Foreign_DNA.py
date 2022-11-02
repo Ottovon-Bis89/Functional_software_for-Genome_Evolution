@@ -29,7 +29,7 @@ def foreign_dna(source_genome, target_genome):
     Gen_b_obj = Gen_Node.Node()
     print("src")
     print(source_genome)
-    Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, Genome_B1)
+    Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, target_genome)
     print("g a1")
     print(Genome_A1)
     #return Genome_A1

@@ -624,8 +624,8 @@ class Node:
         in_target = []
         # for chromosome in source_genome:
         #     for t_chrom in target_genome:
-        print(len(source_genome))
-        print(len(target_genome))
+        #print(len(source_genome))
+        #print(len(target_genome))
         #Take note o differing length of genomes where this condition does not hold
         for j in range(len(target_genome)):
             print(j)
