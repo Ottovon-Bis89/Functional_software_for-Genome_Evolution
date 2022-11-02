@@ -14,7 +14,7 @@ def foreign_dna(source_genome, target_genome):
     Genome_A1 = []
     Genome_B1 = []
     #Genome_B1 =[]
-    #genome_b1_tot = []
+    genome_b1_tot = []
     # check for genes present in Genome_A(source_genome) but absent from Genome_B(target_genome) and insert them into
     # Genome_B to produce Genome_B1
     for j in range(len(source_genome)):
@@ -26,9 +26,9 @@ def foreign_dna(source_genome, target_genome):
             elif isinstance(Genome_A[j], int):
                     Genome_B.append(Genome_A[j]+ "_")
         Genome_B1.append(Genome_B)
-        # genome_b1_tot.append(Genome_B1)
-        # Genome_B1 = []
-        # return Genome_B1
+        #genome_b1_tot.append(Genome_B1)
+        #Genome_B1 = []
+        #return Genome_B1
     #print("g b1")
     #print(Genome_A1)
     # Let Genome_B1 undergo evolutionary events(insertions, deletions and duplications) via normal DCJ operations( call "Do mutations" function) 
@@ -40,7 +40,7 @@ def foreign_dna(source_genome, target_genome):
     #print(trgt)
     #rint(trgt)
     # sys.exit(0)
-    Genome_B1, list_of_mutations = eve_obj.get_legal_operations(source_genome, target_genome) 
+    Genome_B1, list_of_mutations = eve_obj.get_legal_operations(source_genome, target_genome)
     # Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, Genome_B1)
     #print("g a1")
     #print(Genome_A1)
