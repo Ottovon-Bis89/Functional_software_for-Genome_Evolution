@@ -272,7 +272,7 @@ class Eve:
                         print("src before mutation legal ops")
                         #print(adjacenciesA)  
                         series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
-                        print("within while loop and series of mutation checks")
+                        #print("within while loop and series of mutation checks")
                         print(series_of_mutation,mutation_required)
                         print(any(series_of_mutation))
                         #print(adjacenciesA)  
@@ -295,6 +295,7 @@ class Eve:
                     repeat_counter += 1
                 else:
                     master_list.append(solution)
+                    print("master here")
             else:
                 master_list.append(solution)
             list_of_legal_operations = []
@@ -594,7 +595,7 @@ class Eve:
                 tup = out_chromosome[j]
                 for tup_in in in_chromosome:
                     if tup_in[0] == tup[0]:
-                        print("returned because overlap")
+                        #print("returned because overlap")
                         return [], do_mutation            
         #Check that intergenic regions exist for insert, del, and dup.
         # get position indexes [only] from in_genome
@@ -662,7 +663,7 @@ class Eve:
             for gene in chromosome:
                 dup_count += 1
         if (no_app_region < (dup_count+insert_count+del_count)):
-            print("returned at line 481")
+            #print("returned at line 481")
             return [], do_mutation
         
         #check that the positions for mutations have applicable intergenic regions
@@ -678,13 +679,13 @@ class Eve:
             # print("tot_pos")
             # print(total_positions)
             for j in range(len(total_positions)):
-                print("final resting place")
-                print(total_positions)
-                print(app_reg_chrom)
+                #print("final resting place")
+                #print(total_positions)
+                #print(app_reg_chrom)
                 if (total_positions[j]+1 not in applicable_regions_chrom) or app_reg_chrom == []:
-                    print("final resting place")
-                    print(total_positions)
-                    print(app_reg_chrom)
+                    #print("final resting place")
+                    #print(total_positions)
+                    #print(app_reg_chrom)
                     return [], do_mutation
 
             mutation_insert = {}
