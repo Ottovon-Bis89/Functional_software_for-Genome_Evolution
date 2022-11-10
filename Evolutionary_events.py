@@ -682,7 +682,7 @@ class Evolutionary:
                 print("final resting place")
                 print(total_positions)
                 print(applicable_region_chromosome)
-                if (total_positions[j]+1 not in applicable_regions_chrom) or applicable_region_chromosome == []:
+                if (total_positions[j]+1 not in applicable_region_chromosome) or applicable_region_chromosome == []:
                     print("final resting place")
                     print(total_positions)
                     print(applicable_region_chromosome)
