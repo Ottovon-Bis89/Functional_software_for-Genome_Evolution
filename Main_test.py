@@ -55,7 +55,7 @@ linear_chromosomes, circular_chromosomes, genome = gen_x_obj.find_chromosome_typ
 print(linear_chromosomes)
 '''
 #test mutations
-chrom = [1, '*', 2, '*8', 5, '*7', 6, '*6', 7, '*9', 8, '*', 9, '*',10]
+#chrom = [1, '*', 2, '*8', 5, '*7', 6, '*6', 7, '*9', 8, '*', 9, '*',10]
 # print(chrom)
 gen_n_obj = Gen_Node.Node()
 # insert_mutation = gen_n_obj.insertion(chrom, 4)

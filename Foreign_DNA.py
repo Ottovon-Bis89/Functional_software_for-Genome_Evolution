@@ -4,27 +4,28 @@ import Gen_xtremities
 import Evolutionary_events
 import copy
 
-#This function inserts foreign DNA into a source_genome and transform it into a target_genome using DCJ_indels and duplications. It shows the evolutionary pathway of the foreign DNA fragments in the source genome transformation process.
+#This function inserts foreign DNA into a source_genome and transform it into a target_genome using DCJ_indels and duplications. 
+# It shows the evolutionary pathway of the foreign DNA fragments in the source genome transformation process.
 def foreign_dna(source_genome, target_genome):
-    trgt = copy.deepcopy(target_genome)
-    #print(trgt)
+    target = copy.deepcopy(target_genome)
+    #print(target)
     #source_genome = []
     #target_genome = []
     # Genome_A = []
     Genome_A1 = []
     Genome_B1 = []
     #Genome_B1 =[]
-    genome_b1_tot = []
+    #genome_b1_tot = []
     # check for genes present in Genome_A(source_genome) but absent from Genome_B(target_genome) and insert them into
     # Genome_B to produce Genome_B1
     for j in range(len(source_genome)):
         Genome_A = source_genome[j]
         Genome_B = target_genome[j]
         for i in range(len(Genome_A)):
-            if isinstance(Genome_A[j], str) not in Genome_B and "*" not in Genome_A[j]:
-                Genome_B.append((Genome_A[j])+ "_")
+            if isinstance(Genome_A[j], str) not in Genome_B and '*' not in Genome_A[j]:
+                Genome_B.append((Genome_A[j])+ '_')
             elif isinstance(Genome_A[j], int):
-                    Genome_B.append(Genome_A[j]+ "_")
+                    Genome_B.append(Genome_A[j]+ '_')
         Genome_B1.append(Genome_B)
         #genome_b1_tot.append(Genome_B1)
         #Genome_B1 = []
@@ -35,7 +36,7 @@ def foreign_dna(source_genome, target_genome):
     # to sort the "new source genome"(Genome_B1)
     # into the target_genome. in the process it will produce Genome_A1, which will be sorted back to Genome_A
     # Gen_b_obj = Gen_Node.Node()
-    eve_obj = Evolutionary_events.Eve()
+    eve_obj = Evolutionary_events.Evolutionary()
     #print("trgt")
     #print(trgt)
     #rint(trgt)
@@ -54,7 +55,7 @@ def foreign_dna(source_genome, target_genome):
                 Genome_B1.remove[j]
             Genome_A2.append(Genome_B1)
             
-    return Genome_A1, Genome_A2, Genome_B1, list_of_mutations
+    return Genome_A1, Genome_A2, Genome_B1, list_of_mutations, target
         
         
     

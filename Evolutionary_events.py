@@ -3,11 +3,11 @@ import Data_generator
 import sys
 from random import randint
 
-class Eve:
+class Evolutionary:
     def __init__(self):
         pass
          
-         #This function determines all the possible events(operations) that can be will executed or need to be executed to transform the source genome into
+         #This function determines all the possible events(operations) that can be executed or need to be executed to transform the source genome into
          #the target genome. The function returns operations such as insertions, deletions, duplications
     def get_legal_operations(self, src, adjacenciesB):
         print("enter get legal ops")
