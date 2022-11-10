@@ -1,7 +1,6 @@
 
 from random import randint
 import sys
-# from turtle import st
 import Gen_xtremities
 import Data_generator
 
@@ -316,12 +315,12 @@ class Node:
                         # switch = False
                     # mutate without foreign dna
                 else:
-                    #print("chose to insert foreign dna")
+                    print("chose to insert foreign dna")
                     #Here is list of foreign dna where fragments are sublists
                     for_dna = []
                     while for_dna == []:
                         for_dna = self.foreign_dna_pool(adjacenciesA, adjacenciesB)
-                    #print("found foreign dna from pool")
+                    print("found foreign dna from pool")
                     # Need to randomly choose a foreign dna from pool
                     for_dna_len = len(for_dna) -1
                     #print("source of error seems to be an insufficient length")
@@ -335,7 +334,7 @@ class Node:
                     list_of_legal_operations.append(list_of_ops)
                     #record addition of foreign dna
                     #list_of_legal_operations.append([include what happened, crom_no, frag])
-                    #print("added for_dna")
+                    print("added for_dna")
                     print("source after add_for_dna:  "+str(adjacenciesA))
                     mutation_genome = adjacenciesA.copy()
                     print("mutation_genome: "+str(mutation_genome))

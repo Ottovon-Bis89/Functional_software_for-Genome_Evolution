@@ -9,13 +9,13 @@ class Evolutionary:
          
          #This function determines all the possible events(operations) that can be executed or need to be executed to transform the source genome into
          #the target genome. The function returns operations such as insertions, deletions, duplications
-    def get_legal_operations(self, src, adjacenciesB):
+    def get_legal_operations(self, source_genome, target_genome):
         print("enter get legal ops")
         list_of_legal_operations = []
-        adjacenciesA = src
-        adjacenciesB = adjacenciesB
+        adjacenciesA = source_genome
+        adjacenciesB = target_genome
         switch = True
-        print(src)
+        print(adjacenciesA)
         print(adjacenciesB)
         
 
@@ -198,10 +198,10 @@ class Evolutionary:
                                                 list_of_legal_operations.append(operation)
                                             else:
                                                 pass
-            clean_src, clean_trgt = self.genome_cleaner(adjacenciesA, adjacenciesB)
-            print(clean_src, clean_trgt)
+            clean_source_genome, clean_target_genome = self.genome_cleaner(adjacenciesA, adjacenciesB)
+            print(clean_source_genome, clean_target_genome)
             
-            while list(map(sorted,clean_src)) != list(map(sorted,clean_trgt)):
+            while list(map(sorted,clean_source_genome)) != list(map(sorted,clean_target_genome)):
                 print("enter solution creation while")
                 #TODO: check number of applicale region, if 0 then create 
                 count_app = 0
@@ -210,7 +210,7 @@ class Evolutionary:
                         if isinstance(chromosome[i], str) and '*' in chromosome[i] and len(chromosome[i]) > 1 :
                             count_app += 1
                 
-                clean_chrom = []
+                clean_chromosome = []
                 clean_genome = []
                 print("count of applicable regions is: " + str(count_app))
                 if count_app >= 0:
@@ -218,11 +218,11 @@ class Evolutionary:
                     for chromosome in adjacenciesA:
                         for i in range(len(chromosome)):
                             if isinstance(chromosome[i],str) and '*' not in chromosome[i]:
-                                clean_chrom.append(chromosome[i])
+                                clean_chromosome.append(chromosome[i])
                             elif isinstance(chromosome[i], int):
-                                clean_chrom.append(chromosome[i])
-                        clean_genome.append(clean_chrom)
-                        clean_chrom = []
+                                clean_chromosome.append(chromosome[i])
+                        clean_genome.append(clean_chromosome)
+                        clean_chromosome = []
                     gen_obj = Data_generator.Data_generator()
                     normal_i_reg = gen_obj.intergenerator(clean_genome)
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
@@ -253,7 +253,7 @@ class Evolutionary:
                                         adjacenciesA = src_genome[:]
                                         mutations_finale.append(mutation_list)
                         list_of_legal_operations.append(mutations_finale)
-                        clean_chrom = []
+                        clean_chromosome = []
                         clean_genome = []
 
                         #remove all unapplicable intergenic regions and call intergenerator
@@ -261,11 +261,11 @@ class Evolutionary:
                             for i in range(len(chromosome)):
                                 if isinstance(chromosome[i],str) and '*' not in chromosome[i]:
                                     # print(chromosome[i])
-                                    clean_chrom.append(chromosome[i])
+                                    clean_chromosome.append(chromosome[i])
                                 elif isinstance(chromosome[i], int):
-                                    clean_chrom.append(chromosome[i])
-                            clean_genome.append(clean_chrom)
-                            clean_chrom = []
+                                    clean_chromosome.append(chromosome[i])
+                            clean_genome.append(clean_chromosome)
+                            clean_chromosome = []
                         gen_obj = Data_generator.Data_generator()
                         normal_i_reg = gen_obj.intergenerator(clean_genome)
                         adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
@@ -279,9 +279,9 @@ class Evolutionary:
                         if mutation_required ==():
                             break
 
-                clean_src, clean_trgt = self.genome_cleaner(adjacenciesA, adjacenciesB)
-                print(list(map(sorted,clean_src)))
-                print(list(map(sorted,clean_trgt)))
+                clean_source_genome, clean_target_genome = self.genome_cleaner(adjacenciesA, adjacenciesB)
+                print(list(map(sorted,clean_source_genome)))
+                print(list(map(sorted,clean_target_genome)))
                 # sys.exit(0)       
                         # print(src_genome)
                     #print(adjacenciesA) 
@@ -302,40 +302,40 @@ class Evolutionary:
         return master_list
         
 
-    def genome_cleaner(self, src, target):
+    def genome_cleaner(self, source_genome, target_genome):
         print("enter genome_cleaner")
-        new_src_chrom = []
-        new_src = []
-        new_trgt_chrom = []
-        new_trgt = []
+        new_source_chromosome = []
+        new_source_genome = []
+        new_target_chromosome = []
+        new_target_genome = []
 
-        for chrom in src:
-            for ele in chrom:
-                if isinstance(ele,str) and '*' not in ele:
-                    if '_' in ele and len(ele) == 3:
-                        new_src_chrom.append(ele[:2])
-                    elif '_' in ele and len(ele) == 2:
-                        new_src_chrom.append(ele[:1])
+        for chrom in source_genome:
+            for element in chromosome:
+                if isinstance(element,str) and '*' not in element:
+                    if '_' in element and len(element) == 3:
+                        new_source_chromosome.append(element[:2])
+                    elif '_' in element and len(element) == 2:
+                        new_source_chromosome.append(element[:1])
                     else:
-                        new_src_chrom.append(ele)
-            new_src.append(new_src_chrom)
-            new_src_chrom = []
+                        new_source_chromosome.append(element)
+            new_source_genome.append(new_source_chromosome)
+            new_source_chromosome = []
         
-        for chrom in target:
-            for ele in chrom:
-                if isinstance(ele,str) and '*' not in ele:
-                    if '_' in ele and len(ele) == 3:
-                        new_trgt_chrom.append(ele[:2])
-                    elif '_' in ele and len(ele) == 2:
-                        new_trgt_chrom.append(ele[:1])
+        for chromosome in target_genome:
+            for element in chromosome:
+                if isinstance(element,str) and '*' not in element:
+                    if '_' in element and len(element) == 3:
+                        new_target_chromosome.append(element[:2])
+                    elif '_' in element and len(element) == 2:
+                        new_target_chromosome.append(element[:1])
                     else:
-                        new_trgt_chrom.append(ele)
-            new_trgt.append(new_trgt_chrom)
-            new_trgt_chrom = []
+                        new_target_chromosome.append(element)
+            new_target_genome.append(new_target_chromosome)
+            new_target_chromosome = []
         
-        return new_src, new_trgt
+        return new_source_genome, new_target_genome
         
-    def mutation_legal_ops(self, source, target):
+    def mutation_legal_ops(self, source_genome, target_genome):
         # This function decides if mutations, any series of mutations, can take genome A to genome B
         # check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
         # Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
@@ -344,48 +344,48 @@ class Evolutionary:
         # if two of same signed ints in chromosome but not next to each other then -> transpositional
         # source_genome = source[:]
         #remove underscores from target
-        chromo = []
+        chromosome = []
         target_genome = []
-        for chrom in target:
-            for i in range(len(chrom)):
-                if isinstance(chrom[i], str) and '_' in chrom[i]:
-                    if len(chrom[i])==3:
-                        gene = chrom[i]
-                        chromo.append(int(gene[:1]))
-                    elif len(chrom[i])==2:
-                        gene = chrom[i]
+        for chromosome in target_genome:
+            for i in range(len(chromosome)):
+                if isinstance(chromosome[i], str) and '_' in chromosome[i]:
+                    if len(chromosome[i])==3:
+                        gene = chromosome[i]
+                        chromosome.append(int(gene[:1]))
+                    elif len(chromosome[i])==2:
+                        gene = chromosome[i]
                         # print((gene[:1]))
-                        chromo.append(int(gene[:1]))
-                elif isinstance(chrom[i], str):
-                    chromo.append((chrom[i]))
-                elif isinstance(chrom[i], int):
-                    chromo.append((chrom[i]))
-                elif ((isinstance(chrom[i], str) and '*' in chrom[i])):
-                    chromo.append((chrom[i]))
-            target_genome.append(chromo)
-            chromo = []
+                        chromosome.append(int(gene[:1]))
+                elif isinstance(chromosome[i], str):
+                    chromosome.append((chromosome[i]))
+                elif isinstance(chromosome[i], int):
+                    chromosome.append((chromosome[i]))
+                elif ((isinstance(chromosome[i], str) and '*' in chromosome[i])):
+                    chromosome.append((chromosome[i]))
+            target_genome.append(chromosome)
+            chromosome = []
 
         #remove underscores that identify fragments in source genome
-        chromo = []
+        chromosome = []
         source_genome = []
-        for chrom in source:
-            for i in range(len(chrom)):
-                if isinstance(chrom[i], str) and '_' in chrom[i]:
-                    if len(chrom[i])==3:
-                        gene = chrom[i]
-                        chromo.append(int(gene[:2]))
-                    elif len(chrom[i])==2:
-                        gene = chrom[i]
+        for chromosome in source_genome:
+            for i in range(len(chromosome)):
+                if isinstance(chromosome[i], str) and '_' in chromosome[i]:
+                    if len(chromosome[i])==3:
+                        gene = chromosome[i]
+                        chromosome.append(int(gene[:2]))
+                    elif len(chromosome[i])==2:
+                        gene = chromosome[i]
                         # print((gene[:1]))
-                        chromo.append(int(gene[:1]))
-                elif isinstance(chrom[i], str):
-                    chromo.append((chrom[i]))
-                elif isinstance(chrom[i], int):
-                    chromo.append((chrom[i]))
-                elif ((isinstance(chrom[i], str) and '*' in chrom[i])):
-                    chromo.append((chrom[i]))
-            source_genome.append(chromo)
-            chromo = []
+                        chromosome.append(int(gene[:1]))
+                elif isinstance(chromosome[i], str):
+                    chromosome.append((chromosome[i]))
+                elif isinstance(chromosome[i], int):
+                    chromosome.append((chromosome[i]))
+                elif ((isinstance(chromosome[i], str) and '*' in chromosome[i])):
+                    chromosome.append((chromosome[i]))
+            source_genome.append(chromosome)
+            chromosome = []
             
         #step 1, check genes per chromosome between target and source [number of chromosomes should always be the same]
         #1.1 in target and not in source [CREATE in list that contains tuples of (position,gene)]
@@ -401,12 +401,13 @@ class Evolutionary:
         for j in range(len(target_genome)):
             in_target = []
             chromosome = source_genome[j]
-            t_chrom = target_genome[j]
+            target_chromosome = target_genome[j]
 
-            for i in range(len(t_chrom)):
-                if '*' not in str(t_chrom[i]) and (t_chrom[i]) not in chromosome:
-                    in_target.append((i,t_chrom[i]))
+            for i in range(len(target_chromosome)):
+                if '*' not in str(target_chromosome[i]) and (target_chromosome[i]) not in chromosome:
+                    in_target.append((i,target_chromosome[i]))
             in_genome.append(in_target)
+            in_target = []
 
         #1.2 in source and not in target[CREATE out list that contains tuples of (position,gene)]
         out_genome = []
@@ -415,11 +416,11 @@ class Evolutionary:
 
         for j in range(len(target_genome)):
             chromosome = source_genome[j]
-            t_chrom = target_genome[j]
+            target_chromosome = target_genome[j]
             for i in range(len(chromosome)):
-                if ((isinstance(chromosome[i], int) and chromosome[i] not in t_chrom)) or (((isinstance(chromosome[i], str) and '*' not in chromosome[i])) and chromosome[i] not in t_chrom):
+                if ((isinstance(chromosome[i], int) and chromosome[i] not in target_chromosome)) or (((isinstance(chromosome[i], str) and '*' not in chromosome[i])) and chromosome[i] not in target_chromosome):
                     out_target.append((i,chromosome[i]))
-                elif (chromosome.count(chromosome[i])) > t_chrom.count(chromosome[i]) and (isinstance(chromosome[i],str) and '*' not in chromosome[i]) and (chromosome[i] not in occurred):
+                elif (chromosome.count(chromosome[i])) > target_chromosome.count(chromosome[i]) and (isinstance(chromosome[i],str) and '*' not in chromosome[i]) and (chromosome[i] not in occurred):
                     out_target.append((i,chromosome[i]))
                     occurred.append(chromosome[i])
             out_genome.append(out_target)
@@ -428,24 +429,24 @@ class Evolutionary:
         #step 2: duplication; check target for duplication [note position, gene and type of duplication]
         #isinstance(chromosome[i], int) and 
         duplication_genome = []
-        t_duplication = []
-        dup_genes = []
+        target_duplication = []
+        duplicated_genes = []
         for chromosome in target_genome:
             for i in range(len(chromosome)):
-                if isinstance(chromosome[i], int) and chromosome.count(chromosome[i]) > 1 and chromosome[i] not in dup_genes :
+                if isinstance(chromosome[i], int) and chromosome.count(chromosome[i]) > 1 and chromosome[i] not in duplicated_genes :
                     if chromosome[i] == chromosome[i+2] or chromosome[i] == chromosome[i-2]:
                         type = "tandem"
                     else:
                         type = "transpositional"
-                    dup_genes.append(chromosome[i])
-                    t_duplication.append([i, self.getIndex(chromosome, chromosome[i]),chromosome[i], type])
-            duplication_genome.append(t_duplication)
-            t_duplication = []
-            dup_genes = []
+                    duplicated_genes.append(chromosome[i])
+                    target_duplication.append([i, self.getIndex(chromosome, chromosome[i]),chromosome[i], type])
+            duplication_genome.append(target_duplication)
+            target_duplication = []
+            duplicated_genes = []
 
         #step 2.1: check if the duplication is already present in source, if yes remove from list, otherwise cause mutation
         duplications_to_remove = []
-        empty_dup_genome = False
+        empty_duplicated_genome = False
         #Check that duplication genome is not empty
         if any(duplication_genome):
             print("elements exist")
@@ -453,8 +454,8 @@ class Evolutionary:
                 chromosome = source_genome[j]
                 sub = duplication_genome[j]
                 for i in range(len(sub)):
-                        dup = sub[i]
-                        duplicated =  dup[2]
+                        duplication = sub[i]
+                        duplicated =  duplication[2]
                         print(duplicated)
                         print(chromosome)
                         #check if gene exists
@@ -464,7 +465,7 @@ class Evolutionary:
                             print("occurances: "+ str(occurances))
                             if occurances == 2:
                                 if len(sub)>1:
-                                    n_sub = sub.remove(dup)
+                                    n_sub = sub.remove(duplicated)
                                     duplication_genome[j] = n_sub
                                 else:
                                     n_sub = []
@@ -473,17 +474,17 @@ class Evolutionary:
 
         #check the 3 lists and randomly pick a tuple from one of them
         do_mutation = ()
-        d = False
-        insert = False
-        dup = False
+        deletion = False
+        insertion = False
+        duplication = False
         if any(duplication_genome):
-            dup = True
+            duplication = True
         if any(out_genome):
-            d = True
+            deletion = True
         if any(in_genome):
-            insert = True
-        print(insert, d, dup)
-        if insert and d and dup:
+            insertion = True
+        print(insertion, deletion, duplication)
+        if insertion and deletion and duplication:
             pick = randint(0,2)
             if pick == 0:
                 for i in range(len(in_genome)):
@@ -508,7 +509,7 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("duplication",i, chromosome[picker])
                         break
-        elif insert and d:
+        elif insertion and deletion:
             pick = randint(0,1)
             if pick == 0:
                 for i in range(len(in_genome)):
@@ -526,7 +527,7 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("delete",i, chromosome[picker])
                         break
-        elif d and dup:
+        elif deletion and duplication:
             pick = randint(0,1)
             if pick == 0:
                 for i in range(len(out_genome)):
@@ -542,7 +543,7 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("duplication",i, chromosome[picker])
                         break
-        elif insert and dup:
+        elif insertion and duplication:
             pick = randint(0,1)
             if pick == 0:
                 for i in range(len(in_genome)):
@@ -560,7 +561,7 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("duplication",i, chromosome[picker])
                         break
-        elif insert:
+        elif insertion:
             for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
@@ -569,14 +570,14 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
                         break
-        elif d:
+        elif deletion:
             for i in range(len(out_genome)):
                     chromosome = out_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("delete",i, chromosome[picker])
                         break
-        elif dup:
+        elif duplication:
             for i in range(len(duplication_genome)):
                     chromosome = duplication_genome[i]
                     if chromosome != []:
@@ -586,105 +587,105 @@ class Evolutionary:
         print('mutation get_leg_op return for do mutation')
         print(do_mutation)
         #step 3: checking if all these necessary mutations can occur at once
-        #first check that insert and del positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
+        #first check that insert and delete positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
         for i in range(len(out_genome)):
             out_chromosome = out_genome[i]
             in_chromosome = in_genome[i]
             for j in range(len(out_chromosome)):
-                tup = out_chromosome[j]
-                for tup_in in in_chromosome:
-                    if tup_in[0] == tup[0]:
+                tuple = out_chromosome[j]
+                for tuple_in in in_chromosome:
+                    if tuple_in[0] == tuple[0]:
                         print("returned because overlap")
                         return [], do_mutation            
         #Check that intergenic regions exist for insert, del, and dup.
         # get position indexes [only] from in_genome
-        in_pos = []
-        in_pos_genome = []
+        in_position = []
+        in_position_genome = []
         # if any(in_genome):
         for chromosome in in_genome:
             for i in range(len(chromosome)):
-                tup = chromosome[i]
-                in_pos.append(tup[0])
-            in_pos_genome.append(in_pos)
+                tuple = chromosome[i]
+                in_position.append(tuple[0])
+            in_position_genome.append(in_position)
         # get position indexes [only] from out_genome
-        out_pos = []
-        out_pos_genome = []
+        out_position = []
+        out_position_genome = []
         # if any(out_genome):
         for chromosome in out_genome:
             if len(chromosome)!= 0:
                 for i in range(len(chromosome)):
-                    tup = chromosome[i]
+                    tuple = chromosome[i]
                     if len(chromosome)>1 and i < len(chromosome)-1:
                         check = chromosome[i+1]
-                        if check[0] == tup[0]+1:
-                            out_pos.append(tup[0])
+                        if check[0] == tuple[0]+1:
+                            out_position.append(tuple[0])
                             i += 1
-                out_pos_genome.append(out_pos)
+                out_position_genome.append(out_position)
             else: 
-                out_pos_genome.append([])
+                out_position_genome.append([])
         # get position for duplication
-        dup_pos = []
-        dup_pos_genome = []
+        duplication_position = []
+        duplication_position_genome = []
         # if any(duplication_genome):
             # print(duplication_genome)
         for chromosome in duplication_genome:
             for i in range(len(chromosome)):
-                tup = chromosome[i]
-                dup_pos.append(tup[1])
-            dup_pos_genome.append(dup_pos)
+                tuple = chromosome[i]
+                duplication_position.append(tuple[1])
+            duplication_position_genome.append(duplication_position)
         # get number of applicable intergenic regions
-        no_app_region = 0
-        app_reg_chrom = []
-        app_reg_genome = []
+        number_applicable_region = 0
+        applicable_region_chromosome = []
+        applicable_region_genome = []
         for chromosome in source_genome:
             for j in range(len(chromosome)):
             # for gene in chromosome:
                 if (isinstance(chromosome[j],str) and len(chromosome[j])>1 and '*' in chromosome[j]):
-                    no_app_region += 1
-                    app_reg_chrom.append(j)
-            app_reg_genome.append(app_reg_chrom)
-            app_reg_chrom = []
+                    number_applicable_region += 1
+                    applicable_region_chromosome.append(j)
+            applicable_region_genome.append(applicable_region_chromosome)
+            applicable_region_chromosome = []
         #check number of applicable regions against number of total mutations
         #count positions for each mutation
         insert_count = 0
-        for chromosome in in_pos_genome:
+        for chromosome in in_position_genome:
             for gene in chromosome:
                 insert_count += 1
-        del_count = 0
+        delete_count = 0
 
 
         #TODO check counting in pairs as well
-        for chromosome in out_pos_genome:
+        for chromosome in out_position_genome:
             for gene in chromosome:
-                del_count += 1
-        dup_count = 0
-        for chromosome in dup_pos_genome:
+                delete_count += 1
+        duplication_count = 0
+        for chromosome in duplication_position_genome:
             for gene in chromosome:
-                dup_count += 1
-        if (no_app_region < (dup_count+insert_count+del_count)):
-            print("returned at line 481")
+                duplication_count += 1
+        if (number_applicable_region < (duplication_count+insert_count+delete_count)):
+            #print("returned at line 481")
             return [], do_mutation
         
         #check that the positions for mutations have applicable intergenic regions
         #check insertion
-        for i in range(len(app_reg_genome)):
-            in_chrom = in_pos_genome[i]
-            out_chrom = out_pos_genome[i]
-            dup_chrom = dup_pos_genome[i]
-            applicable_regions_chrom = app_reg_genome[i]
+        for i in range(len(applicable_region_genome)):
+            in_chromosome = in_position_genome[i]
+            out_chromosome = out_position_genome[i]
+            duplication_chromosome = duplication_position_genome[i]
+            applicable_regions_chrom = applicable_region_genome[i]
             # print(applicable_regions_chrom)
             total_positions = []
-            total_positions = in_chrom+out_chrom+dup_chrom
+            total_positions = in_chromosome+out_chromosome+duplication_chromosome
             # print("tot_pos")
             # print(total_positions)
             for j in range(len(total_positions)):
                 print("final resting place")
                 print(total_positions)
-                print(app_reg_chrom)
-                if (total_positions[j]+1 not in applicable_regions_chrom) or app_reg_chrom == []:
+                print(applicable_region_chromosome)
+                if (total_positions[j]+1 not in applicable_regions_chrom) or applicable_region_chromosome == []:
                     print("final resting place")
                     print(total_positions)
-                    print(app_reg_chrom)
+                    print(applicable_region_chromosome)
                     return [], do_mutation
 
             mutation_insert = {}
@@ -812,7 +813,7 @@ class Evolutionary:
                 source_genome[chromosome_index] = mutated_chromosome
                 operation['Genome after mutation'] = source_genome
                 list_of_mutations.append(operation)
-        return source_genome, list_of_mutations
+        return source_genome, list_of_mutations, mutation_point_chromosome
 
     def insertion(self, source_chromosome, position_app_region, gene):
         source_chromosome[position_app_region-1] = gene

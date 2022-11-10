@@ -18,9 +18,9 @@ for sub in fdna_1:
     print("solution")
     print(sub[0])
     print()
-    all_fsrc.append(sub[0])
-    all_solutions.append(sub[1])
-    for op in sub[1]:
+    all_fsrc.append(sub[1])
+    all_solutions.append(sub[2])
+    for op in sub[0]:
         print(op)
         print()
     print('\n')
