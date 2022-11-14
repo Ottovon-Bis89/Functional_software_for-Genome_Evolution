@@ -309,7 +309,7 @@ class Evolutionary:
         new_target_chromosome = []
         new_target_genome = []
 
-        for chrom in source_genome:
+        for chromosome in source_genome:
             for element in chromosome:
                 if isinstance(element,str) and '*' not in element:
                     if '_' in element and len(element) == 3:

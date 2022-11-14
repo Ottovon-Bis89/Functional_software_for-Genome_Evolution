@@ -27,7 +27,7 @@ for sub in fdna_1:
 
 print(all_fsrc)
 print(all_solutions)
-sys.exit(0)
+#sys.exit(0)
 #f = open("collection_final_source.txt", "w")
 #for item in all_fsrc:
     #f.write(str(item))
