@@ -596,7 +596,7 @@ class Evolutionary:
                 for tuple_in in in_chromosome:
                     if tuple_in[0] == tuple[0]:
                         print("returned because overlap")
-                        return [], do_mutation            
+                        return [], do_mutation, duplications_to_remove          
         #Check that intergenic regions exist for insert, del, and dup.
         # get position indexes [only] from in_genome
         in_position = []
