@@ -490,7 +490,7 @@ class Evolutionary:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_ops insert_1')
+                        print('inside mutation_legal_operations insert_1')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -515,7 +515,7 @@ class Evolutionary:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_ops insert_2')
+                        print('inside mutation_legal_operations insert_2')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -565,7 +565,7 @@ class Evolutionary:
             for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_ops insert_4')
+                        print('inside mutation_legal_operations insert_4')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -584,7 +584,7 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("duplication",i, chromosome[picker])
                         break
-        print('mutation get_leg_op return for do mutation')
+        print('mutation get_legal_operations return for do mutation')
         print(do_mutation)
         #step 3: checking if all these necessary mutations can occur at once
         #first check that insert and delete positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
@@ -654,7 +654,7 @@ class Evolutionary:
         delete_count = 0
 
 
-        #TODO check counting in pairs as well
+        #check counting in pairs as well
         for chromosome in out_position_genome:
             for gene in chromosome:
                 delete_count += 1
@@ -672,7 +672,7 @@ class Evolutionary:
             in_chromosome = in_position_genome[i]
             out_chromosome = out_position_genome[i]
             duplication_chromosome = duplication_position_genome[i]
-            applicable_regions_chrom = applicable_region_genome[i]
+            applicable_region_chromosome = applicable_region_genome[i]
             # print(applicable_regions_chrom)
             total_positions = []
             total_positions = in_chromosome+out_chromosome+duplication_chromosome
@@ -733,7 +733,7 @@ class Evolutionary:
             for i in range(len(genes_with_intergenic_approved)):
                 # print(genes_with_intergenic_approved)
                 if isinstance(genes_with_intergenic_approved[i],str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
-                    # count_applicable_regions += 1
+                    count_applicable_regions += 1
                     if i != len(genes_with_intergenic_approved)-2:
                         list_of_mutation_points.append(i+1)
                 elif (not isinstance(genes_with_intergenic_approved[i],str)) or (isinstance(genes_with_intergenic_approved[i],str) and '*' not in genes_with_intergenic_approved[i]):

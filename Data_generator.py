@@ -58,9 +58,9 @@ class Data_generator():
                         value = region[2]+region[2]
                     else:
                         value = region[1]
-                    #if int(value) <= 5:
-                        #genes_with_intergenic[i] = '*'
-        # print(genes_with_intergenic_genome)
+                    if int(value) <= 5:
+                        genes_with_intergenic[i] = '*'
+        print(genes_with_intergenic_genome)
         return genes_with_intergenic_genome
 
 if __name__ == '__main__':
