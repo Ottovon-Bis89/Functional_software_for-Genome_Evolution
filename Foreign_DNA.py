@@ -38,7 +38,7 @@ def foreign_dna(source_genome, target_genome):
     #rint(trgt)
     # sys.exit
     #Genome_A1  = eve_obj.get_legal_operations(source_genome, target_genome)
-    Genome_A1, list_of_mutations = eve_obj.get_legal_operations(source_genome, Genome_B1)
+    Genome_A1, list_of_mutations = eve_obj.get_legal_operations(source_genome, target_genome)
     # Genome_A1, list_of_mutations = Gen_b_obj.mutation_legal_ops(source_genome, Genome_B1)
     #print("g a1")
     #print(Genome_A1)

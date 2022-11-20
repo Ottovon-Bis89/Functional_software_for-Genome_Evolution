@@ -227,10 +227,10 @@ class Evolutionary:
                     normal_i_reg = gen_obj.intergenerator(clean_genome)
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                     print(adjacenciesA)
-                series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
+                series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
                 if series_of_mutation == []:
-                    src_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
-                    adjacenciesA = src_genome[:]
+                    source_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
+                    adjacenciesA = source_genome[:]
                     list_of_legal_operations.append(mutation_list)
                 else:
                     while (any(series_of_mutation) and mutation_required !=()) or mutation_required !=():
@@ -246,11 +246,11 @@ class Evolutionary:
                             for chromosome_number in range(len(mutation)):
                                 if mutation[chromosome_number] != []:
                                     chromosome_index = chromosome_number
-                                    chrom = mutation[chromosome_number]
-                                    for m in range(len(chrom)):
-                                        do_mutation = (mutation_type, chromosome_index, chrom[m])
-                                        src_genome, mutation_list = self.do_mutation(adjacenciesA, do_mutation)
-                                        adjacenciesA = src_genome[:]
+                                    chromosome = mutation[chromosome_number]
+                                    for m in range(len(chromosome)):
+                                        do_mutation = (mutation_type, chromosome_index, chromosome[m])
+                                        source_genome, mutation_list = self.do_mutation(adjacenciesA, do_mutation)
+                                        adjacenciesA = source_genome[:]
                                         mutations_finale.append(mutation_list)
                         list_of_legal_operations.append(mutations_finale)
                         clean_chromosome = []
@@ -271,7 +271,7 @@ class Evolutionary:
                         adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                         print("src before mutation legal ops")
                         #print(adjacenciesA)  
-                        series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
+                        series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
                         print("within while loop and series of mutation checks")
                         print(series_of_mutation,mutation_required)
                         print(any(series_of_mutation))
@@ -335,7 +335,7 @@ class Evolutionary:
         
         return new_source_genome, new_target_genome
         
-    def mutation_legal_ops(self, source_genome, target_genome):
+    def mutation_legal_operations(self, source_genome, target_genome):
         # This function decides if mutations, any series of mutations, can take genome A to genome B
         # check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
         # Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
@@ -733,7 +733,7 @@ class Evolutionary:
             for i in range(len(genes_with_intergenic_approved)):
                 # print(genes_with_intergenic_approved)
                 if isinstance(genes_with_intergenic_approved[i],str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
-                    count_applicable_regions += 1
+                    #count_applicable_regions += 1
                     if i != len(genes_with_intergenic_approved)-2:
                         list_of_mutation_points.append(i+1)
                 elif (not isinstance(genes_with_intergenic_approved[i],str)) or (isinstance(genes_with_intergenic_approved[i],str) and '*' not in genes_with_intergenic_approved[i]):
