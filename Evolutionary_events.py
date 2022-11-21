@@ -228,7 +228,9 @@ class Evolutionary:
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                     print(adjacenciesA)
                 series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
-                if series_of_mutation == []:
+                print(mutation_required)
+                if series_of_mutation == [] and mutation_required !=():
+                    print(series_of_mutation)
                     source_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
                     adjacenciesA = source_genome[:]
                     list_of_legal_operations.append(mutation_list)
@@ -269,7 +271,7 @@ class Evolutionary:
                         gen_obj = Data_generator.Data_generator()
                         normal_i_reg = gen_obj.intergenerator(clean_genome)
                         adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
-                        print("src before mutation legal ops")
+                        print("source_genome before mutation legal operations")
                         #print(adjacenciesA)  
                         series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
                         print("within while loop and series of mutation checks")
@@ -549,7 +551,7 @@ class Evolutionary:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        #print('inside mutation_legal_ops insert_3')
+                        #print('inside mutation_legal_operations insert_3')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -663,7 +665,7 @@ class Evolutionary:
             for gene in chromosome:
                 duplication_count += 1
         if (number_applicable_region < (duplication_count+insert_count+delete_count)):
-            #print("returned at line 481")
+            # print("returned at line 481")
             return [], do_mutation
         
         #check that the positions for mutations have applicable intergenic regions
