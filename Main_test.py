@@ -1,5 +1,30 @@
 import Gen_xtremities
-import Gen_Node
+#import Gen_Node #UNCOMMENT ME
+import Gen_Node_edited #COMMENT ME OUT
+
+def pretty_print(a):
+    for key, value in a.items():
+        print(f"{key}: {value}")
+    print("\n")
+
+def sort_solution (sequence):
+    splices = []
+    for chromosome in sequence:
+        splices.append([index for (index, value) in enumerate(chromosome) if value.startswith('*')])
+
+    genome = []
+    for chromosome in sequence:
+        temp = [x for x in chromosome if '*' not in x]
+        genome.append(temp)
+
+    sorted_genome = []
+    for item in genome:
+        sort = sorted(item, key = lambda x : int(x.replace("_", "")))
+        sorted_genome.append(sort)
+
+    for index, value in enumerate(sorted_genome):
+        for region in splices[index]:
+            value.insert(region, sequence[index][region])
 
 # data_target = []
 # data_source = []
@@ -57,7 +82,10 @@ print(linear_chromosomes)
 #test mutations
 #chrom = [1, '*', 2, '*8', 5, '*7', 6, '*6', 7, '*9', 8, '*', 9, '*',10]
 # print(chrom)
-gen_n_obj = Gen_Node.Node()
+
+# gen_n_obj = Gen_Node.Node() #UNCOMMENT ME
+gen_n_obj = Gen_Node_edited.Node() #COMMENT ME OUT
+
 # insert_mutation = gen_n_obj.insertion(chrom, 4)
 # print(insert_mutation)
 
@@ -80,11 +108,61 @@ gen_n_obj = Gen_Node.Node()
 # data_source = [['*8', '1', '*6', '5','*6', '4', '*6','3', '*','9_' ], ['*8','10', '*10', '22', '*9', '37', '*9','33']]
 # data_target = [['*8','1','*','4','*','5', '*','6'], ['*8','10','*9', '33','*', '33', '*', '40']]
 
-data_source = [['*', '1', '*7', '2', '*', '3', '*7', '4', '*', '1', '*7', '5'], ['*6', '8', '*9', '7', '*', '6', '*', '5', '*', '1', '*', '4', '*9', '1', '*', '3', '*', '1', '*8', '2'], ['*8', '9', '*7', '11'], ['*', '20', '*8', '19', '*', '18', '*', '17', '*', '16', '*6', '32', '*9', '10', '*8', '31', '*', '30', '*', '29', '*8', '28', '*', '27'], ['*', '21', '*', '22', '*7', '23', '*', '24', '*7', '25', '*6', '26'], ['*8', '33'], ['*', '34', '*', '35', '*', '36', '*', '37']]
-data_target = [['*', '1', '*6', '2', '*', '3', '*', '4', '*', '5', '*', '6', '*', '7', '*6', '8'], ['*', '9', '*', '10', '*8', '11'], ['*', '12', '*', '13', '*', '14', '*', '15'], ['*', '16', '*6', '17', '*6', '18', '*', '19', '*', '20'], ['*9', '21', '*', '22', '*', '23', '*', '24', '*', '25', '*7', '26'], ['*', '27', '*', '28', '*', '29', '*9', '30', '*8', '31', '*', '32', '*', '33'], ['*', '34', '*6', '35', '*', '36', '*', '37', '*7', '38', '*6', '39', '*', '40']]
-# in_g, out, dup = gen_n_obj.mutation_legal_ops(data_source, data_target)
-# print(in_g)
-# print(out)
-# print(dup)
-list_of_legal  = gen_n_obj.get_legal_operations(data_source, data_target)
-#print(list_of_legal
+#               0                                                                                               1                                                                                                                   2                                                           3                                                                                                                                               4                                                                          5                                                                                        6                        
+data_source = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],                          ['*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1', '*8', '4', '*9', '1', '*7', '3', '*8', '1', '*8', '2'],    ['*8', '9', '*7', '11'],                            ['*7', '20', '*8', '19', '*9', '18', '*6', '17', '*8', '16', '*6', '32', '*9', '10', '*8', '31', '*9', '30', '*7', '29', '*8', '28', '*6', '27'],   ['*8', '21', '*7', '22', '*7', '23', '*8', '24', '*7', '25', '*6', '26'], ['*8', '33'],                                                                         ['*7', '34', '*9', '35', '*7', '36', '*8', '37']]
+data_target = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],    ['*9', '9', '*8', '10', '*8', '11'],                                                                                ['*8', '12', '*6', '13', '*7', '14', '*8', '15'],   ['*7', '16', '*6', '17', '*6', '18', '*8', '19', '*10', '20'],                                                                                      ['*9', '21', '*6', '22', '*7', '23', '*8', '24', '*8', '25', '*7', '26'], ['*8', '27', '*9', '28', '*9', '29', '*9', '30', '*8', '31', '*9', '32', '*8', '33'], ['*6', '34', '*6', '35', '*6', '36', '*7', '37', '*7', '38', '*6', '39', '*10', '40']]
+
+
+list_of_legal_operations  = gen_n_obj.get_legal_operations(data_source, data_target)
+
+print("list_of_legal_operations...")
+for item in list_of_legal_operations:
+    for x in item:
+        if (type(x) == dict):
+            pretty_print(x)
+        elif type(x) == list:
+            for y in x:
+                if (type(y) == dict):
+                    pretty_print(y)
+                else:
+                    print(y)
+        else:
+            print(x)
+print(f"Total number of legal opperations: {len(list_of_legal_operations)}")
+
+all_fsrc = []
+all_solutions = []
+
+for sub in list_of_legal_operations:
+
+    print("\n")
+    print(f"Original Solution: {len(sub)}")
+    pretty_print(sub[0])
+
+    print(f"Sorted Solution: {len(sub)}")
+    sort_solution(sub[0]["Genome before mutation"])
+    sort_solution(sub[0]["Genome after mutation"])
+    pretty_print(sub[0])
+
+    all_fsrc.append(sub[1])
+    all_solutions.append(sub[2])
+    for op in sub[0]:
+        print(op)
+        print()
+    print('\n')
+
+print(all_fsrc)
+print(all_solutions)
+#sys.exit(0)
+f = open("collection_final_source.txt", "w")
+for item in all_fsrc:
+    f.write(str(item))
+    f.write('\n')
+f.close()
+
+f1 = open("collection_final_solutions.txt", "w")
+for item in all_solutions:
+    f1.write(str(item))
+    f1.write('\n')
+f1.close()
+

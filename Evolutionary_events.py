@@ -334,6 +334,7 @@ class Evolutionary:
                         new_target_chromosome.append(element)
             new_target_genome.append(new_target_chromosome)
             new_target_chromosome = []
+            #print("we are here")
         
         return new_source_genome, new_target_genome
         
@@ -353,10 +354,11 @@ class Evolutionary:
                 if isinstance(chromosome[i], str) and '_' in chromosome[i]:
                     if len(chromosome[i])==3:
                         gene = chromosome[i]
-                        chromosome.append(int(gene[:1]))
+                        chromosome.append(int(gene[:2]))
                     elif len(chromosome[i])==2:
                         gene = chromosome[i]
                         # print((gene[:1]))
+                        print("i'm here")
                         chromosome.append(int(gene[:1]))
                 elif isinstance(chromosome[i], str):
                     chromosome.append((chromosome[i]))
@@ -365,6 +367,8 @@ class Evolutionary:
                 elif ((isinstance(chromosome[i], str) and '*' in chromosome[i])):
                     chromosome.append((chromosome[i]))
             target_genome.append(chromosome)
+            print(target_genome)
+            print("target genome is empty")
             chromosome = []
 
         #remove underscores that identify fragments in source genome
@@ -379,7 +383,7 @@ class Evolutionary:
                     elif len(chromosome[i])==2:
                         gene = chromosome[i]
                         # print((gene[:1]))
-                        chromosome.append(int(gene[:1]))
+                        chromosome.append(int(gene[:2]))
                 elif isinstance(chromosome[i], str):
                     chromosome.append((chromosome[i]))
                 elif isinstance(chromosome[i], int):

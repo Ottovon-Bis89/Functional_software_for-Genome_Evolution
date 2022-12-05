@@ -16,6 +16,7 @@ all_fsrc = []
 all_solutions = []
 for sub in fdna_1:
     print("solution")
+    print(len(sub))
     print(sub[0])
     print()
     all_fsrc.append(sub[1])
@@ -28,14 +29,14 @@ for sub in fdna_1:
 print(all_fsrc)
 print(all_solutions)
 #sys.exit(0)
-#f = open("collection_final_source.txt", "w")
-#for item in all_fsrc:
-    #f.write(str(item))
-    #f.write('\n')
-#f.close()
+f = open("collection_final_source.txt", "w")
+for item in all_fsrc:
+    f.write(str(item))
+    f.write('\n')
+f.close()
 
-#f1 = open("collection_final_solutions.txt", "w")
-#for item in all_solutions:
-    #f1.write(str(item))
-    #f1.write('\n')
-#f1.close()
+f1 = open("collection_final_solutions.txt", "w")
+for item in all_solutions:
+    f1.write(str(item))
+    f1.write('\n')
+f1.close()

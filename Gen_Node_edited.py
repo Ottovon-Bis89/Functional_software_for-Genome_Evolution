@@ -1,6 +1,5 @@
 
 from random import randint
-import sys
 import Gen_xtremities
 import Data_generator
 
@@ -17,7 +16,6 @@ class Node:
         self.next_operation_weight = 1
         self.join_adjacency = 0
 
-        # get_chromosomes = Node.find_chromosomes(self, self.state)
         gen_x = Gen_xtremities.Xtremities()
         get_chromosomes = gen_x.find_chromosome_type(self.state)
         self.linear_chromosomes = get_chromosomes
@@ -49,9 +47,9 @@ class Node:
                         w = 0
                         z = 0
 
-                        # if elements containing x and y respectively  are adjacencies
+                        # if elements containing x and y respectively are adjacencies
                         for marker in adjacenciesA_copy:
-                            if type(marker) is tuple:
+                            #if type(marker) is tuple:
                                 if marker[0] == x or marker[1] == x:
                                     w = marker
 
@@ -573,6 +571,7 @@ class Node:
         # Duplication - look at the target; if two of same signed integer next to each other -> tandom duplicatio
         # if two of same signed ints in chromosome but not next to each other then -> transpositional
         # source_genome = source[:]
+
         #remove underscores that identify fragments in source genome
         chromo = []
         source_genome = []
@@ -594,6 +593,7 @@ class Node:
                     chromo.append((chrom[i]))
             source_genome.append(chromo)
             chromo = []
+
         # sys.exit(0)
         #step 1, check genes per chromosome between target and source [number of chromosomes should always be the same]
         #1.1 in target and not in source [CREATE in list that contains tuples of (position,gene)]
@@ -603,7 +603,8 @@ class Node:
         #     for t_chrom in target_genome:
         #print(len(source_genome))
         #print(len(target_genome))
-        #Take note o differing length of genomes where this condition does not hold
+        #Take note of differing length of genomes where this condition does not hold
+
         for j in range(len(target_genome)):
             print(j)
             in_target = []
@@ -904,6 +905,7 @@ class Node:
                         break
         print('mutation get_legal_operation return for do mutation')
         print(do_mutation)
+
         #step 3: checking if all these necessary mutations can occur at once
         #first check that insert and del positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
         for i in range(len(out_genome)):
