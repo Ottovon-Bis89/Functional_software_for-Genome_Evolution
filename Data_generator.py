@@ -36,11 +36,11 @@ class Data_generator():
         # for i in range(length):
         #     random_bp = random.randint(0,10)
         #     start = numbered_genes_list[i]
-        #     region = '*' + str(random_bp)
         #     genes_with_intergenic.append(start)
         #     if i != length-1:
         #         genes_with_intergenic.append(region)
         # return genes_with_intergenic
+        #
 
     '''
     Function to find applicable intergenic regions
@@ -58,7 +58,7 @@ class Data_generator():
                         value = region[2]+region[2]
                     else:
                         value = region[1]
-                    if int(value) <= 5:
+                    if int(value) < 5:
                         genes_with_intergenic[i] = '*'
         print(genes_with_intergenic_genome)
         return genes_with_intergenic_genome
@@ -86,14 +86,14 @@ if __name__ == '__main__':
 
 
     #Write data to file
-    ele = ''
+    element = ''
     with open('Generated_data_B.txt', 'w') as f:
         for i in range(len(list_of_genome_with_intergenic)):
             for j in range(len(list_of_genome_with_intergenic[i])):
                 element = list_of_genome_with_intergenic[i]
                 if j == len(list_of_genome_with_intergenic[i])-1:
-                    ele += str(element[j])
+                    element += str(element[j])
                 else:
-                    ele += str(element[j]) + ','
-            f.write(ele+"\n")
-            ele = ''
+                    element += str(element[j]) + ','
+            f.write(element+"\n")
+            element = ''

@@ -1,6 +1,7 @@
 import Gen_xtremities
 #import Gen_Node #UNCOMMENT ME
 import Gen_Node_edited #COMMENT ME OUT
+import random
 
 def pretty_print(a):
     for key, value in a.items():
@@ -83,7 +84,7 @@ print(linear_chromosomes)
 #chrom = [1, '*', 2, '*8', 5, '*7', 6, '*6', 7, '*9', 8, '*', 9, '*',10]
 # print(chrom)
 
-# gen_n_obj = Gen_Node.Node() #UNCOMMENT ME
+#gen_n_obj = Gen_Node.Node() #UNCOMMENT ME
 gen_n_obj = Gen_Node_edited.Node() #COMMENT ME OUT
 
 # insert_mutation = gen_n_obj.insertion(chrom, 4)
@@ -107,13 +108,12 @@ gen_n_obj = Gen_Node_edited.Node() #COMMENT ME OUT
 # print(mutated_genome) , [10, '*10', 22, '*9', 33]
 # data_source = [['*8', '1', '*6', '5','*6', '4', '*6','3', '*','9_' ], ['*8','10', '*10', '22', '*9', '37', '*9','33']]
 # data_target = [['*8','1','*','4','*','5', '*','6'], ['*8','10','*9', '33','*', '33', '*', '40']]
+#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      6                        
+source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],['*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1', '*8', '4', '*9', '1', '*7', '3', '*8', '1', '*8', '2'], ['*8', '9', '*7', '11'], ['*7', '20', '*8', '19', '*9', '18', '*6', '17', '*8', '16', '*6', '32', '*9', '10', '*8', '31', '*9', '30', '*7', '29', '*8', '28', '*6', '27'], ['*8', '21', '*7', '22', '*7', '23', '*8', '24', '*7', '25', '*6', '26'], ['*8', '33'], ['*7', '34', '*9', '35', '*7', '36', '*8', '37']]
+target_genome = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11'], ['*8', '12', '*6', '13', '*7', '14', '*8', '15'],['*7', '16', '*6', '17', '*6', '18', '*8', '19', '*10', '20'], ['*9', '21', '*6', '22', '*7', '23', '*8', '24', '*8', '25', '*7', '26'], ['*8', '27', '*9', '28', '*9', '29', '*9', '30', '*8', '31', '*9', '32', '*8', '33'], ['*6', '34', '*6', '35', '*6', '36', '*7', '37', '*7', '38', '*6', '39', '*10', '40']]
 
-#               0                                                                                               1                                                                                                                   2                                                           3                                                                                                                                               4                                                                          5                                                                                        6                        
-data_source = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],                          ['*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1', '*8', '4', '*9', '1', '*7', '3', '*8', '1', '*8', '2'],    ['*8', '9', '*7', '11'],                            ['*7', '20', '*8', '19', '*9', '18', '*6', '17', '*8', '16', '*6', '32', '*9', '10', '*8', '31', '*9', '30', '*7', '29', '*8', '28', '*6', '27'],   ['*8', '21', '*7', '22', '*7', '23', '*8', '24', '*7', '25', '*6', '26'], ['*8', '33'],                                                                         ['*7', '34', '*9', '35', '*7', '36', '*8', '37']]
-data_target = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],    ['*9', '9', '*8', '10', '*8', '11'],                                                                                ['*8', '12', '*6', '13', '*7', '14', '*8', '15'],   ['*7', '16', '*6', '17', '*6', '18', '*8', '19', '*10', '20'],                                                                                      ['*9', '21', '*6', '22', '*7', '23', '*8', '24', '*8', '25', '*7', '26'], ['*8', '27', '*9', '28', '*9', '29', '*9', '30', '*8', '31', '*9', '32', '*8', '33'], ['*6', '34', '*6', '35', '*6', '36', '*7', '37', '*7', '38', '*6', '39', '*10', '40']]
 
-
-list_of_legal_operations  = gen_n_obj.get_legal_operations(data_source, data_target)
+list_of_legal_operations  = gen_n_obj.get_legal_operations(source_genome, target_genome)
 
 print("list_of_legal_operations...")
 for item in list_of_legal_operations:
@@ -128,8 +128,27 @@ for item in list_of_legal_operations:
                     print(y)
         else:
             print(x)
-print(f"Total number of legal opperations: {len(list_of_legal_operations)}")
+print(f"Total number of legal operations: {len(list_of_legal_operations)}")
 
+# shuffle the list of list_legal_operations to get different sets of solutions
+# create a master list to hold  shuffled list_of legal_operations
+master_list = []
+list_of_legal_operations = []
+
+solution1  = random.sample(list_of_legal_operations, len(list_of_legal_operations))
+print(f"solution 1: {solution1}")
+
+# shuffle list of legal operations and loop through the list to create new solutions
+for i in range(len(list_of_legal_operations)):
+    solution = random.sample(list_of_legal_operations, len(list_of_legal_operations))
+    master_list.append(solution)
+    print(f"solution {i}: {solution}")
+
+    #print(master_list)
+    print()
+    print()
+    print("list of solutions:" +str(master_list))
+            
 all_fsrc = []
 all_solutions = []
 
