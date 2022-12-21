@@ -37,13 +37,13 @@ class Xtremities:
     def create_adjacencyList(self, genome):
         adjacencies = []
         gene_extremity = Xtremities.gene_extremity(self, genome)
-        # print(gene_extremity)
+       
         for chromosome in gene_extremity:
             i = 0
             chrom = []
             while i < len(chromosome):
                 if(isinstance(chromosome[i], str) == True):
-                    # print(chromosome[i])
+                 
                     chrom.append(chromosome[i])
                     i += 1
                 elif chromosome[i] == chromosome[0] or chromosome[i] == chromosome[-1]:
@@ -73,10 +73,8 @@ class Xtremities:
         c_tel = []
         sorted_adjacencies = Xtremities.create_adjacencyList(self, genome)
         for element in sorted_adjacencies:
-            # print(type(element))
             for i in range(len(element)):
                 if type(element[i]) is tuple:
-                    # print(element[i])
                     tup = element[i]
                     if int(tup[0]) < int(tup[1]):
                         c_adj.append(tup)
@@ -160,8 +158,6 @@ class Xtremities:
         genome = []
         genome = [element for element in adjacencies if type(element) is not tuple and type(element) is not string]
         for chromosome in genome:
-            # print(chromosome[0])
-            # print(chromosome[len(chromosome)-1])
             if type(chromosome[0]) is not tuple and type(chromosome[len(chromosome)-1]) is not str:
                 if chromosome[0] < 0:
                     #circular

@@ -31,8 +31,9 @@ while True:
     # check if any genome in the population matches the target genome
     for genome in population:
         if genome == target_genome:
-            print(f"Foreign DNA evolved to target genome in generation {generation}")
+            # print(f"Foreign DNA evolved to target genome in generation {generation}")
             break
     else:
         generation += 1
-    print(population)
+        
+    # print(population)

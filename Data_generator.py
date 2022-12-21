@@ -12,7 +12,7 @@ class Data_generator():
         for i in range(len(numbered_genes_list)):
             chrom = numbered_genes_list[i]
             length = len(chrom)
-            # print(chrom)
+          
             for j in range(len(chrom)):
                 if j == 0 :
                     random_bp = random.randint(6,10)
@@ -26,7 +26,7 @@ class Data_generator():
                     genes_with_intergenic_chrom.append(region)
             genes_with_intergenic.append(genes_with_intergenic_chrom)
             genes_with_intergenic_chrom = []
-        # print(genes_with_intergenic)
+      
         return genes_with_intergenic
 
 
@@ -53,14 +53,13 @@ class Data_generator():
             for i in range(len(genes_with_intergenic)):
                 if i % 2 == 0 or i == 0:
                     region = genes_with_intergenic[i]
-                    # print(region)
+                
                     if len(region) > 2:
                         value = region[2]+region[2]
                     else:
                         value = region[1]
                     if int(value) < 5:
                         genes_with_intergenic[i] = '*'
-        print(genes_with_intergenic_genome)
         return genes_with_intergenic_genome
 
 if __name__ == '__main__':
