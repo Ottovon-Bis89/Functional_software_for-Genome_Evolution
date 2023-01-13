@@ -69,15 +69,7 @@ adjacencies_one = gen_x_obj.create_adjacencyList(data_source) #chromosome
 # for i in adjacencies:
 #     print(i)
 
-adjacencies_sorted, adjacencies, telomers = gen_x_obj.adjacencies_ordered_and_sorted(data_source)
-# print(adjacencies_sorted)
-# print()
-# print(adjacencies)
-# print()
-# print(telomers)
-next_ext = gen_x_obj.find_next_extremity(adjacencies)
-print(next_ext)
-print()
+
 
 next_extrem = gen_x_obj.find_next_adjacency(next_ext, adjacencies_one, telomers)
 # print(telomers)
@@ -124,9 +116,15 @@ source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '
 target_genome = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11']]
 
 
+
 list_of_legal_operations  = gen_n_obj.get_legal_operations(source_genome, target_genome)
 
-print("\nList_of_legal_operations...")
+
+
+print("Initializing ........")
+print(f"Source_genome: {source_genome}")
+print(f"Target_genome: {target_genome}")
+print("\npredicting possible evolutionary events...")
 # for item in list_of_legal_operations:
 #     for x in item:
 #         if (type(x) == dict):
@@ -139,27 +137,31 @@ print("\nList_of_legal_operations...")
 #                     print(y)
 #         else:
 #             print(x)
-print(f"Total number of legal operations: {len(list_of_legal_operations)}\n")
+print(f"Estimating total number of evolutionary events: {len(list_of_legal_operations)}\n")
+print("Printing solution sets........\n")
 
 # shuffle the list of list_legal_operations to get different sets of solutions
 # create a master list to hold  the solutions
-# master_list = []
-# shuffle_solution(list_of_legal_operations)
+#master_list = []
+#shuffle_solution(list_of_legal_operations)
 
 
-# solution1  = random.sample(list_of_legal_operations, len(list_of_legal_operations))
-# print(f"solution 1: {solution1}")
+#solution  = list(itertools.permutations(list_of_legal_operations))
+
+#for i,res in enumerate(solution):
+  #  print(f"solution{i+1}: {res}")
+#print(f"solution 1: {solution1}")
 
 # shuffle list of legal operations and loop through the list to create new solutions
-# for i in range(len(list_of_legal_operations)):
-#     solution = random.sample(list_of_legal_operations, len(list_of_legal_operations))
-#     master_list.append(solution)
-#     print(f"solution {i}: {solution}")
+#for i in range(len(list_of_legal_operations)):
+ #    solution = random.sample(list_of_legal_operations, len(list_of_legal_operations))
+ #    master_list.append(solution)
+ #    print(f"solution {i}: {solution}")
 
-#     #print(master_list)
-#     print()
-#     print()
-#     print("list of solutions:" +str(master_list))
+  #   print(master_list)
+   #  print()
+   #  print()
+    # print("list of solutions:" +str(master_list))
             
 all_fsrc = []
 all_solutions = []

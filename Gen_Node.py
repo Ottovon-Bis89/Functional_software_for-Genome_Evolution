@@ -17,14 +17,14 @@ class Node:
         self.next_operation_weight = 1
         self.join_adjacency = 0
 
-        # get_chromosomes = Node.find_chromosomes(self, self.state)
+        #get_chromosomes = Node.find_chromosomes(self, self.state)
         gen_x = Gen_xtremities.Xtremities()
         get_chromosomes = gen_x.find_chromosome_type(self.state)
         self.linear_chromosomes = get_chromosomes
 
     # The function returns a list  of the operations needed to transform the genomes the
     # source  genome to the target genome
-    "returns random legal options that can be applied to A, called recursively until A can be transformed to B"
+    #returns random legal options that can be applied to A, called recursively until A can be transformed to B
 
     def get_legal_operations(self,source_genome, target_genome):
         list_of_legal_operations = []
@@ -333,7 +333,7 @@ class Node:
                                         chrom = mutation[chromosome_number]
                                         for m in range(len(chrom)):
                                             do_mutation = (mutation_type, chromosome_index, chrom[m])
-                                            src_genome, mutation_list = self.do_mutation(adjacenciesA, do_mutation)
+                                            source_genome, mutation_list = self.do_mutation(adjacenciesA, do_mutation)
                                             adjacenciesA = source_genome[:]
                                             mutations_finale.append(mutation_list)
                             
@@ -459,6 +459,13 @@ class Node:
 
             list_of_mutation_points_genome.append(list_of_mutation_points)
             list_of_mutation_points = []
+        #    number_of_insertion = randint(1,3)
+        #    count =0
+        #    genome_length = len(source_genome)
+        #    while count<number_of_insertion:
+        #        random_index = randint(0,genome_length-1)
+        #        source_genome = source_genome[:random_index]+ frag + source_genome[random_index:]
+        #        count +=1
         
         #insert intergenic regions in foreign dna fragments 
         frag_with_intergenic_regions = []
@@ -946,6 +953,7 @@ class Node:
         del source_chromosome[position_app_region]
         if position_app_region > 0 :
             del source_chromosome[position_app_region-1]
+        
         
         return source_chromosome
 
