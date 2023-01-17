@@ -482,7 +482,7 @@ class Node:
             if j != length-1:
                 frag_with_intergenic_regions.append(region)
 
-        #find applicable inergenic regions in frag
+        #find applicable intergenic regions in frag
         for i in range(len(frag_with_intergenic_regions)):
             if i % 2 == 0 or i == 0:
                 region = frag_with_intergenic_regions[i]

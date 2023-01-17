@@ -28,7 +28,7 @@ def sort_solution (sequence):
 
     sorted_genome = []
     for item in genome:
-        sort = sorted(item, key = lambda x : int(x.replace("_", "")))
+        sort = sorted(item, key = lambda x : int(x.replace("_", "_")))
         sorted_genome.append(sort)
 
     for index, value in enumerate(sorted_genome):
@@ -56,20 +56,6 @@ gen_obj = Gen_Node.Node()
 for_dna = gen_obj.foreign_dna_pool(data_source, data_target)
 print(for_dna)
 # print(len(for_dna))
-
-
-
-#create the object
-gen_x_obj = Gen_xtremities.Xtremities()
-genome_gene_extremity = gen_x_obj.gene_extremity(data_source)
-# print(genome_gene_extremity)
-adjacencies_one = gen_x_obj.create_adjacencyList(data_source) #chromosome
-# print()
-# print((adjacencies_one))
-# for i in adjacencies:
-#     print(i)
-
-
 
 next_extrem = gen_x_obj.find_next_adjacency(next_ext, adjacencies_one, telomers)
 # print(telomers)
@@ -120,11 +106,11 @@ target_genome = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '
 list_of_legal_operations  = gen_n_obj.get_legal_operations(source_genome, target_genome)
 
 
-
 print("Initializing ........")
 print(f"Source_genome: {source_genome}")
 print(f"Target_genome: {target_genome}")
 print("\npredicting possible evolutionary events...")
+#print(source_genome)
 # for item in list_of_legal_operations:
 #     for x in item:
 #         if (type(x) == dict):
@@ -137,8 +123,9 @@ print("\npredicting possible evolutionary events...")
 #                     print(y)
 #         else:
 #             print(x)
-print(f"Estimating total number of evolutionary events: {len(list_of_legal_operations)}\n")
+print(f"Estimated total number of evolutionary events: {len(list_of_legal_operations)}\n")
 print("Printing solution sets........\n")
+#print(list_of_legal_operations)
 
 # shuffle the list of list_legal_operations to get different sets of solutions
 # create a master list to hold  the solutions
