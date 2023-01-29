@@ -15,17 +15,12 @@ class Node:
         self.linear_chromosomes = []
         self.next_operation = 0
         self.next_operation_weight = 1
-        self.join_adjacency = 0
-
-        #get_chromosomes = Node.find_chromosomes(self, self.state)
-        gen_x = Gen_xtremities.Xtremities()
-        get_chromosomes = gen_x.find_chromosome_type(self.state)
-        self.linear_chromosomes = get_chromosomes
+        
 
     # The function returns a list  of the operations needed to transform the genomes the
     # source  genome to the target genome
-    #returns random legal options that can be applied to A, called recursively until A can be transformed to B
-
+    # returns random legal options that can be applied to A, called recursively until A can be transformed to B
+    # It also chooses a fragment of foreign DNA and inserts it into the source genome
     def get_legal_operations(self,source_genome, target_genome):
         list_of_legal_operations = []
         adjacenciesA = source_genome
@@ -234,7 +229,6 @@ class Node:
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
        
                 # randomly choose to insert foreign dna
-                #randint(0, 10)
                 choose = randint(0, 30)
                 if choose >= 3:
                     series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
@@ -290,7 +284,7 @@ class Node:
                                 break
                         switch = False
                 else:
-                    print("\tInserted foreign dna")
+                    print("\tInserted foreign DNA")
                     #Here is list of foreign dna where fragments are sublists
                     for_dna = []
                     while for_dna == []:
@@ -368,14 +362,14 @@ class Node:
                 if series_of_mutation == [] and mutation_required !=():
                     switch = True
 
-                    #TODO random mutation
+                    #Do random mutation
                     source_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
                     print("Could not find mutation to get to target_genome so randomly mutated")
 
                     adjacenciesA = source_genome[:]
                     list_of_legal_operations.append(mutation_list)
                     
-                    #TODO: check number of applicale region, if 0 then create 
+                    # check number of applicale region, if 0 then create 
                     count_app = 0
                     for chromosome in adjacenciesA:
                         for i in range(len(chromosome)):
@@ -445,8 +439,8 @@ class Node:
             loop_counter += 1
 
         return list_of_legal_operations
-    
-    # change to new fdna func
+
+    # add foreign DNA fragment
     def add_for_dna(self, source_genome, frag):
         # Count number of applicable intergenic regions to associate to number of mutations
         list_of_mutation_points = []
