@@ -16,17 +16,20 @@ class Node:
         self.next_operation = 0
         self.next_operation_weight = 1
         
+    """
+    The function returns a list  of the operations needed to transform the genomes the
+    source  genome to the target genome
+    returns random legal options that can be applied to A, called recursively until A can be transformed to B
+    It also chooses a fragment of foreign DNA and inserts it into the source genome
 
-    # The function returns a list  of the operations needed to transform the genomes the
-    # source  genome to the target genome
-    # returns random legal options that can be applied to A, called recursively until A can be transformed to B
-    # It also chooses a fragment of foreign DNA and inserts it into the source genome
+    """
     def get_legal_operations(self,source_genome, target_genome):
         list_of_legal_operations = []
         adjacenciesA = source_genome
         adjacenciesB = target_genome
         switch = True
         loop_counter = 0  # No foreign DNA in first iteration of mutations
+        for_Dna_counter = 0
 
         #accomodate more than one solution -> modify while loop
         while switch:
@@ -230,7 +233,7 @@ class Node:
        
                 # randomly choose to insert foreign dna
                 choose = randint(0, 30)
-                if choose >= 3:
+                if (choose >= 3 and for_Dna_counter != 0) :
                     series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
                     
                     if series_of_mutation == [] and mutation_required !=():
@@ -283,8 +286,9 @@ class Node:
                             if mutation_required ==():
                                 break
                         switch = False
-                else:
+                elif ((for_Dna_counter < 3 or for_Dna_counter ==0)):
                     print("\tInserted foreign DNA")
+                    for_Dna_counter += 1
                     #Here is list of foreign dna where fragments are sublists
                     for_dna = []
                     while for_dna == []:
@@ -439,8 +443,12 @@ class Node:
             loop_counter += 1
 
         return list_of_legal_operations
+    """
+     This function adds a fragment of foreign DNA to the Source genome. The foreign fragment can be identified with an underscore(_) attached to an integer. 
+     The path of foreign DNA fragment can be followed through the evolutionary journey of the source genome into 
+     the target genome
 
-    # add foreign DNA fragment
+    """
     def add_for_dna(self, source_genome, frag):
         # Count number of applicable intergenic regions to associate to number of mutations
         list_of_mutation_points = []
@@ -453,13 +461,6 @@ class Node:
 
             list_of_mutation_points_genome.append(list_of_mutation_points)
             list_of_mutation_points = []
-        #    number_of_insertion = randint(1,3)
-        #    count =0
-        #    genome_length = len(source_genome)
-        #    while count<number_of_insertion:
-        #        random_index = randint(0,genome_length-1)
-        #        source_genome = source_genome[:random_index]+ frag + source_genome[random_index:]
-        #        count +=1
         
         #insert intergenic regions in foreign dna fragments 
         frag_with_intergenic_regions = []
@@ -509,14 +510,16 @@ class Node:
         return source_genome, ['F_DNA inserted ',rand_chrom, position, frag_with_intergenic_regions]
 
     def mutation_legal_operations(self, source, target_genome):
-        # This function decides if mutations, any series of mutations, can take genome A to genome B
-        # check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
-        # Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
-        # check signed integers(genes) between target and source
-        # Duplication - look at the target; if two of same signed integer next to each other -> tandom duplicatio
-        # if two of same signed ints in chromosome but not next to each other then -> transpositional
-        # source_genome = source[:]
-        #remove underscores that identify fragments in source genome
+        """
+        This function decides if mutations, any series of mutations, can take genome A to genome B
+        check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
+        Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
+        check signed integers(genes) between target and source
+        Duplication - look at the target; if two of same signed integer next to each other -> tandom duplicatio
+        if two of same signed ints in chromosome but not next to each other then -> transpositional
+        source_genome = source[:]
+        remove underscores that identify fragments in source genome
+        """
         chromo = []
         source_genome = []
 
@@ -845,11 +848,11 @@ class Node:
 
     def do_mutation(self, source_genome, mutation_required):
         list_of_mutations = []
-        # Picks a mutation and calls a functions (delete, duplicate, insert) to act on it
-        # uses source_genome with approved intergenic regions
-
-        # Count number of applicable intergenic regions to associate to number of mutations
-        # count_applicable_regions = 0
+        """
+        This fuction picks a type of mutation and calls different functions (delete, duplicate, insert) to act on it
+        It uses source_genome with approved intergenic regions
+        It counts number of applicable intergenic regions to associate to number of mutations
+        """
         list_of_genes = []
         list_of_genes_genome = []
         list_of_mutation_points = []
@@ -866,6 +869,7 @@ class Node:
 
             list_of_genes_genome.append(list_of_genes)
             list_of_mutation_points_genome.append(list_of_mutation_points)
+            
             list_of_mutation_points =[]
 
         type = mutation_required[0]
@@ -887,12 +891,13 @@ class Node:
                 #create record
                 operation = {}
                 operation['Type'] = type
-                operation['Chromosome'] = chromosome_index + 1
-                operation['Position of mutation in chromosome'] = position
-                operation['Type of mutation'] = type_of_duplication
-                operation['Genome before mutation'] = source_genome
+                operation['Chr'] = chromosome_index + 1
+                operation['Pos'] = position
+                operation['Type of dup'] = type_of_duplication
+    #            operation['Genome before mutation'] = source_genome
                 operation['Genome after mutation'] = source_genome
                 list_of_mutations.append(operation)
+                
         elif type == 'insert':
             position = actual_mutation[0]
             gene_to_insert = actual_mutation[1]
@@ -906,10 +911,10 @@ class Node:
                 #create record
                 operation = {}
                 operation['Type'] = type
-                operation['Chromosome'] = chromosome_index + 1
-                operation['Position of mutation in chromosome'] = position
-                operation['Gene to insert'] = gene_to_insert
-                operation['Genome before mutation'] = source_genome
+                operation['Chr'] = chromosome_index + 1
+                operation['Pos'] = position
+                operation['Gene'] = gene_to_insert
+    #            operation['Genome before mutation'] = source_genome
                 source_genome[chromosome_index] = mutated_chromosome
                 operation['Genome after mutation'] = source_genome
                 list_of_mutations.append(operation)
@@ -926,10 +931,10 @@ class Node:
                 #create record
                 operation = {}
                 operation['Type'] = type
-                operation['Chromosome'] = chromosome_index + 1
-                operation['Position of mutation in chromosome'] = position
-                operation['Gene to delete'] = gene_to_delete
-                operation['Genome before mutation'] = source_genome
+                operation['Chr'] = chromosome_index + 1
+                operation['Pos'] = position
+                operation['Gene'] = gene_to_delete
+    #            operation['Genome before mutation'] = source_genome
                 source_genome[chromosome_index] = mutated_chromosome
                 operation['Genome after mutation'] = source_genome
                 list_of_mutations.append(operation)
@@ -1037,8 +1042,8 @@ class Node:
                     check = False
             if check == True:
                 final_frag = difference[:]
-                #add a fragment that does contain the difference
-                #Check that the gene does not already exist in the fragment
+            #add a fragment that does contain the difference
+            #Check that the gene does not already exist in the fragment
                 while len(final_frag) <= len(difference)+1:
                     c =  for_dna[randint(0, len(for_dna)-1)]
                     if c not in final_frag:
@@ -1071,7 +1076,6 @@ class Node:
             #Use for_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
             number_of_frags = randint(1,99)
             len_frags = 1
-            #randint(1,5)
             #choose randomly from for_dna list to add to frags
             list_of_frags = []
             frag = []

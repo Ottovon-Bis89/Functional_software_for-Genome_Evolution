@@ -146,10 +146,35 @@ print("Printing solution sets........\n")
 all_fsrc = []
 all_solutions = []
 
+
+# for i in range(len(list_of_legal_operations)):
+#     # print(type(list_of_legal_operations[i]))
+#     try:
+        
+#         sub = list_of_legal_operations[i]
+#         # print((sub[0]))
+#         if type(sub[0]) is dict:
+#             print(f"Solution: {(i)}")
+#             print(sub[0]['Type'])
+#         elif type(sub[0]) is list:
+#             print(f"Solution: {(i)}")
+#             print(sub[0])
+#             single_solution = sub[0] 
+#             print(single_solution)
+#     except:
+#         print("error")
+
+solution_counter = 1
 for sub in list_of_legal_operations:
     try:
-        print(f"Solution: {len(sub)}")
-        sort_solution(sub[0]["Genome before mutation"])
+        print(f"Solution: {solution_counter}")
+        print((sub[0]))
+ #       if type(sub[0]) is str:
+ #           print(sub[0])
+ #       elif type(sub[0]) is list:
+  #          print(sub[0])
+   #         print(sub[1])
+    #    sort_solution(sub[0]["Genome before mutation"])
         sort_solution(sub[0]["Genome after mutation"])
         pretty_print(sub[0])
 
@@ -157,13 +182,16 @@ for sub in list_of_legal_operations:
         all_solutions.append(sub[2])
         for op in sub[0]:
             print(op)
+        solution_counter +=1
     except:
+#        print("__________________________________")
         print("")
+#        print("___________________________________")
     
 
 # print(all_fsrc)
 # print(all_solutions)
-#sys.exit(0)
+# sys.exit(0)
 
 # f = open("collection_final_source.txt", "w")
 # for item in all_fsrc:
