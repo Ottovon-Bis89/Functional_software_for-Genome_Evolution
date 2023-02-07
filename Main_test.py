@@ -4,36 +4,29 @@ import Gen_Node #UNCOMMENT ME
 #import Gen_Node_edited #COMMENT ME OUT
 import random
 
-def pretty_print(legal_opperations):
-    for key, value in legal_opperations.items():
-        print(f"{key}: {value}")
-    print("\n")
+# def pretty_print(legal_opperations):
+#     for key, value in legal_opperations.items():
+#         print(f"{key}: {value}")
+#     print("\n")
 
-# def shuffle_solution (legal_opperations):
-#     print(f"Total number of possible solutions: {len(legal_opperations)}")
+# def sort_solution (sequence):
+#     splices = []
+#     for chromosome in sequence:
+#         splices.append([index for (index, value) in enumerate(chromosome) if value.startswith('*')])
 
-#     for L in range(len(legal_opperations) + 1):
-#         for subset in itertools.combinations(legal_opperations, L):
-#             print(subset)
+#     genome = []
+#     for chromosome in sequence:
+#         temp = [x for x in chromosome if '*' not in x]
+#         genome.append(temp)
 
-def sort_solution (sequence):
-    splices = []
-    for chromosome in sequence:
-        splices.append([index for (index, value) in enumerate(chromosome) if value.startswith('*')])
+#     sorted_genome = []
+#     for item in genome:
+#         sort = sorted(item, key = lambda x : int(x.replace("_", "")))
+#         sorted_genome.append(sort)
 
-    genome = []
-    for chromosome in sequence:
-        temp = [x for x in chromosome if '*' not in x]
-        genome.append(temp)
-
-    sorted_genome = []
-    for item in genome:
-        sort = sorted(item, key = lambda x : int(x.replace("_", "")))
-        sorted_genome.append(sort)
-
-    for index, value in enumerate(sorted_genome):
-        for region in splices[index]:
-            value.insert(region, sequence[index][region])
+#     for index, value in enumerate(sorted_genome):
+#         for region in splices[index]:
+#             value.insert(region, sequence[index][region])
 
 # data_target = []
 # data_source = []
@@ -118,33 +111,23 @@ print("\npredicting possible evolutionary events...")
 #             print(x)
 print(f"Estimated total number of evolutionary events: {len(list_of_legal_operations)}\n")
 print("Printing solution sets........\n")
-#print(list_of_legal_operations)
-
-# shuffle the list of list_legal_operations to get different sets of solutions
-# create a master list to hold  the solutions
-#master_list = []
-#shuffle_solution(list_of_legal_operations)
 
 
-#solution  = list(itertools.permutations(list_of_legal_operations))
 
-#for i,res in enumerate(solution):
-  #  print(f"solution{i+1}: {res}")
-#print(f"solution 1: {solution1}")
+solutions =[]
+for i in range (len(list_of_legal_operations)):
+    sub = list_of_legal_operations[i]
+solution1 = sub[0]
+list_sol = random.sample(sub, len(sub))
+solutions.append(list_sol)
+sub.remove(list_sol[0])
+print("solution1:", solution1)
+for i, solution in enumerate(solutions):
+        print(f"solution{i+2}:", solutions)
 
-# shuffle list of legal operations and loop through the list to create new solutions
-#for i in range(len(list_of_legal_operations)):
- #    solution = random.sample(list_of_legal_operations, len(list_of_legal_operations))
- #    master_list.append(solution)
- #    print(f"solution {i}: {solution}")
-
-  #   print(master_list)
-   #  print()
-   #  print()
-    # print("list of solutions:" +str(master_list))
             
-all_fsrc = []
-all_solutions = []
+# all_fsrc = []
+# all_solutions = []
 
 
 # for i in range(len(list_of_legal_operations)):
@@ -164,29 +147,29 @@ all_solutions = []
 #     except:
 #         print("error")
 
-solution_counter = 1
-for sub in list_of_legal_operations:
-    try:
-        print(f"Solution: {solution_counter}")
-        print((sub[0]))
- #       if type(sub[0]) is str:
- #           print(sub[0])
- #       elif type(sub[0]) is list:
-  #          print(sub[0])
-   #         print(sub[1])
-    #    sort_solution(sub[0]["Genome before mutation"])
-        sort_solution(sub[0]["Genome after mutation"])
-        pretty_print(sub[0])
+# solution_counter = 1
+# for sub in list_of_legal_operations:
+#     try:
+#         print(f"Solution: {solution_counter}")
+#         print((sub[0]))
+#  #       if type(sub[0]) is str:
+#  #           print(sub[0])
+#  #       elif type(sub[0]) is list:
+#   #          print(sub[0])
+#    #         print(sub[1])
+#     #    sort_solution(sub[0]["Genome before mutation"])
+#         sort_solution(sub[0]["Genome after mutation"])
+#         pretty_print(sub[0])
 
-        all_fsrc.append(sub[1])
-        all_solutions.append(sub[2])
-        for op in sub[0]:
-            print(op)
-        solution_counter +=1
-    except:
-#        print("__________________________________")
-        print("")
-#        print("___________________________________")
+#         all_fsrc.append(sub[1])
+#         all_solutions.append(sub[2])
+#         for op in sub[0]:
+#             print(op)
+#         solution_counter +=1
+#     except:
+# #        print("__________________________________")
+#         print("")
+# #        print("___________________________________")
     
 
 # print(all_fsrc)

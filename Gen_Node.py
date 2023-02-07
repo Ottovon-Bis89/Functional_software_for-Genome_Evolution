@@ -248,11 +248,11 @@ class Node:
                             mutations_finale = []
                             for i in range(len(series_of_mutation)):
                                 if i == 0:
-                                    mutation_type = 'insert'
+                                    mutation_type = 'ins'
                                 elif i == 1:
-                                    mutation_type = 'delete'
+                                    mutation_type = 'del'
                                 else:
-                                    mutation_type = 'duplication'
+                                    mutation_type = 'dup'
                                 mutation = series_of_mutation[i]
                                 for chromosome_number in range(len(mutation)):
                                     if mutation[chromosome_number] != []:
@@ -317,11 +317,11 @@ class Node:
                             mutations_finale = []
                             for i in range(len(series_of_mutation)):
                                 if i == 0:
-                                    mutation_type = 'insert'
+                                    mutation_type = 'ins'
                                 elif i == 1:
-                                    mutation_type = 'delete'
+                                    mutation_type = 'del'
                                 else:
-                                    mutation_type = 'duplication'
+                                    mutation_type = 'dup'
 
                                 mutation = series_of_mutation[i]
 
@@ -401,11 +401,11 @@ class Node:
                             mutations_finale = []
                             for i in range(len(series_of_mutation)):
                                 if i == 0:
-                                    mutation_type = 'insert'
+                                    mutation_type = 'ins'
                                 elif i == 1:
-                                    mutation_type = 'delete'
+                                    mutation_type = 'del'
                                 else:
-                                    mutation_type = 'duplication'
+                                    mutation_type = 'dup'
                                 mutation = series_of_mutation[i]
                                 for chromosome_number in range(len(mutation)):
                                     if mutation[chromosome_number] != []:
@@ -635,21 +635,21 @@ class Node:
                     chromosome = in_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("insert",i, chromosome[picker])
+                        do_mutation = ("ins",i, chromosome[picker])
                         break
             elif pick == 1:
                 for i in range(len(out_genome)):
                     chromosome = out_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("delete",i, chromosome[picker])
+                        do_mutation = ("del",i, chromosome[picker])
                         break
             elif pick == 2:
                 for i in range(len(duplication_genome)):
                     chromosome = duplication_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("duplication",i, chromosome[picker])
+                        do_mutation = ("dup",i, chromosome[picker])
                         break
         elif insert and d:
             pick = randint(0,1)
@@ -658,14 +658,14 @@ class Node:
                     chromosome = in_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("insert",i, chromosome[picker])
+                        do_mutation = ("ins",i, chromosome[picker])
                         break
             elif pick == 1:
                 for i in range(len(out_genome)):
                     chromosome = out_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("delete",i, chromosome[picker])
+                        do_mutation = ("del",i, chromosome[picker])
                         break
         elif d and dup:
             pick = randint(0,1)
@@ -674,14 +674,14 @@ class Node:
                     chromosome = out_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("delete",i, chromosome[picker])
+                        do_mutation = ("del",i, chromosome[picker])
                         break
             elif pick == 1:
                 for i in range(len(duplication_genome)):
                     chromosome = duplication_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("duplication",i, chromosome[picker])
+                        do_mutation = ("dup",i, chromosome[picker])
                         break
         elif insert and dup:
             pick = randint(0,1)
@@ -690,35 +690,35 @@ class Node:
                     chromosome = in_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("insert",i, chromosome[picker])
+                        do_mutation = ("ins",i, chromosome[picker])
                         break
             elif pick == 1:
                 for i in range(len(duplication_genome)):
                     chromosome = duplication_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("duplication",i, chromosome[picker])
+                        do_mutation = ("dup",i, chromosome[picker])
                         break
         elif insert:
             for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("insert",i, chromosome[picker])
+                        do_mutation = ("ins",i, chromosome[picker])
                         break
         elif d:
             for i in range(len(out_genome)):
                     chromosome = out_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("delete",i, chromosome[picker])
+                        do_mutation = ("del",i, chromosome[picker])
                         break
         elif dup:
             for i in range(len(duplication_genome)):
                     chromosome = duplication_genome[i]
                     if chromosome != []:
                         picker = randint(0, len(chromosome)-1)
-                        do_mutation = ("duplication",i, chromosome[picker])
+                        do_mutation = ("dup",i, chromosome[picker])
                         break
     
         #step 3: checking if all these necessary mutations can occur at once
@@ -876,7 +876,7 @@ class Node:
         chromosome_index = mutation_required[1]
         actual_mutation = mutation_required[2]
 
-        if type == 'duplication':
+        if type == 'dup':
             position = actual_mutation[1]
             gene_to_duplicate = actual_mutation[2]
             type_of_duplication = actual_mutation[3]
@@ -898,7 +898,7 @@ class Node:
                 operation['Genome after mutation'] = source_genome
                 list_of_mutations.append(operation)
                 
-        elif type == 'insert':
+        elif type == 'ins':
             position = actual_mutation[0]
             gene_to_insert = actual_mutation[1]
             chromosome = source_genome[chromosome_index]
@@ -919,7 +919,7 @@ class Node:
                 operation['Genome after mutation'] = source_genome
                 list_of_mutations.append(operation)
 
-        elif type == 'delete':
+        elif type == 'del':
             position = actual_mutation[0]
             gene_to_delete = actual_mutation[1]
             chromosome = source_genome[chromosome_index]
@@ -941,14 +941,24 @@ class Node:
 
         return source_genome, list_of_mutations
 
+    """
+     This function inserts of gene(sequence block) in the source genome in order 
+     to get to the target genome
+    """
+
     def insertion(self, source_chromosome, position_app_region, gene):
-        #insertion of gene
+        
         source_chromosome[position_app_region-1] = gene
      
         return source_chromosome
 
+    """
+    This function deletes genes that are in the source genome but not in the target genome, so that
+    the source genome can be the same as the target genome at the end of the evolutionary process.
+    """
+
     def deletion(self, source_chromosome, position_app_region):
-        #deletion of gene
+        
         del source_chromosome[position_app_region]
         if position_app_region > 0 :
             del source_chromosome[position_app_region-1]
@@ -956,8 +966,12 @@ class Node:
         
         return source_chromosome
 
+    """
+     This function duplicates genes in the source genome so they can compare with 
+     the duplicates in the target genome.The duplication could be tandem or transpositional
+    """    
     def duplication(self, source_chromosome, gene, insertion_position):
-        #duplication of a gene
+        
         source_chromosome[insertion_position-1] = gene
 
         return source_chromosome
@@ -1095,6 +1109,7 @@ class Node:
                 frag = i
                 for j in range(len(frag)):
                     frag[j] = str(frag[j])+"_"
+
             return list_of_frags
 
     
