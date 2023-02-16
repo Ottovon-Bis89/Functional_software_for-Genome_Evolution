@@ -292,7 +292,7 @@ class Node:
                     while for_dna == []:
                         for_dna = self.foreign_dna_pool(adjacenciesA, adjacenciesB)
 
-                    # Need to randomly choose a foreign dna from pool
+                    #  Randomly choose a foreign dna from pool
                     for_dna_len = len(for_dna) -1
                     choice_for_dna = randint(0, for_dna_len)
                     chosen = for_dna[choice_for_dna]
