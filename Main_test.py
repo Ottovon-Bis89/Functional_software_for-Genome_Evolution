@@ -4,10 +4,10 @@ import Gen_Node #UNCOMMENT ME
 #import Gen_Node_edited #COMMENT ME OUT
 import random
 
-# def pretty_print(legal_opperations):
-#     for key, value in legal_opperations.items():
-#         print(f"{key}: {value}")
-#     print("\n")
+def pretty_print(legal_opperations):
+    for key, value in legal_opperations.items():
+        print(f"{key}: {value}")
+    print("\n")
 
 # def sort_solution (sequence):
 #     splices = []
@@ -91,39 +91,59 @@ print()
 print()
 print()
 
+
 list_of_legal_operations  = gen_n_obj.get_legal_operations(source_genome, target_genome)
 
 
 print("Initializing ........")
 print("\npredicting possible evolutionary events...")
-#print(source_genome)
-# for item in list_of_legal_operations:
-#     for x in item:
-#         if (type(x) == dict):
-#             pretty_print(x)
-#         elif type(x) == list:
-#             for y in x:
-#                 if (type(y) == dict):
-#                     pretty_print(y)
-#                 else:
-#                     print(y)
-#         else:
-#             print(x)
+
+
 print(f"Estimated total number of evolutionary events: {len(list_of_legal_operations)}\n")
 print("Printing solution sets........\n")
 
+# print(list_of_legal_operations)
 
 
-solutions =[]
-for i in range (len(list_of_legal_operations)):
-    sub = list_of_legal_operations[i]
-solution1 = sub[0]
-list_sol = random.sample(sub, len(sub))
-solutions.append(list_sol)
-sub.remove(list_sol[0])
-print("solution1:", solution1)
-for i, solution in enumerate(solutions):
-        print(f"solution{i+2}:", solutions)
+
+
+
+for item in list_of_legal_operations:
+    for x in item:
+        if (type(x) == dict):
+            pretty_print(x)
+        elif type(x) == list:
+            for y in x:
+                if (type(y) == dict):
+                    pretty_print(y)
+                else:
+                    print(y)
+        else:
+            print(x)
+
+
+# solutions = []
+# for i, item in enumerate(list_of_legal_operations):
+#     solution = []
+#     for x in item:
+#         if type(x) == dict:
+#             pretty_print(x)
+#             solution.append(x)
+#         elif type(x) == list:
+#             for y in x:
+#                 if type(y) == dict:
+#                     pretty_print(y)
+#                     solution.append(y)
+#                 else:
+#                     solution.append(y)
+#         else:
+#             solution.append(x)
+#     random.shuffle(solution)
+#     solutions.append(solution)
+
+# for i, solution in enumerate(solutions):
+#     print(f"Solution{i+1}: {solution}")
+
 
             
 # all_fsrc = []
@@ -131,7 +151,7 @@ for i, solution in enumerate(solutions):
 
 
 # for i in range(len(list_of_legal_operations)):
-#     # print(type(list_of_legal_operations[i]))
+   
 #     try:
         
 #         sub = list_of_legal_operations[i]
@@ -152,13 +172,13 @@ for i, solution in enumerate(solutions):
 #     try:
 #         print(f"Solution: {solution_counter}")
 #         print((sub[0]))
-#  #       if type(sub[0]) is str:
-#  #           print(sub[0])
-#  #       elif type(sub[0]) is list:
-#   #          print(sub[0])
-#    #         print(sub[1])
+#     #     if type(sub[0]) is str:
+#     #         print(sub[0])
+#     #    elif type(sub[0]) is list:
+#     #         print(sub[0])
+#     #         print(sub[1])
 #     #    sort_solution(sub[0]["Genome before mutation"])
-#         sort_solution(sub[0]["Genome after mutation"])
+#         sorted(sub[0]["Genome after mutation"])       
 #         pretty_print(sub[0])
 
 #         all_fsrc.append(sub[1])
@@ -167,14 +187,13 @@ for i, solution in enumerate(solutions):
 #             print(op)
 #         solution_counter +=1
 #     except:
-# #        print("__________________________________")
+      
 #         print("")
-# #        print("___________________________________")
-    
+      
 
-# print(all_fsrc)
+# # print(all_fsrc)
 # print(all_solutions)
-# sys.exit(0)
+# #sys.exit(0)
 
 # f = open("collection_final_source.txt", "w")
 # for item in all_fsrc:

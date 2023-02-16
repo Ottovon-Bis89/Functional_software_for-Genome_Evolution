@@ -1,10 +1,15 @@
 import random
 
 class Data_generator():
-    def __init__(self) -> None:
+    def __init__(self):
         
      '''
-    Function to generate intergenic regions
+    Function to generate intergenic regions.
+    The function adds random numbers to the intergenic regions(space between genes)
+    of genes which will used as identifiers or mutation points for the evolutionary events.
+    These numbers represent the number of base pairs between(lenght of intergenic region) genes
+    These numbers are preceded by an asterisk(*)  to differentiate them from the normal 
+    genes(sequence blocks) since they both numbers.
     '''
     def intergenerator(self,numbered_genes_list):
         genes_with_intergenic_chrom = []
@@ -43,12 +48,14 @@ class Data_generator():
         #
 
     '''
-    Function to find applicable intergenic regions
+    Function to find applicable intergenic regions.
+    The function removes numeric base pair values from
+    intergenenic regions that are not viable mutation points.
+    It then populates the intergenic regions with viable 
+    intergenic regions which are needed for mutation to occur.
     '''
     def intergenic_regions(self,genes_with_intergenic_genome):
-        #function removes numeric base pair values from
-        #intergenenic regions that cannot mutate
-        #check for viable intergenic region
+        
         for genes_with_intergenic in genes_with_intergenic_genome:
             for i in range(len(genes_with_intergenic)):
                 if i % 2 == 0 or i == 0:
@@ -62,16 +69,18 @@ class Data_generator():
                         genes_with_intergenic[i] = '*'
         return genes_with_intergenic_genome
 
-if __name__ == '__main__':
-    genomeA = []
-    with open("genB0.txt") as csv:
-        line = [element.strip('\n').split(',') for element in csv]
-        for element in line:
-            element = list(map(int, element))
-            genomeA.append(element)
-    #print(genomeA)
-    data_gen_obj = Data_generator()
-    list_of_genome_with_intergenic = data_gen_obj.intergenerator(genomeA)
+
+
+# if __name__ == '__main__':
+#     #  source_genome = []
+#     # with open("genB0.txt") as csv:
+#     #     line = [element.strip('\n').split(',') for element in csv]
+#     #     for element in line:
+#     #         element = list(map(int, element))
+#     #         source_genome.append(element)
+#     #print(genomeA)
+#     data_gen_obj = Data_generator()
+#     list_of_genome_with_intergenic = data_gen_obj.intergenerator(source_genome)
     #print(list_of_genome_with_intergenic)
     #list_of_genome_with_applicable_intergenic = data_gen_obj.intergenic_regions(list_of_genome_with_intergenic)
     #print(list_of_genome_with_applicable_intergenic)
@@ -85,14 +94,14 @@ if __name__ == '__main__':
 
 
     #Write data to file
-    element = ''
-    with open('Generated_data_B.txt', 'w') as f:
-        for i in range(len(list_of_genome_with_intergenic)):
-            for j in range(len(list_of_genome_with_intergenic[i])):
-                element = list_of_genome_with_intergenic[i]
-                if j == len(list_of_genome_with_intergenic[i])-1:
-                    element += str(element[j])
-                else:
-                    element += str(element[j]) + ','
-            f.write(element+"\n")
-            element = ''
+    # element = ''
+    # with open('Generated_data_B.txt', 'w') as f:
+    #     for i in range(len(list_of_genome_with_intergenic)):
+    #         for j in range(len(list_of_genome_with_intergenic[i])):
+    #             element = list_of_genome_with_intergenic[i]
+    #             if j == len(list_of_genome_with_intergenic[i])-1:
+    #                 element += str(element[j])
+    #             else:
+    #                 element += str(element[j]) + ','
+    #         f.write(element+"\n")
+    #         element = ''

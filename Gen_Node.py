@@ -11,15 +11,13 @@ class Node:
         self.state = []
         self.children = []
         self.children_weights = []
-        self.children_operations = []
-        self.linear_chromosomes = []
         self.next_operation = 0
-        self.next_operation_weight = 1
+        self.next_operation_weight = []
         
     """
-    The function returns a list  of the operations needed to transform the genomes the
-    source  genome to the target genome
-    returns random legal options that can be applied to A, called recursively until A can be transformed to B
+    The function returns a list  of the operations needed to transform the
+    source  genome to the target genome. Itreturns random legal options that can be applied to A,
+    called recursively until A can be transformed to B
     It also chooses a fragment of foreign DNA and inserts it into the source genome
 
     """
@@ -31,183 +29,182 @@ class Node:
         loop_counter = 0  # No foreign DNA in first iteration of mutations
         for_Dna_counter = 0
 
-        #accomodate more than one solution -> modify while loop
         while switch:
 
             for element in adjacenciesB:
                 if element in adjacenciesA:
                     pass
                 else:
-                    adjacenciesA_copy = adjacenciesA[:]
+                    source_genome = adjacenciesA[:]
 
-                    # if element is an adjacency:
-                    if type(element) is tuple:
-                        x = element[0]
-                        y = element[1]
-                        w = 0
-                        z = 0
+            #         # if element is an adjacency:
+            #         if type(element) is tuple:
+            #             x = element[0]
+            #             y = element[1]
+            #             w = 0
+            #             z = 0
 
-                        # if elements containing x and y respectively  are adjacencies
-                        for marker in adjacenciesA_copy:
-                            if type(marker) is tuple:
-                                if marker[0] == x or marker[1] == x:
-                                    w = marker
+            #             # if elements containing x and y respectively  are adjacencies
+            #             for marker in adjacenciesA_copy:
+            #                 if type(marker) is tuple:
+            #                     if marker[0] == x or marker[1] == x:
+            #                         w = marker
 
-                                if marker[0] == y or marker[1] == y:
-                                    z = marker
+            #                     if marker[0] == y or marker[1] == y:
+            #                         z = marker
 
-                        # element containing x in adjacenciesA is a telomere
-                        if w == 0:
-                            w = x
-                        # element containing y in adjacenciesA is a telomere
-                        if z == 0:
-                            z = y
+            #             # element containing x in adjacenciesA is a telomere
+            #             if w == 0:
+            #                 w = x
+            #             # element containing y in adjacenciesA is a telomere
+            #             if z == 0:
+            #                 z = y
 
-                        if w != z:
-                            adjacenciesA_copy.append((x, y))
-                            adjacenciesA_copy.remove(w)
+            #             if w != z:
+            #                 adjacenciesA_copy.append((x, y))
+            #                 adjacenciesA_copy.remove(w)
 
-                            adjacenciesA_copy.remove(z)
+            #                 adjacenciesA_copy.remove(z)
 
-                            # if w is an adjacency:
-                            if type(w) is tuple:
-                                # calculate w'x
-                                if w[0] == x:
-                                    w_not_x = w[1]
-                                else:
-                                    w_not_x = w[0]
+            #                 # if w is an adjacency:
+            #                 if type(w) is tuple:
+            #                     # calculate w'x
+            #                     if w[0] == x:
+            #                         w_not_x = w[1]
+            #                     else:
+            #                         w_not_x = w[0]
 
-                                # if z is an adjacency:
-                                if type(z) is tuple:
-                                    # calculate z'y
-                                    if z[0] == y:
-                                        z_not_y = z[1]
-                                    else:
-                                        z_not_y = z[0]
+            #                     # if z is an adjacency:
+            #                     if type(z) is tuple:
+            #                         # calculate z'y
+            #                         if z[0] == y:
+            #                             z_not_y = z[1]
+            #                         else:
+            #                             z_not_y = z[0]
 
-                                    adjacenciesA_copy.append((w_not_x, z_not_y))
+            #                         adjacenciesA_copy.append((w_not_x, z_not_y))
 
-                                    # order operation before appending
-                                    if w[0] < z[0]:
-                                        op_1 = (w, z)
-                                    else:
-                                        op_1 = (z, w)
-                                    if x < y:
-                                        op_2_1 = (x, y)
-                                    else:
-                                        op_2_1 = (y, x)
-                                    if w_not_x < z_not_y:
-                                        op_2_2 = (w_not_x, z_not_y)
-                                    else:
-                                        op_2_2 = (z_not_y, w_not_x)
-                                    if op_2_1[0] < op_2_2[0]:
-                                        op_2 = (op_2_1, op_2_2)
-                                    else:
-                                        op_2 = (op_2_2, op_2_1)
-                                    ordered_operation = (op_1, op_2)
+            #                         # order operation before appending
+            #                         if w[0] < z[0]:
+            #                             op_1 = (w, z)
+            #                         else:
+            #                             op_1 = (z, w)
+            #                         if x < y:
+            #                             op_2_1 = (x, y)
+            #                         else:
+            #                             op_2_1 = (y, x)
+            #                         if w_not_x < z_not_y:
+            #                             op_2_2 = (w_not_x, z_not_y)
+            #                         else:
+            #                             op_2_2 = (z_not_y, w_not_x)
+            #                         if op_2_1[0] < op_2_2[0]:
+            #                             op_2 = (op_2_1, op_2_2)
+            #                         else:
+            #                             op_2 = (op_2_2, op_2_1)
+            #                         ordered_operation = (op_1, op_2)
 
-                                    if ordered_operation not in list_of_legal_operations:
-                                        list_of_legal_operations.append(ordered_operation)
-                                    else:
-                                        pass
+            #                         if ordered_operation not in list_of_legal_operations:
+            #                             list_of_legal_operations.append(ordered_operation)
+            #                         else:
+            #                             pass
 
-                                # else z is a telomere
-                                else:
-                                    adjacenciesA_copy.append(w_not_x)
+            #                     # else z is a telomere
+            #                     else:
+            #                         adjacenciesA_copy.append(w_not_x)
 
-                                    if x < y:
-                                        op_2_1 = (x, y)
-                                    else:
-                                        op_2_1 = (y, x)
+            #                         if x < y:
+            #                             op_2_1 = (x, y)
+            #                         else:
+            #                             op_2_1 = (y, x)
 
-                                    op_2 = (op_2_1, w_not_x)
-                                    ordered_operation = ((w, z), op_2)
+            #                         op_2 = (op_2_1, w_not_x)
+            #                         ordered_operation = ((w, z), op_2)
 
-                                    if ordered_operation not in list_of_legal_operations:
-                                        list_of_legal_operations.append(ordered_operation)
-                                    else:
-                                        pass
+            #                         if ordered_operation not in list_of_legal_operations:
+            #                             list_of_legal_operations.append(ordered_operation)
+            #                         else:
+            #                             pass
 
-                            # else w is a telomere
-                            else:
-                                # if z is an adjacency
-                                if type(z) is tuple:
-                                    # calculate z'y
-                                    if z[0] == y:
-                                        z_not_y = z[1]
-                                    else:
-                                        z_not_y = z[0]
-                                    adjacenciesA_copy.append(z_not_y)
+            #                 # else w is a telomere
+            #                 else:
+            #                     # if z is an adjacency
+            #                     if type(z) is tuple:
+            #                         # calculate z'y
+            #                         if z[0] == y:
+            #                             z_not_y = z[1]
+            #                         else:
+            #                             z_not_y = z[0]
+            #                         adjacenciesA_copy.append(z_not_y)
 
-                                    if x < y:
-                                        op_2_1 = (x, y)
-                                    else:
-                                        op_2_1 = (y, x)
+            #                         if x < y:
+            #                             op_2_1 = (x, y)
+            #                         else:
+            #                             op_2_1 = (y, x)
 
-                                    ordered_operation = ((z, w), (op_2_1, z_not_y))
+            #                         ordered_operation = ((z, w), (op_2_1, z_not_y))
 
-                                    if ordered_operation not in list_of_legal_operations:
-                                        list_of_legal_operations.append(ordered_operation)
-                                    else:
-                                        pass
+            #                         if ordered_operation not in list_of_legal_operations:
+            #                             list_of_legal_operations.append(ordered_operation)
+            #                         else:
+            #                             pass
 
-                                # else z is a telomere
-                                else:
-                                    if x < y:
-                                        op_2 = (x, y)
-                                    else:
-                                        op_2 = (y, x)
-                                    if w < z:
-                                        ordered_operation = (w, z, op_2)
-                                    else:
-                                        ordered_operation = (z, w, op_2)
+            #                     # else z is a telomere
+            #                     else:
+            #                         if x < y:
+            #                             op_2 = (x, y)
+            #                         else:
+            #                             op_2 = (y, x)
+            #                         if w < z:
+            #                             ordered_operation = (w, z, op_2)
+            #                         else:
+            #                             ordered_operation = (z, w, op_2)
 
-                                    if ordered_operation not in list_of_legal_operations:
-                                        list_of_legal_operations.append(ordered_operation)
-                                    else:
-                                        pass
+            #                         if ordered_operation not in list_of_legal_operations:
+            #                             list_of_legal_operations.append(ordered_operation)
+            #                         else:
+            #                             pass
 
-                    # else if the element is a telomere
-                    else:
-                        w = 0
-                        x = element
+            #         # else if the element is a telomere
+            #         else:
+            #             w = 0
+            #             x = element
 
-                        for marker in adjacenciesA_copy:
-                            if type(marker) is tuple:
-                                if marker[0] == x or marker[1] == x:
-                                    w = marker
-                        if w == 0:
-                            w = x
+            #             for marker in adjacenciesA_copy:
+            #                 if type(marker) is tuple:
+            #                     if marker[0] == x or marker[1] == x:
+            #                         w = marker
+            #             if w == 0:
+            #                 w = x
 
-                        # if w is not a telomere:
-                        if w != x:
-                            adjacenciesA_copy.append(w[0])
-                            adjacenciesA_copy.append(w[1])
-                            adjacenciesA_copy.remove(w)
-                            operation = (w, (w[0]), (w[1]))
-                            if operation not in list_of_legal_operations:
-                                list_of_legal_operations.append(operation)
-                            else:
-                                pass
-                        # if the element in the adjacencies is a foreign dna
-                        else:
-                            for marker in adjacenciesA_copy:
-                                if type(marker) is tuple:
-                                    if marker[0] != x or marker[1] != x:
-                                        fdna = marker
-                                    else:
-                                        if marker[0] != y or marker[1] != y:
-                                            fdna = marker
-                                            adjacenciesA_copy.append(fdna[0])
-                                            adjacenciesA_copy.append(fdna[1])
-                                            operation = (fdna, (fdna[0]), (fdna[1]))
-                                            if operation not in list_of_legal_operations:
-                                                list_of_legal_operations.append(operation)
-                                            else:
-                                                pass
+            #             # if w is not a telomere:
+            #             if w != x:
+            #                 adjacenciesA_copy.append(w[0])
+            #                 adjacenciesA_copy.append(w[1])
+            #                 adjacenciesA_copy.remove(w)
+            #                 operation = (w, (w[0]), (w[1]))
+            #                 if operation not in list_of_legal_operations:
+            #                     list_of_legal_operations.append(operation)
+            #                 else:
+            #                     pass
+            #             # if the element in the adjacencies is a foreign dna
+            #             else:
+            #                 for marker in adjacenciesA_copy:
+            #                     if type(marker) is tuple:
+            #                         if marker[0] != x or marker[1] != x:
+            #                             fdna = marker
+            #                         else:
+            #                             if marker[0] != y or marker[1] != y:
+            #                                 fdna = marker
+            #                                 adjacenciesA_copy.append(fdna[0])
+            #                                 adjacenciesA_copy.append(fdna[1])
+            #                                 operation = (fdna, (fdna[0]), (fdna[1]))
+            #                                 if operation not in list_of_legal_operations:
+            #                                     list_of_legal_operations.append(operation)
+            #                                 else:
+            #                                     pass
     
             if loop_counter > 0 :
-                #TODO: check number of applicale region, if 0 then create 
+                # check number of applicale region, if 0 then create 
                 count_app = 0
                 for chromosome in adjacenciesA:
                     for i in range(len(chromosome)):
@@ -232,8 +229,8 @@ class Node:
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
        
                 # randomly choose to insert foreign dna
-                choose = randint(0, 30)
-                if (choose >= 3 and for_Dna_counter != 0) :
+                choose = randint(0, 1000000)
+                if (choose <= 1000000 and for_Dna_counter != 0) :
                     series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
                     
                     if series_of_mutation == [] and mutation_required !=():
@@ -267,7 +264,8 @@ class Node:
                             clean_chrom = []
                             clean_genome = []
 
-                            #remove all unapplicable intergenic regions and call intergenerator
+                            #remove all unapplicable intergenic regions and call intergenerator 
+                            # to insert new applicable regions for mutations to occur
                             for chromosome in adjacenciesA:
                                 for i in range(len(chromosome)):
                                     if isinstance(chromosome[i],str) and '*' not in chromosome[i]:
@@ -286,7 +284,7 @@ class Node:
                             if mutation_required ==():
                                 break
                         switch = False
-                elif ((for_Dna_counter < 3 or for_Dna_counter ==0)):
+                elif ((for_Dna_counter < 100 or for_Dna_counter ==0)):
                     print("\tInserted foreign DNA")
                     for_Dna_counter += 1
                     #Here is list of foreign dna where fragments are sublists
@@ -307,6 +305,7 @@ class Node:
                     series_of_mutation, mutation_required = self.mutation_legal_operations(mutation_genome, adjacenciesB)
     
                     if series_of_mutation == []:
+                        
                         source_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
                         adjacenciesA = source_genome[:]
                         list_of_legal_operations.append(mutation_list)
@@ -368,7 +367,7 @@ class Node:
 
                     #Do random mutation
                     source_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
-                    print("Could not find mutation to get to target_genome so randomly mutated")
+                    print("Could not find straight path to get to target_genome so randomly mutated")
 
                     adjacenciesA = source_genome[:]
                     list_of_legal_operations.append(mutation_list)
@@ -467,10 +466,10 @@ class Node:
         length = len(frag)
         for j in range(len(frag)):
             if j == 0 :
-                random_bp = randint(0,10)
+                random_bp = randint(5,10)
                 region = '*' + str(random_bp)
                 frag_with_intergenic_regions.append(region)
-            random_bp = randint(0,10)
+            random_bp = randint(5,10)
             start = frag[j]
             region = '*' + str(random_bp)
             frag_with_intergenic_regions.append(start)
@@ -485,11 +484,11 @@ class Node:
                     value = region[2]+region[2]
                 else:
                     value = region[1]
-                if int(value) <= 5:
+                if int(value) < 5:
                     frag_with_intergenic_regions[i] = '*'
 
 
-        #TODO: ACCOUNT FOR CHROMOSOMES WITHOUT INTERGENIC REGIONS
+        # Account for chromosomes without intergenic regions
         position_app_reg_chrom = []
         source_chrom = []
         rand_chrom = []
@@ -509,17 +508,20 @@ class Node:
         source_genome[rand_chrom] = mutated
         return source_genome, ['F_DNA inserted ',rand_chrom, position, frag_with_intergenic_regions]
 
+
+    """
+    This function decides if mutations, any series of mutations, can take genome A to genome B
+    check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source)
+     or chromosome insertion (source chromosome count less than target)
+    Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
+    check signed integers(genes) between target and source
+    Duplication - look at the target; if two of same signed integer next to each other -> tandom duplicatio
+    if two of same signed ints in chromosome but not next to each other then -> transpositional
+    source_genome = source[:]remove underscores that identify fragments in source genome
+    """
+
     def mutation_legal_operations(self, source, target_genome):
-        """
-        This function decides if mutations, any series of mutations, can take genome A to genome B
-        check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
-        Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
-        check signed integers(genes) between target and source
-        Duplication - look at the target; if two of same signed integer next to each other -> tandom duplicatio
-        if two of same signed ints in chromosome but not next to each other then -> transpositional
-        source_genome = source[:]
-        remove underscores that identify fragments in source genome
-        """
+       
         chromo = []
         source_genome = []
 
@@ -546,7 +548,7 @@ class Node:
         in_genome = []
         in_target = []
         
-        #Take note o differing length of genomes where this condition does not hold
+        #Take note of different length of genomes where this condition does not hold
         for j in range(len(target_genome)):
             in_target = []
             chromosome = source_genome[j]
@@ -557,7 +559,7 @@ class Node:
                     in_target.append((i,t_chrom[i]))
             in_genome.append(in_target)
         
-        #1.2 in source and not in target[CREATE out list that contains tuples of (position,gene)]
+        #1.2 in source genome and not in target genome[Create out list that contains tuples of (position,gene)]
         out_genome = []
         out_target = []
         occurred = []
@@ -790,7 +792,7 @@ class Node:
         del_count = 0
 
 
-        #TODO check counting in pairs as well
+        # check counting in pairs as well
         for chromosome in out_pos_genome:
             for gene in chromosome:
                 del_count += 1
@@ -817,8 +819,8 @@ class Node:
                     return [], do_mutation
 
             mutation_insert = {}
-            #TODO: COMPLETE FORMAT CHANGE FOR MUTATION DISPLAY
-            #write code to take elements of lists and place in dictionary [for loop]
+            
+            # code to take elements of lists and place in dictionary [for loop]
             for i in range(len(in_genome)):
                 if len(in_genome[i]) > 0:
                     mutation_insert["insertion chromosome"] = i+1
@@ -845,14 +847,14 @@ class Node:
                 return i
         else:
             return 0
-
+    """
+    This fuction picks a type of mutation and calls different functions (delete, duplicate, insert) to act on it
+    It uses source_genome with approved intergenic regions
+    It counts number of applicable intergenic regions to associate to number of mutations
+    """
     def do_mutation(self, source_genome, mutation_required):
         list_of_mutations = []
-        """
-        This fuction picks a type of mutation and calls different functions (delete, duplicate, insert) to act on it
-        It uses source_genome with approved intergenic regions
-        It counts number of applicable intergenic regions to associate to number of mutations
-        """
+        
         list_of_genes = []
         list_of_genes_genome = []
         list_of_mutation_points = []
@@ -907,7 +909,7 @@ class Node:
                 position = len(chromosome)-1
            
             if(isinstance(chromosome[position-1], str) and '*' in chromosome[position-1] and len(chromosome[position-1])>1):
-                mutated_chromosome = self.insertion(chromosome,position,gene_to_insert)
+                mutated_chromosome = self.insertion(chromosome, position, gene_to_insert)
                 #create record
                 operation = {}
                 operation['Type'] = type
@@ -942,7 +944,7 @@ class Node:
         return source_genome, list_of_mutations
 
     """
-     This function inserts of gene(sequence block) in the source genome in order 
+     This function inserts series of genes required(sequence block) in the source genome in order 
      to get to the target genome
     """
 
@@ -957,17 +959,24 @@ class Node:
     the source genome can be the same as the target genome at the end of the evolutionary process.
     """
 
+    # def deletion(self, source_chromosome, position_app_region):
+    #     if isinstance(source_chromosome[position_app_region], int) and '_' not in str(source_chromosome[position_app_region]):
+    #         del source_chromosome[position_app_region]
+    #     if position_app_region > 0 and isinstance(source_chromosome[position_app_region-1], int) and '_' not in str(source_chromosome[position_app_region-1]):
+    #         del source_chromosome[position_app_region-1]
+
+    #     return source_chromosome
+
     def deletion(self, source_chromosome, position_app_region):
+
+            del source_chromosome[position_app_region]
+            if position_app_region > 0 :
+                del source_chromosome[position_app_region-1]
+            return source_chromosome
         
-        del source_chromosome[position_app_region]
-        if position_app_region > 0 :
-            del source_chromosome[position_app_region-1]
-        
-        
-        return source_chromosome
 
     """
-     This function duplicates genes in the source genome so they can compare with 
+     This function duplicates genes required in the source genome so they can compare with 
      the duplicates in the target genome.The duplication could be tandem or transpositional
     """    
     def duplication(self, source_chromosome, gene, insertion_position):
@@ -977,11 +986,11 @@ class Node:
         return source_chromosome
 
 
-    #TODO CHECK THIS OUT
     def foreign_dna_pool(self, source, target):
-        # Check what genes are not in source that is in target
+        # Check what genes are not in source genome but are in target genome
         source_genome = []
         target_genome = []
+
         # create master lists
 
         for chromosome in source:
@@ -995,13 +1004,13 @@ class Node:
                     elif len(chromosome[i])==3:
                         gene = chromosome[i]
                         source_genome.append(int(gene[:2]))
-        # and '*' not in chromosome[i]
+        
         for chromosome in target:
             for i in range(len(chromosome)):
                 if isinstance(chromosome[i],int):
                     target_genome.append(int(chromosome[i]))
 
-        # Find the difference between source and target
+        # Find the difference between source genome and target genome
         difference = list(set(target_genome) - set(source_genome))
 
         if len(difference) > 0:
@@ -1034,7 +1043,7 @@ class Node:
             #Use for_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
             number_of_frags = randint(1,99)
             len_frags = 1
-            #(len(difference))+2
+            
             #choose randomly from for_dna list to add to frags
             list_of_frags = []
             frag = []
@@ -1049,7 +1058,7 @@ class Node:
                     j -= 1
                 frag = []
 
-            #Check for the difference in genes within atleast one fragment in list
+            #Check for the difference in genes within at least one fragment in list
             check = True
             for f in list_of_frags:
                 if difference in f:
