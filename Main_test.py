@@ -102,9 +102,7 @@ print("\npredicting possible evolutionary events...")
 print(f"Estimated total number of evolutionary events: {len(list_of_legal_operations)}\n")
 print("Printing solution sets........\n")
 
-# print(list_of_legal_operations)
-
-
+print(list_of_legal_operations)
 
 
 
@@ -120,6 +118,30 @@ for item in list_of_legal_operations:
                     print(y)
         else:
             print(x)
+ 
+
+
+# # List of mutations
+# mutations = [list_of_legal_operations]
+
+# # Generate all solution sets
+# solutions = []
+# for i in range(len(mutations)):
+#     solution = random.sample(mutations, len(mutations))
+#     solutions.append(solution)
+
+# # Rearrange the mutations randomly in each solution set
+# for i, solution in enumerate(solutions):
+#     for j in range(len(solution)):
+#         random.shuffle(solution)
+#         solutions[i] = solution.copy()
+
+# # Print each solution set
+# for i, solution in enumerate(solutions):
+#     print(f"Solution {i+1}:")
+#     for j in range(0, len(solution), len(mutations)):
+#         print(solution[j:j+len(mutations)])
+#     print()
 
 
 # solutions = []

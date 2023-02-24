@@ -1610,3 +1610,175 @@ class Node:
 # if __name__ == '__main__':
 #     gen_ex_obj = Gen_xtremities.Xtremities()
 #     genome_gene_extremities = gen_ex_obj.gene_extremity()
+
+
+
+
+    # def foreign_dna_pool(self, source, target):
+    #     # Check what genes are not in source genome but are in target genome
+    #     source_genome = []
+    #     target_genome = []
+
+    #     # create master lists
+
+    #     for chromosome in source:
+    #         for i in range(len(chromosome)):
+    #             if isinstance(chromosome[i], int):
+    #                 source_genome.append(int(chromosome[i]))
+    #             elif isinstance(chromosome[i], str) and "_" in chromosome[i]:
+    #                 if len(chromosome[i]) == 2:
+    #                     gene = chromosome[i]
+    #                     source_genome.append(int(gene[:1]))
+    #                 elif len(chromosome[i]) == 3:
+    #                     gene = chromosome[i]
+    #                     source_genome.append(int(gene[:2]))
+
+    #     for chromosome in target:
+    #         for i in range(len(chromosome)):
+    #             if isinstance(chromosome[i], int):
+    #                 target_genome.append(int(chromosome[i]))
+
+    #     # Find the difference between source genome and target genome
+    #     difference = list(set(target_genome) - set(source_genome))
+
+    #     if len(difference) > 0:
+    #         # define the ratio (1/5)
+    #         # change ratio here (5)
+    #         number_of_random_ints = (len(difference) * 3) - (len(difference))
+
+    #         # create foreign dna
+    #         for_dna = []
+    #         count = 0
+    #         while count < (number_of_random_ints):
+    #             gene = random.randint(1, 40)
+    #             if len(for_dna) >= 1:
+    #                 if gene not in for_dna:
+    #                     for_dna.append(gene)
+    #                     count += 1
+    #             else:
+    #                 for_dna.append(gene)
+
+    #         # add difference to foreign dna and check duplicates and add foreign DNA if necessary
+    #         for_dna = difference + for_dna
+    #         for_dna = list(set(for_dna))
+    #         if len(for_dna) < ((len(difference)) * 3):  # change ratio here (5)
+    #             count = len(for_dna)
+    #             while (len(for_dna) < ((len(difference)) * 3)):
+    #                 gene = random.randint(1, 40)
+    #                 if gene not in for_dna:
+    #                     for_dna.append(gene)
+    #                     count += 1
+
+    #         # Use for_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
+    #         number_of_frags = random.randint(1, 99)
+    #         len_frags = 1
+
+    #         # choose randomly from for_dna list to add to frags
+    #         list_of_frags = []
+    #         frag = []
+    #         for j in range(number_of_frags):
+    #             for i in range(len_frags):
+    #                 choice = random.randint(0, len(for_dna)-1)
+    #                 frag.append(for_dna[choice])
+    #             # Ensure unique fragments in list
+    #             if j > 0 and frag not in list_of_frags:
+    #                 list_of_frags.append(frag)
+    #             else:
+    #                 j -= 1
+    #             frag = []
+
+    #         # Check for the difference in genes within at least one fragment in list
+    #         check = True
+    #         for f in list_of_frags:
+    #             if difference in f:
+    #                 check = False
+    #         if check == True:
+    #             final_frag = difference[:]
+    #         # add a fragment that does contain the difference
+    #         # Check that the gene does not already exist in the fragment
+    #             while len(final_frag) <= len(difference)+1:
+    #                 c = for_dna[random.randint(0, len(for_dna)-1)]
+    #                 if c not in final_frag:
+    #                     final_frag.append(c)
+    #             list_of_frags.append(final_frag)
+
+    #         # Tag foreign DNA
+    #         for i in list_of_frags:
+    #             frag = i
+    #             for j in range(len(frag)):
+    #                 frag[j] = str(frag[j])+"_"
+    #         return list_of_frags
+
+    #     else:
+    #         # define the ratio (1/5)
+    #         number_of_random_ints = random.randint(1, 5)
+
+    #         # create foreign dna
+    #         for_dna = []
+    #         count = 0
+    #         while count < (number_of_random_ints):
+    #             gene = random.randint(1, 40)
+    #             if len(for_dna) >= 1:
+    #                 if gene not in for_dna:
+    #                     for_dna.append(gene)
+    #                     count += 1
+    #             else:
+    #                 for_dna.append(gene)
+
+    #         # Use for_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
+    #         number_of_frags = random.randint(1, 99)
+    #         len_frags = 1
+    #         # choose randomly from for_dna list to add to frags
+    #         list_of_frags = []
+    #         frag = []
+    #         for j in range(number_of_frags):
+    #             for i in range(len_frags):
+    #                 choice = random.randint(0, len(for_dna)-1)
+    #                 frag.append(for_dna[choice])
+    #             # Ensure unique fragments in list
+    #             if j > 0 and frag not in list_of_frags:
+    #                 list_of_frags.append(frag)
+    #             else:
+    #                 j -= 1
+    #             frag = []
+
+    #         # Tag foreign DNA
+    #         for i in list_of_frags:
+    #             frag = i
+    #             for j in range(len(frag)):
+    #                 frag[j] = str(frag[j])+"_"
+
+    #         print(f'{list_of_frags}__________________________')
+    #         return list_of_frags
+
+
+    # def intergenic_regions(self,genes_with_intergenic_genome):
+        
+    #     for genes_with_intergenic in genes_with_intergenic_genome:
+    #         for i in range(len(genes_with_intergenic)):
+    #             if i % 2 == 0 or i == 0:
+    #                 region = genes_with_intergenic[i]
+                
+    #                 if len(region) > 2:
+    #                     value = region[2]+region[2]
+    #                 else:
+    #                     value = region[1]
+    #                 if int(value) < 5:
+    #                     genes_with_intergenic[i] = '*'
+    #     return genes_with_intergenic_genome
+
+
+      # def intergenerator(self,numbered_genes_list):
+    #     genes_with_intergenic_chrom = []
+    #     genes_with_intergenic = []
+    #     for i in range(len(numbered_genes_list)):
+    #         chrom = numbered_genes_list[i]
+    #         length = len(chrom)
+          
+        #         ntergenic_chrom.append(start)
+    #             if j != length-1:
+    #                 genes_with_intergenic_chrom.append(region)
+    #         genes_with_intergenic.append(genes_with_intergenic_chrom)
+    #         genes_with_intergenic_chrom = []
+      
+    #     return genes_with_intergenic
