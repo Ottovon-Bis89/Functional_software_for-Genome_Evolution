@@ -30,7 +30,7 @@ class Node:
                 series_of_mutation, mutation_required = self.mutation_legal_operations(source_genome, target_genome)
                 print(series_of_mutation)
 
-        return list_of_legal_operations
+        return list_of_legal_operations, mutation_required
 
     def mutation_legal_operations(self, source, target_genome):
        

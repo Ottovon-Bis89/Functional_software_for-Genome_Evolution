@@ -115,8 +115,8 @@ class Gen_API:
         f_DNA_pool = []
 
         for chromosome in source_genome:
-            # temp = [x.replace('_', '') for x in chromosome if "*" not in x]
-            temp = [x for x in chromosome if "*" not in x]
+            temp = [x.replace('_', '') for x in chromosome if "*" not in x]
+            # temp = [x for x in chromosome if "*" not in x]
             count_genes += len(temp)
             for c in temp:
                 largest_gene = max(int(largest_gene), int(c))
