@@ -1,13 +1,44 @@
-import itertools
-import Gen_xtremities
-import Gen_Node #UNCOMMENT ME
-#import Gen_Node_edited #COMMENT ME OUT
-import random
 
-def pretty_print(legal_opperations):
-    for key, value in legal_opperations.items():
+# import new_version
+# import gen_node_save
+import random
+# import New_gen_node
+# import Gen_Node
+import GEN_NODE
+
+
+def pretty_print(list_of_legal_operations):
+    for key, value in list_of_legal_operations.items():
         print(f"{key}: {value}")
     print("\n")
+   
+
+
+
+
+# def pretty_print(list_of_legal_operations):
+#     for item in sorted(list_of_legal_operations):
+#         for x in item:
+#             if isinstance(x, dict):
+#                 for key in sorted(x.keys()):
+#                     value = x[key]
+#                     print(f"  {key}:")
+#                     pretty_print(value)
+#             elif isinstance(x, list):
+#                 sorted_list = sorted(x)
+#                 for y in sorted_list:
+#                     if isinstance(y, dict):
+#                         for key in sorted(y.keys()):
+#                             value = y[key]
+#                             print(f"    {key}:")
+#                             pretty_print(value)
+#                     else:
+#                         print(f"    {y}")
+#             else:
+#                 print(f"{x}")
+#     print("\n")
+
+
 
 # def sort_solution (sequence):
 #     splices = []
@@ -36,6 +67,7 @@ def pretty_print(legal_opperations):
 #          k = l.strip('\n').split(',')
 #          data_source.append(k)
 
+
 # with open("Generated_data_B.txt") as f:
 #      lines = f.readlines()
 #      for l in lines:
@@ -53,28 +85,15 @@ print(for_dna)
 '''
 
 
-gen_n_obj = Gen_Node.Node() #UNCOMMENT ME
-#gen_n_obj = Gen_Node_edited.Node() #COMMENT ME OUT
+# gen_n_obj = new_version.Node() #UNCOMMENT ME
+# gen_n_obj  = New_gen_node.Node()
+# gen_n_obj = Gen_Node_edited.Node() #COMMENT ME OUT
+# gen_n_obj = Gen_Node.Node()
 
-# insert_mutation = gen_n_obj.insertion(chrom, 4)
-# print(insert_mutation)
+gen_n_obj = GEN_NODE.Node()
 
-# del_mutation = gen_n_obj.deletion(chrom, 4)
-# print(del_mutation)
-# print(chrom)
-# dup_mutation = gen_n_obj.duplication(chrom, 4, 8)
-# print(dup_mutation)
 
-# print(data_source)
 
-# for_chrom = gen_n_obj.add_for_dna(data_source, [1,1,1,3])
-# print(for_chrom)
-# print(data_source)
-# print()
-# #test do mutation
-# mutated_genome, list_of_mutations = gen_n_obj.do_mutation(data_source)
-# print(list_of_mutations), [10,11,'*9', 33]
-# print(mutated_genome) , [10, '*10', 22, '*9', 33]
 # data_source = [['*8', '1', '*6', '5','*6', '4', '*6','3', '*','9_' ], ['*8','10', '*10', '22', '*9', '37', '*9','33']]
 # data_target = [['*8','1','*','4','*','5', '*','6'], ['*8','10','*9', '33','*', '33', '*', '40']]
 #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
@@ -84,18 +103,25 @@ gen_n_obj = Gen_Node.Node() #UNCOMMENT ME
 source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],['*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1', '*8', '4', '*9', '1', '*7', '3', '*8', '1', '*8', '2']]
 target_genome = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11']]
 
+# target_genome = [[1,2,3],[ 4,5],[ 6,7,8,9],[ 10,11],[ 12,13,14,15,16,17],[ 18,19,20],[ 21,22,23,24,25],[ 26],[ 27,28,29,30,31],[ 32,33,34],[ 35],[ 36],[ 37]] 
+# source_genome = [[1,3],[ 5],[8,6,4,7,9],[21,10,-30,11],[ 19,12,14,16,17],[ -15,18,20],[ 22,23,25],[ -24,26],[ 28,32,27,29,31],[ 33,-2,34],[ -13,35],[37],[ 36]] 
+
 
 print("Target_genome:",target_genome)
 print("\nSource_genome:",source_genome)
 print()
 print()
-print()
-
 
 list_of_legal_operations  = gen_n_obj.get_legal_operations(source_genome, target_genome)
+print()
 
+if source_genome==target_genome:
+    print("Source genome same as target genome")
 
-print("Initializing ........")
+else:
+    print("Source genome is different from target genome, possibly due to evolution")
+print()
+print("Initializing genome transformation process........")
 print("\npredicting possible evolutionary events...")
 
 
@@ -103,6 +129,7 @@ print(f"Estimated total number of evolutionary events: {len(list_of_legal_operat
 print("Printing solution sets........\n")
 
 print(list_of_legal_operations)
+
 
 
 
@@ -118,6 +145,33 @@ for item in list_of_legal_operations:
                     print(y)
         else:
             print(x)
+
+
+# # Define your list of legal operations
+# legal_operations = [list_of_legal_operations]
+
+# # Define the number of solutions you want to generate
+# num_solutions = len(legal_operations)
+
+# # Shuffle the list of legal operations
+# random.shuffle(legal_operations)
+
+# # Generate solutions by randomly dividing the shuffled list
+# solutions = []
+# for i in range(num_solutions):
+#     start = i * (len(legal_operations) // num_solutions)
+#     end = (i+1) * (len(legal_operations) // num_solutions)
+#     solution = legal_operations[start:end]
+#     random.shuffle(solution)
+#     solutions.append(solution)
+
+# # Print the solutions
+# for i, solution in enumerate(solutions):
+#     print(f"Solution {i+1}: {solution}")
+
+
+
+#pretty_print(list_of_legal_operations)
  
 
 

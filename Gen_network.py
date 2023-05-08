@@ -3,7 +3,7 @@ from networkx import DiGraph
 # This program creates a key-value pair data structure that will used to generate a graph of network of solutions paths from the source genome to the target genome
 def build_hash_table(current_node, hash_table, adjacenciesB, weights):
     node = current_node
-    operations = node.get_legal_oops(adjacenciesB)
+    operations = node.get_legal_operations(adjacenciesB)
     for operation in operations:
         operation_result = node.do_mutation(operation)  # perform all the possible mutations that are required to transform genome_A into genome_B.
         child_state = operation_result[0]
@@ -19,19 +19,19 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
             child.join_adjacency = 0
             if op_type == "ins":
                 operation_type = op_type
-                op_weight = 0.09 * weights[0]
+                op_weight = 0.15 * weights[0]
 
             elif op_type == "dup":
                 operation_type = op_type
-                op_weight = 0.18 * weights[1]
+                op_weight = 0.3 * weights[1]
 
             elif op_type == "del_":
                 operation_type = op_type
-                op_weight = 0.03 * weights[2]
+                op_weight = 0.05 * weights[2]
 
             elif op_type == "f_DNA":
                 operation_type = op_type
-                op_weight = 0.70 * weights[3]
+                op_weight = 0.50 * weights[3]
 
             else:
                 print("You got a problem, the op_type is :", op_type, " #1")
