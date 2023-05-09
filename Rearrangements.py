@@ -1,7 +1,7 @@
 class Node_rearrangement:
 
     join_adjacency = 0
-    
+
     def __init__(self, state=None):
         self.state = state
         self.children = []
@@ -120,23 +120,23 @@ class Node_rearrangement:
         return linear_chromosomes, circular_chromosomes
 
     
-    def get_legal_operations(self, adjacenciesB):
+    def get_legal_operations(self, adjacencies_genomeB):
 
         list_of_legal_operations = []
 
         # Get the current state of adjacencies
-        adjacenciesA = self.state
+        adjacencies_genomeA = self.state
 
         # Loop through each element in adjacenciesB
-        for element in adjacenciesB:
+        for element in adjacencies_genomeB:
 
         # If the element is already in adjacenciesA, do nothing
-            if element in adjacenciesA:
+            if element in adjacencies_genomeA:
                 pass
 
         # If the element is not in adjacenciesA, perform some operations
             else:
-                adjacenciesA_copy = adjacenciesA[:]
+                adjacencies_genomeA_copy = adjacencies_genomeA[:]
 
             # If the element is an adjacency, perform some operations
             if type(element) is tuple:
@@ -144,7 +144,7 @@ class Node_rearrangement:
                 u, v = 0, 0
 
                 # Check if the elements containing p and q respectively in adjacenciesA are adjacencies
-                for marker in adjacenciesA_copy:
+                for marker in adjacencies_genomeA_copy:
                     if type(marker) is tuple:
                         if marker[0] == p or marker[1] == p:
                             u = marker
@@ -163,11 +163,11 @@ class Node_rearrangement:
                 if u != v:
 
                     # Add the adjacency (p,q) to adjacenciesA_copy
-                    adjacenciesA_copy.append((p, q))
+                    adjacencies_genomeA_copy.append((p, q))
 
                     # Remove u and v from adjacenciesA_copy
-                    adjacenciesA_copy.remove(u)
-                    adjacenciesA_copy.remove(v)
+                    adjacencies_genomeA_copy.remove(u)
+                    adjacencies_genomeA_copy.remove(v)
 
                     # If u is an adjacency, perform some operations
                     if type(u) is tuple:
@@ -183,7 +183,7 @@ class Node_rearrangement:
                             v_not_q = v[0]
 
                         # Add the adjacency (u'p, v'q) to adjacenciesA_copy
-                        adjacenciesA_copy.append((u_not_p, v_not_q))
+                        adjacencies_genomeA_copy.append((u_not_p, v_not_q))
 
                         # Order the operations before appending to list_of_legal_operations
                         op_1 = (u, v) if u[0] < v[0] else (v, u)
@@ -345,27 +345,27 @@ class Node_rearrangement:
 
     
 
-    def adjacencies_equivalent(self, adjacenciesB):
+    def adjacencies_equivalent(self, adjacencies_genomeB):
         # create a copy of adjacenciesA (the current node's state) and adjacenciesB (the input state)
-        adjacenciesA = self.state.copy()
-        adjacenciesB = adjacenciesB
+        adjacencies_genomeA = self.state.copy()
+        adjacencies_genomeB = adjacencies_genomeB
 
         # order the adjacencies in adjacenciesA and store them in ordered_adjacenciesA
-        ordered_adjacenciesA = []
-        for element in adjacenciesA:
+        ordered_adjacencies_genomeA = []
+        for element in adjacencies_genomeA:
             if type(element) is tuple:
                 # if the adjacency is a tuple, sort the tuple and append it to ordered_adjacenciesA
                 if int(element[0]) < int(element[1]):
-                    ordered_adjacenciesA.append(element)
+                    ordered_adjacencies_genomeA.append(element)
                 else:
-                    ordered_adjacenciesA.append((element[1], element[0]))
+                    ordered_adjacencies_genomeA.append((element[1], element[0]))
             else:
                 # if the adjacency is not a tuple, append it to ordered_adjacenciesA
-                ordered_adjacenciesA.append(element)
+                ordered_adjacencies_genomeA.append(element)
 
         # compare each adjacency in adjacenciesB with ordered_adjacenciesA
-        for element in adjacenciesB:
-            if element in ordered_adjacenciesA:
+        for element in adjacencies_genomeB:
+            if element in ordered_adjacencies_genomeA:
                 # if the adjacency is in ordered_adjacenciesA, do nothing and continue to the next adjacency
                 pass
             else:
@@ -406,9 +406,9 @@ class Node_rearrangement:
         return sorted_adjacencies
     
 
-    def get_decircularization_operations(self, adjacenciesB):
+    def get_decircularization_operations(self, adjacencies_genomeB):
         # get all legal operations
-        operations = self.get_legal_operations(adjacenciesB)
+        operations = self.get_legal_operations(adjacencies_genomeB)
 
         # filter out operations that don't involve decircularization
         decircularization_operations = []
