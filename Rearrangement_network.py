@@ -7,7 +7,7 @@ from networkx import DiGraph
 
 
 
-def build_hash_table(node, hash_table, adjacenciesB, weights):
+def build_hash_table(node, hash_table, adjacencies_genomeB, weights):
 # def build_hash_table(current_node: Node, hash_table: Dict[str, Node], adjacencies: List[Tuple[int, int]], weights: List[float]) -> Dict[str, Node]:
 
     """
@@ -25,7 +25,7 @@ def build_hash_table(node, hash_table, adjacenciesB, weights):
     if node.join_adjacency != 0:
 
         # Get list of possible reinsertion operations
-        operations = node.get_reinsertion_operations(adjacenciesB)
+        operations = node.get_reinsertion_operations(adjacencies_genomeB)
 
         # Check each operation
         for operation in operations:
@@ -60,14 +60,14 @@ def build_hash_table(node, hash_table, adjacenciesB, weights):
                 node.children_operations.append((operation, operation_type))
 
                 # Recursively call function with new child node
-                build_hash_table(child, hash_table, adjacenciesB, weights)
+                build_hash_table(child, hash_table, adjacencies_genomeB, weights)
     
 
     # If the previous operation was not a circularization (i.e. the current intermediary genome consists of only linear chromosomes)
     else:
 
         # Get legal operations to perform on the current node's genome
-        operations = node.get_legal_operations(adjacenciesB)
+        operations = node.get_legal_operations(adjacencies_genomeB)
 
         # Iterate over each legal operation
         for operation in operations:
@@ -186,7 +186,7 @@ def build_hash_table(node, hash_table, adjacenciesB, weights):
                     node.children_weights.append(0.5 * weights[1])
 
                         # Recursively build the hash table for the new child node.
-                    build_hash_table(child, hash_table, adjacenciesB, weights)
+                    build_hash_table(child, hash_table, adjacencies_genomeB, weights)
  
                 
                 # If no circular chromosome has been created
@@ -225,7 +225,7 @@ def build_hash_table(node, hash_table, adjacenciesB, weights):
                     # Update the node and build the hash table
                     node.children_weights.append(op_weight)
                     node.children_operations.append((operation, operation_type))
-                    build_hash_table(child, hash_table, adjacenciesB, weights)
+                    build_hash_table(child, hash_table, adjacencies_genomeB, weights)
 
     def check_hash_key(child_state, hash_table):
         key = hash(str(child_state))
