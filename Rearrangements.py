@@ -1,6 +1,7 @@
 class Node_rearrangement:
 
-
+    join_adjacency = 0
+    
     def __init__(self, state=None):
         self.state = state
         self.children = []
@@ -10,11 +11,13 @@ class Node_rearrangement:
         self.circular_chromosomes = []
         self.next_operation = 0
         self.next_operation_weight = 1
-        self.join_adjacency = 0
+        # self.join_adjacency = 0
+
+        
 
         # Find chromosomes and store them in instance variables
         self.linear_chromosomes, self.circular_chromosomes = self.find_chromosomes(self.state)
-
+        
     def find_next_extremity(self, current, next_extremity):
         # Determine the next extremity for the given current extremity
         next = current[1] + 0.5 if current[0] == next_extremity and current[1] % 1 == 0 else \

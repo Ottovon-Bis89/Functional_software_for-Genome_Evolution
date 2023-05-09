@@ -13,11 +13,10 @@ def build_hash_table(node, hash_table, adjacenciesB, weights):
     """
     Recursively builds a hash table of intermediary genomes, where each node represents an intermediary genome and is
     indexed by a hash of its string representation.
-    :param current_node: the node representing the current intermediary genome
+    :param node: the node representing the current intermediary genome
     :param hash_table: the hash table to add nodes to
     :param adjacenciesB: the list of adjacencies in the input genome
     :param weights: a list of weights corresponding to different types of genome rearrangements
-    :return: the hash table containing all intermediary genomes
     """
 
     node = Node_rearrangement

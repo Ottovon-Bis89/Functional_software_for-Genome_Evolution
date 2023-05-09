@@ -7,6 +7,8 @@ from Rearrangements import Node_rearrangement
 from Rearrangement_Extremities import Extremities
 import Rearrangement_network
 
+t0 = time.time()
+
 def load_genome(file_path):
     with open(file_path) as f:
         lines = [line.strip().split(',') for line in f]
@@ -83,7 +85,7 @@ def run(args):
 
         for i, current in enumerate(path):
             if i == 0:
-                operation_type = 'none, this is the source genome'
+                operation_type = 'Not applicable, this is the source genome'
                 operation_weight = 'N/A'
                 operation = 'N/A'
             else:
