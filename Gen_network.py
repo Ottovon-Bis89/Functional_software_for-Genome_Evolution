@@ -1,18 +1,19 @@
 from networkx import DiGraph
+from GEN_NODE import Node
 
 # This program creates a key-value pair data structure that will used to generate a graph of network of solutions paths from the source genome to the target genome
-def build_hash_table(current_node, hash_table, adjacenciesB, weights):
-    node = current_node
-    operations = node.get_legal_operations(adjacenciesB)
+def build_hash_table(current_node, hash_table, target_genome, weights):
+    Node = current_node
+    operations = Node.get_legal_operations(target_genome)
     for operation in operations:
-        operation_result = node.do_mutation(operation)  # perform all the possible mutations that are required to transform genome_A into genome_B.
+        operation_result = Node.do_mutation(operation)  # perform all the possible mutations that are required to transform genome_A into genome_B.
         child_state = operation_result[0]
         op_type = operation_result[1]
 
         check_hash_table = check_hash_key(child_state, hash_table)  # check for intermediate existence
         if check_hash_table[0]:
             child = check_hash_table[1]
-            node.children.append(child)
+            Node.children.append(child)
             child.find_chromosomes(child_state)
 
         else:
@@ -35,17 +36,17 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
 
             else:
                 print("You got a problem, the op_type is :", op_type, " #1")
-                node.children_weights.append('op_weight')
-                node.children_operations.append((operations, 'operation_type'))
+                Node.children_weights.append('op_weight')
+                Node.children_operations.append((operations, 'operation_type'))
 
         # when the child is not in the hash_table
-        child = node(child_state)
+        child = Node(child_state)
         child.find_chromosomes(child_state)
 
         child.join_adjacency = 0
         hash_key = hash(str(child_state))
         hash_key.update({hash_key: child})
-        node.children.append(child)
+        Node.children.append(child)
         if op_type == "ins":
             operation_type = op_type
             op_weight = 0.09 * weights[0]
@@ -65,9 +66,9 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
             print("there is a problem at the .find_op_type function")
             print("you got a problem, the op_type is:", op_type, '#2')
 
-        node.children_weights.append(op_weight)
-        node.children_operations.append(operation, operation_type)
-        build_hash_table(child, hash_table, adjacenciesB, weights)
+        Node.children_weights.append(op_weight)
+        Node.children_operations.append(operation, operation_type)
+        build_hash_table(child, hash_table, target_genome, weights)
 
 
 def check_hash_key(child_state, hash_table):

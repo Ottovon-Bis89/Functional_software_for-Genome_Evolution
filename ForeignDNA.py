@@ -5,14 +5,14 @@ class Foreign_DNA:
     def __init__(self):
         self.state = []
 
-    """
-    The function finds the difference in genes between the source and target genomes. These genes are added to a pool of random integers and foreign DNA fragments
-    are created out of the pool of integers. The fragments are tagged with an underscore(_) to them indentiable in the source genome and also for them to be 
-    ignored by the delete function in the transformation process.
-    """
 
     
     def foreign_dna_pool(self, source, target):
+        """
+        The function finds the difference in genes between the source and target genomes. These genes are added to a pool of random integers and foreign DNA fragments
+        are created out of the pool of integers. The fragments are tagged with an underscore(_) to them indentiable in the source genome and also for them to be 
+        ignored by the delete function in the transformation process.
+        """
         # Check what genes are in target genome but not in source genome. Those genes are needed to create a foreign DNA pool 
         # with fragments that are similar to the two genomes 
         source_genome = []
@@ -68,7 +68,7 @@ class Foreign_DNA:
                         count += 1
             
             #Use foreign_dna list that was created to create foreign dna fragments (random number of fragment and random length of fragments)
-            number_of_fragments = randint(1,99)
+            number_of_fragments = randint(1,50)
             len_fragments = 1
             
             #choose randomly from foreign_dna list to add to frags
@@ -124,7 +124,7 @@ class Foreign_DNA:
                     foreign_dna.append(gene)
             
             #Use foreign_dna list that was created to create foreign dna fragments (random number of frag and random length of fragments)
-            number_of_fragments = randint(1,99)
+            number_of_fragments = randint(1,50)
             len_fragments = 1
             #choose randomly from foreign_dna list to add to frags
             list_of_fragments = []
@@ -149,20 +149,20 @@ class Foreign_DNA:
             return list_of_fragments
     
 
-    """
-    This function adds/insert a fragment of foreign DNA to the Source genome. The foreign fragment can be identified with an underscore(_) attached to an integer. 
-     The path of foreign DNA fragment can be followed through the evolutionary journey of the source genome into 
-     the target genome
-
-    """
+    
     def insert_foreign_dna(self, source_genome, fragment):
+        """
+        This function adds/insert a fragment of foreign DNA to the Source genome. The foreign fragment can be identified with an underscore(_) attached to an integer. 
+        The path of foreign DNA fragment can be followed through the evolutionary journey of the source genome into 
+        the target genome
+        """
         # Count number of applicable intergenic regions to associate to number of mutations
         list_of_mutation_points = []
         list_of_mutation_points_genome = []
 
         for genes_with_intergenic_approved in source_genome:
             for i in range(len(genes_with_intergenic_approved)):
-                if isinstance(genes_with_intergenic_approved[i], str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
+                if (isinstance(genes_with_intergenic_approved[i], str) and len(genes_with_intergenic_approved[i]) > 1) and '*' in genes_with_intergenic_approved[i]:
                     list_of_mutation_points.append(i+1)
 
             list_of_mutation_points_genome.append(list_of_mutation_points)
@@ -173,10 +173,10 @@ class Foreign_DNA:
         length = len(fragment)
         for j in range(len(fragment)):
             if j == 0 :
-                random_bp = randint(5,10)
+                random_bp = randint(6,10)
                 region = '*' + str(random_bp)
                 fragment_with_intergenic_regions.append(region)
-            random_bp = randint(5,10)
+            random_bp = randint(6,10)
             start = fragment[j]
             region = '*' + str(random_bp)
             fragment_with_intergenic_regions.append(start)
@@ -187,7 +187,9 @@ class Foreign_DNA:
         for i in range(len(fragment_with_intergenic_regions)):
             if i % 2 == 0 or i == 0:
                 region = fragment_with_intergenic_regions[i]
+               
                 if len(region) > 2:
+                    # print("lltr: ", len(region))
                     value = region[2]+region[2]
                 else:
                     value = region[1]
@@ -206,16 +208,6 @@ class Foreign_DNA:
             source_chromosome = source_genome[rand_chromosome]
         
         #randomly pick a position from position of applicable region in the chromsome to position
-        rand_position = randint(0,len(position_applicable_region_chromosome)-1)
-        position = position_applicable_region_chromosome[rand_position]
-
-        mutated = []
-        mutated = source_chromosome[0:position-1] + fragment_with_intergenic_regions + source_chromosome[position:]
-
-        source_genome[rand_chromosome] = mutated
-       
-        return source_genome, ['F_DNA',rand_chromosome, position, fragment_with_intergenic_regions]
-
         # rand_position = randint(0,len(position_applicable_region_chromosome)-1)
         # position = position_applicable_region_chromosome[rand_position]
 
@@ -223,13 +215,20 @@ class Foreign_DNA:
         # mutated = source_chromosome[0:position-1] + fragment_with_intergenic_regions + source_chromosome[position:]
 
         # source_genome[rand_chromosome] = mutated
+       
+        # return source_genome,  ['F_DNA',rand_chromosome, position, fragment_with_intergenic_regions, mutated]
 
-        # mutation = [['F_DNA',rand_chromosome, position, fragment_with_intergenic_regions], mutated]
-        # mutation_record = {'mut_Type': 'F_DNA', 'Chr': rand_chromosome, 'position': position, 'Gene': fragment_with_intergenic_regions, 'Genome after mutation': mutated}
+        rand_position = randint(0, len(position_applicable_region_chromosome)-1)
+        position = position_applicable_region_chromosome[rand_position]
 
-        # return  mutation_record
+        mutated = []
+        if position == 0:  # Insert at the beginning
+            mutated = fragment_with_intergenic_regions + source_chromosome
+        else:  # Insert at the ending
+            mutated = source_chromosome + fragment_with_intergenic_regions
 
-
+        source_genome[rand_chromosome] = mutated
+        return source_genome,  ['F_DNA',rand_chromosome, position, fragment_with_intergenic_regions, mutated]
 
 
     

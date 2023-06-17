@@ -9,10 +9,7 @@ class Data_generator():
     of genes which will used be as identifiers or mutation points for the evolutionary events.
     These numbers represent the number of base pairs between(lenght of intergenic region) genes
     These numbers are preceded by an asterisk(*)  to differentiate them from the normal
-    genes(sequence blocks) since they are all both numbers.
-    The function also removes unapplicable intergenic regions from the chromosomes and.
-    then populates the chromosomes with viable intergenic regions(non coding regions between genes)
-    which are needed for mutation to occur.
+    genes(sequence blocks) since they are all numbers.
     '''
     def generate_integenic_regions(self, source_genome):
         new_source_genome = [[] * 1 for i in range(len(source_genome))]

@@ -112,7 +112,7 @@ class Node:
                             if mutation_required ==():
                                 break
                         switch = False
-                elif ((for_Dna_counter < 100 or for_Dna_counter ==0)):
+                elif for_Dna_counter < 100 or for_Dna_counter ==0:
                     print("\tInserted foreign DNA")
                     for_Dna_counter += 1
                     #Here is list of foreign dna where fragments are sublists
@@ -951,4 +951,31 @@ class Node:
 
     
 
+    # inserted = False
+    #         if larger_length:
+    #             # for i in range(len(source_chromosome)-1):
+    #             #     if '*' not in source_chromosome[i] and '_' not in source_chromosome[i]:
+    #             #         if (gene) <= (source_chromosome[i]):
+    #             #             source_chromosome.insert(i, gene)
+    #             #         else:
+    #             #             source_chromosome.append(gene)
 
+    #             insertion_index = 0
+    #             while insertion_index < len(source_chromosome):
+    #                 if '*' not in source_chromosome[insertion_index] and '_' not in source_chromosome[insertion_index]:
+    #                     if int(gene) <= int(source_chromosome[insertion_index]):
+    #                         source_chromosome.insert(insertion_index, gene)
+    #                         inserted = True
+    #                         break
+    #                 insertion_index += 1
+    #             if inserted == False:
+    #                 source_chromosome.append(gene)
+    #             # insertion_index = 0
+    #             # while insertion_index < len(source_chromosome) and (gene) > (source_chromosome[insertion_index]):
+    #             #     source_chromosome.insert(insertion_index, gene)
+    #             #     insertion_index += 1
+
+
+    #         else:
+    #             source_chromosome[position_applicable_region] = gene
+    #         return source_chromosome
