@@ -1,39 +1,50 @@
-import time
-import argparse
-import sys
 from networkx import all_shortest_paths
-
 from Rearrangement_node import Node
+
 from Rearrangement_Extremities import Gene_extremities
 import Rearrangement_network
 
+import time
+import argparse
+import sys
+
 t0 = time.time()
-
-def load_genome(file_path):
-    with open(file_path) as f:
-        lines = [line.strip().split(',') for line in f]
-    genome = [[int(x) for x in line] for line in lines]
-
-    return genome
-
-def load_weight_ratios(file_path):
-    with open(file_path) as f:
-        lines = [line.strip().split(',') for line in f]
-    weight_ratios = [[int(x) for x in line] for line in lines]
-
-    return weight_ratios
 
 
 def run(args):
-    genomeA = load_genome("genA0.txt")
-    genomeB = load_genome("genB0.txt")
-    weight_ratios = load_weight_ratios("weight_ratios.txt")
-
-    stdoutOrigin = sys.stdout 
+    genomeA_file = args.source_genome
+    genomeB_file = args.target_genome
+    weight_ratios_file = args.ratios
+    stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
+    # outfile = open(args.output_file, 'w')
+    with open("sour.txt") as f:
+        line = [element.strip('\n').split(',') for element in f]
+    genomeA = []
+
+    for element in line:
+        element = list(map(int, element))
+        genomeA.append(element)
+
+    with open("tar.txt") as f:
+        line = [element.strip('\n').split(',') for element in f]
+    genomeB = []
+
+    for element in line:
+        element = list(map(int, element))
+        genomeB.append(element)
+
+    with open("Weight_ratios.txt") as f:
+        line = [element.strip('\n').split(',') for element in f]
+    weight_ratios = []
+
+    for element in line:
+        element = list(map(int, element))
+        weight_ratios.append(element)
 
     get_adjacencies = Gene_extremities()
     adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
+
     adjacencies_genomeB = get_adjacencies.ordered_and_sorted_adjacencies(genomeB)
 
     # Create start and target node
@@ -59,27 +70,34 @@ def run(args):
 
     network = Rearrangement_network.build_network(hash_table)
 
-    shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))    
-
+    shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
 
     j = 1
-    tot_b_trl = tot_u_trl = tot_inv = tot_trp1 = tot_trp2 = tot_fus = tot_fis = 0
+    tot_b_trl = 0
+    tot_u_trl = 0
+    tot_inv = 0
+    tot_trp1 = 0
+    tot_trp2 = 0
+    tot_fus = 0
+    tot_fis = 0
 
+    Paths_state = []
+    Paths_state_weight = []
+    # print(shortest_paths[0][4].children_weights[2])
     for path in shortest_paths:
         path_state = []
         path_state_weight = []
-        Paths_state = []
-        Paths_state_weight = []
 
         i = 0
         while i < len(path):
             current = path[i]
             if i == 0:
-                operation_type = 'Not applicable, this is the source genome'
+                operation_type = 'none, this is the source genome'
                 operation_weight = 'N/A'
                 operation = 'N/A'
             else:
                 x = path[i - 1].children.index(current)
+
                 operation_type = path[i - 1].children_operations[x][1]
                 operation_weight = path[i - 1].children_weights[x]
                 operation = path[i - 1].children_operations[x][0]
@@ -87,16 +105,23 @@ def run(args):
             adjacencies = current.state
             genome = get_adjacencies.find_genome(adjacencies)
             path_state_weight.append((genome, ((operation_type, operation), operation_weight)))
+
             path_state.append((genome, (operation_type, operation)))
 
             i += 1
-        Paths_state.append(path_state)
+        Paths_state.append((path_state))
         Paths_state_weight.append(path_state_weight)
 
-
-        # loop through shortest paths
     for path in shortest_paths:
-        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = 0  # initialize counters for this path
+
+        i = 0
+        b_trl = 0
+        u_trl = 0
+        inv = 0
+        trp1 = 0
+        trp2 = 0
+        fus = 0
+        fis = 0
         while i < len(path):
 
             current = path[i]
@@ -129,16 +154,22 @@ def run(args):
         tot_fus += fus
         tot_fis += fis
         j += 1
-
         
-    print('############################################################################################################')
-
-    # Print genomes
-    print('Source Genome:', genomeA)
-    print('Target Genome:', genomeB)
-
-    # Print number of most parsimonious solutions
-    print('Estimated number of rearrangement events:', len(shortest_paths))
+        event_dict['trp1'] = trp1_values[path: trp1]
+        event_dict['fus'] = trp1_values[path: fus]
+	
+    
+    def sort_by_event(solutions: list, event: str) -> list:
+    	solutions_sorted = solutions.sort(key=event_dict[event].get)
+    	return solutions_sorted
+    
+    print(
+        '*****************************************************************Genome Evolution Results*********************************************************')
+    print()
+    print('Source Genome: ', genomeA)
+    print('Target Genome: ', genomeB)
+    print()
+    print('Estimated number of rearrangement events: ', len(shortest_paths))
     print()
     print('Average number of events per solution: ',
           float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
@@ -163,44 +194,31 @@ def run(args):
         for genome in path:
             print(genome)
         path_counter += 1
-
-    
-    print('############################################################################################################')
+        print()
+    print()
+    print(
+        '***********************************************************************************End of Analysis*********************************************************')
 
     sys.stdout.close()
     sys.stdout = stdoutOrigin
 
 
-
-
 def main():
-    # Create an ArgumentParser object with a description of the program
     parser = argparse.ArgumentParser(
-        description='A program that outputs all the optimal set of rearrangment operations that can describe the evolution of one genome into another')
-    
-    # Add arguments to the parser
-    parser.add_argument("-t", help="the set of genes representing the target genome", dest='target_genome', required=True)
-    parser.add_argument("-s", help="the set of genes representing the source genome", dest='source_genome', required=True)
-    parser.add_argument("-r", help='the ratios of each rearrangement operation in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions', dest='ratios', required=True)
-    parser.add_argument("-o", help="the name of the output file that will contain the set of rearrangements", dest='output_file', required=True)
-    
-    # Set the default function to run when the arguments are parsed
+        description='A program that outputs all the optimal set of rearrangment operations that can descripe the evolution of one genome into another')
+    parser.add_argument("-t", help="this is the set of genes representing the target genome", dest='target_genome',
+                        required=True)
+    parser.add_argument("-s", help="this is the set of genes representing the source genome",
+                        dest='source_genome', required=True, )
+    parser.add_argument("-r",
+                        help='the ratios in which each rearrangement is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions',
+                        dest='ratios', required=True)
+    parser.add_argument("-o", help="the name of the output file that will contain the set of rearrangements",
+                        dest='output_file', required=True)
     parser.set_defaults(func=run)
-    
-    # Parse the arguments
     args = parser.parse_args()
-    
-    # Call the function set as the default
     args.func(args)
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-    
-
-

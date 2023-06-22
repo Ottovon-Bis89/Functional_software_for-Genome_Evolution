@@ -190,7 +190,7 @@ class Foreign_DNA:
                
                 if len(region) > 2:
                     # print("lltr: ", len(region))
-                    value = region[2]+region[2]
+                    value = region[1]+region[2]
                 else:
                     value = region[1]
                 if int(value) < 5:
@@ -208,15 +208,6 @@ class Foreign_DNA:
             source_chromosome = source_genome[rand_chromosome]
         
         #randomly pick a position from position of applicable region in the chromsome to position
-        # rand_position = randint(0,len(position_applicable_region_chromosome)-1)
-        # position = position_applicable_region_chromosome[rand_position]
-
-        # mutated = []
-        # mutated = source_chromosome[0:position-1] + fragment_with_intergenic_regions + source_chromosome[position:]
-
-        # source_genome[rand_chromosome] = mutated
-       
-        # return source_genome,  ['F_DNA',rand_chromosome, position, fragment_with_intergenic_regions, mutated]
 
         rand_position = randint(0, len(position_applicable_region_chromosome)-1)
         position = position_applicable_region_chromosome[rand_position]

@@ -9,7 +9,7 @@ class Node:
     def __init__(self):
         self.state = []
    
-    def get_legal_operations(self,source_genome, target_genome):
+    def get_operations(self,source_genome, target_genome):
              
         """
         The function returns a list  of the operations that are needed to transform the
@@ -74,7 +74,6 @@ class Node:
        
                 # randomly choose to insert foreign dna
                 choose = randint(0, 5)  # Generate a random number between 0 and 5 and assign it to 'choose'
-                # print("cho:", choose)
                 # foreign_Dna_counter += 1
 
                 if (choose < 5 and foreign_Dna_counter != 0):  # Check if 'choose' is less than 5 and 'foreign_Dna_counter' is not equal to 0
@@ -159,7 +158,7 @@ class Node:
                                 # print("rtq:",required_mutation)
                                 break
                             switch = False  # Set 'switch' to False for the loop to terminate
-                elif foreign_Dna_counter <= 5 or foreign_Dna_counter >= 0:  # Check if the 'foreign_Dna_counter' is greater than  or equal to 0
+                elif foreign_Dna_counter <= 5 or foreign_Dna_counter > 0:  # Check if the 'foreign_Dna_counter' is greater than  or equal to 0
                     print("\tInserted foreign DNA")  # Print a message indicating that foreign DNA is being inserted
                     foreign_Dna_counter += 1   # Increment the 'foreign_Dna_counter' by 1 after each insertion
                     #Here is list of foreign DNAs where fragments are sublists
@@ -267,22 +266,18 @@ class Node:
                             mutations, required_mutation = self.mutation_legal_operations(source_genome, target_genome)
                             
                             if not required_mutation:  # If a required mutation is not found, exit the loop
-                                # print("m:", mutations)
-                                # print("rm:" ,required_mutation)
                                 break
                                 # continue
                         switch = False
-                        # switch = True
+                      
                         
-            elif loop_counter >= 0:
+            elif loop_counter > 1:
 
                 mutations, required_mutation = self.mutation_legal_operations(source_genome, target_genome)
                 
                 
                 if not mutations and required_mutation:  # If there are no mutations or a required mutation is found, set switch to True
-                    # print("mut:", mutations)
-                    # print(";;;;;;;;;;;;;;;;;;;;")
-                    # print(required_mutation)
+                 
                     switch = True
                     # switch = False
                     
@@ -293,8 +288,6 @@ class Node:
                     # source_genome = source_genome[:]
 
                     list_of_legal_operations.append(mutation_list) # Append the mutation list to the list of legal operations
-                    # print("list4: ", list_of_legal_operations)
-                    # print("mtt:", mutation_list)
                     # check number of applicale region, if 0 then create new intergenic regions 
                     count_applicable_region = 0 # Initialize count_applicable_region variable to keep track of the applicable regions
 
@@ -351,7 +344,6 @@ class Node:
                                             final_mutations.append(mutation_list)
                             # Append the final mutations to the list of legal operations
                             list_of_legal_operations.append(final_mutations)
-                            # print("list5: ", list_of_legal_operations)
                             
                             clean_chromosome = []
                             clean_genome = []
@@ -435,8 +427,6 @@ class Node:
 
             new_source_genome.append(new_chromosome)   # Append the modified chromosome to the new_source_genome
             new_source_genome_with_positions.append(new_chromosome_positions_with_genes)  # Append the positions with genes to the new_source_genome_with_positions
-            # print("ncp:" ,new_chromosome_positions_with_genes)
-            # print("nsg:" ,new_source_genome_with_positions)
 
 
         # Perform step 1: Checking genes per chromosome between the target and source genomes
@@ -460,8 +450,6 @@ class Node:
                 if '*' not in str(target_chromosome[i]) and (target_chromosome[i]) not in new_chromosome:
                     insertion_target.append((i,target_chromosome[i])) # Append the position and gene as a tuple to the insertion_target list
             insertion_genome.append(insertion_target)    # Append the insertion_target to the insertion_genome list
-            # print("inst:",insertion_target)
-            print("insg:", insertion_genome)
             insertion_target = []
         
         #create the missing chromosomes in the source genome
@@ -507,9 +495,9 @@ class Node:
                     deletion_target.append((position, gene)) # Append the position and gene as a tuple to the deletion_target list
 
             deletion_genome.append(deletion_target)  # Append the deletion_target to the deletion_genome list
-            # print("deltag:", deletion_target)
+        
             deletion_target = []    # Reset the deletion_target list for the next chromosome
-            print("deletion genome:::::",deletion_genome)
+            
         #create chromosomes with genes from the target genome if it has more chromosomes than the source genome
         if len(target_genome) > len(new_source_genome_with_positions):
             for g in range(len(new_source_genome_with_positions), len(target_genome)):
