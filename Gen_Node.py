@@ -7,7 +7,7 @@ import Data_generator
 
 class Node:
 
-    def __init__(self, state=None):
+    def __init__(self):
         self.state = []
         self.children = []
         self.children_weights = []
@@ -229,8 +229,8 @@ class Node:
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
        
                 # randomly choose to insert foreign dna
-                choose = randint(0, 1000000)
-                if (choose <= 1000000 and for_Dna_counter != 0) :
+                choose = randint(0, 1000)
+                if (choose <= 1000 and for_Dna_counter != 0) :
                     series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
                     
                     if series_of_mutation == [] and mutation_required !=():

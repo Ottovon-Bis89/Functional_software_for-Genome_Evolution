@@ -227,12 +227,10 @@ class Evolutionary:
                     normal_i_reg = gen_obj.intergenerator(clean_genome)
                     adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
                     print(adjacenciesA)
-                series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
-                print(mutation_required)
-                if series_of_mutation == [] and mutation_required !=():
-                    print(series_of_mutation)
-                    source_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
-                    adjacenciesA = source_genome[:]
+                series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
+                if series_of_mutation == []:
+                    src_genome, mutation_list = self.do_mutation(adjacenciesA, mutation_required)
+                    adjacenciesA = src_genome[:]
                     list_of_legal_operations.append(mutation_list)
                 else:
                     while (any(series_of_mutation) and mutation_required !=()) or mutation_required !=():
@@ -248,11 +246,11 @@ class Evolutionary:
                             for chromosome_number in range(len(mutation)):
                                 if mutation[chromosome_number] != []:
                                     chromosome_index = chromosome_number
-                                    chromosome = mutation[chromosome_number]
-                                    for m in range(len(chromosome)):
-                                        do_mutation = (mutation_type, chromosome_index, chromosome[m])
-                                        source_genome, mutation_list = self.do_mutation(adjacenciesA, do_mutation)
-                                        adjacenciesA = source_genome[:]
+                                    chrom = mutation[chromosome_number]
+                                    for m in range(len(chrom)):
+                                        do_mutation = (mutation_type, chromosome_index, chrom[m])
+                                        src_genome, mutation_list = self.do_mutation(adjacenciesA, do_mutation)
+                                        adjacenciesA = src_genome[:]
                                         mutations_finale.append(mutation_list)
                         list_of_legal_operations.append(mutations_finale)
                         clean_chromosome = []
@@ -271,9 +269,9 @@ class Evolutionary:
                         gen_obj = Data_generator.Data_generator()
                         normal_i_reg = gen_obj.intergenerator(clean_genome)
                         adjacenciesA = gen_obj.intergenic_regions(normal_i_reg)
-                        print("source_genome before mutation legal operations")
+                        print("src before mutation legal ops")
                         #print(adjacenciesA)  
-                        series_of_mutation,mutation_required = self.mutation_legal_operations(adjacenciesA, adjacenciesB)
+                        series_of_mutation,mutation_required = self.mutation_legal_ops(adjacenciesA, adjacenciesB)
                         print("within while loop and series of mutation checks")
                         print(series_of_mutation,mutation_required)
                         print(any(series_of_mutation))
@@ -311,7 +309,7 @@ class Evolutionary:
         new_target_chromosome = []
         new_target_genome = []
 
-        for chromosome in source_genome:
+        for chrom in source_genome:
             for element in chromosome:
                 if isinstance(element,str) and '*' not in element:
                     if '_' in element and len(element) == 3:
@@ -334,11 +332,10 @@ class Evolutionary:
                         new_target_chromosome.append(element)
             new_target_genome.append(new_target_chromosome)
             new_target_chromosome = []
-            #print("we are here")
         
         return new_source_genome, new_target_genome
         
-    def mutation_legal_operations(self, source_genome, target_genome):
+    def mutation_legal_ops(self, source_genome, target_genome):
         # This function decides if mutations, any series of mutations, can take genome A to genome B
         # check number of chromosomes -> possibility of chromosome deletion(target chromosmes less than source) or chromosome insertion (source chromosome count less than target)
         # Check number of genes in chromosome for target and source -> indicators for insertion/foreign dna/deletion
@@ -354,11 +351,10 @@ class Evolutionary:
                 if isinstance(chromosome[i], str) and '_' in chromosome[i]:
                     if len(chromosome[i])==3:
                         gene = chromosome[i]
-                        chromosome.append(int(gene[:2]))
+                        chromosome.append(int(gene[:1]))
                     elif len(chromosome[i])==2:
                         gene = chromosome[i]
                         # print((gene[:1]))
-                        print("i'm here")
                         chromosome.append(int(gene[:1]))
                 elif isinstance(chromosome[i], str):
                     chromosome.append((chromosome[i]))
@@ -367,8 +363,6 @@ class Evolutionary:
                 elif ((isinstance(chromosome[i], str) and '*' in chromosome[i])):
                     chromosome.append((chromosome[i]))
             target_genome.append(chromosome)
-            print(target_genome)
-            print("target genome is empty")
             chromosome = []
 
         #remove underscores that identify fragments in source genome
@@ -383,7 +377,7 @@ class Evolutionary:
                     elif len(chromosome[i])==2:
                         gene = chromosome[i]
                         # print((gene[:1]))
-                        chromosome.append(int(gene[:2]))
+                        chromosome.append(int(gene[:1]))
                 elif isinstance(chromosome[i], str):
                     chromosome.append((chromosome[i]))
                 elif isinstance(chromosome[i], int):
@@ -496,7 +490,7 @@ class Evolutionary:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_operations insert_1')
+                        print('inside mutation_legal_ops insert_1')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -521,7 +515,7 @@ class Evolutionary:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_operations insert_2')
+                        print('inside mutation_legal_ops insert_2')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -555,7 +549,7 @@ class Evolutionary:
                 for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        #print('inside mutation_legal_operations insert_3')
+                        #print('inside mutation_legal_ops insert_3')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -571,7 +565,7 @@ class Evolutionary:
             for i in range(len(in_genome)):
                     chromosome = in_genome[i]
                     if chromosome != []:
-                        print('inside mutation_legal_operations insert_4')
+                        print('inside mutation_legal_ops insert_4')
                         # print(chromosome[i])
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("insert",i, chromosome[picker])
@@ -590,7 +584,7 @@ class Evolutionary:
                         picker = randint(0, len(chromosome)-1)
                         do_mutation = ("duplication",i, chromosome[picker])
                         break
-        print('mutation get_legal_operations return for do mutation')
+        print('mutation get_leg_op return for do mutation')
         print(do_mutation)
         #step 3: checking if all these necessary mutations can occur at once
         #first check that insert and delete positions dont overlap for same chromosomes, if they do then we wont be able to cause all mutations necessary
@@ -660,7 +654,7 @@ class Evolutionary:
         delete_count = 0
 
 
-        #check counting in pairs as well
+        #TODO check counting in pairs as well
         for chromosome in out_position_genome:
             for gene in chromosome:
                 delete_count += 1
@@ -669,7 +663,7 @@ class Evolutionary:
             for gene in chromosome:
                 duplication_count += 1
         if (number_applicable_region < (duplication_count+insert_count+delete_count)):
-            # print("returned at line 481")
+            #print("returned at line 481")
             return [], do_mutation
         
         #check that the positions for mutations have applicable intergenic regions
@@ -678,7 +672,7 @@ class Evolutionary:
             in_chromosome = in_position_genome[i]
             out_chromosome = out_position_genome[i]
             duplication_chromosome = duplication_position_genome[i]
-            applicable_region_chromosome = applicable_region_genome[i]
+            applicable_regions_chrom = applicable_region_genome[i]
             # print(applicable_regions_chrom)
             total_positions = []
             total_positions = in_chromosome+out_chromosome+duplication_chromosome
@@ -739,7 +733,7 @@ class Evolutionary:
             for i in range(len(genes_with_intergenic_approved)):
                 # print(genes_with_intergenic_approved)
                 if isinstance(genes_with_intergenic_approved[i],str) and len(genes_with_intergenic_approved[i]) > 1 and '*' in genes_with_intergenic_approved[i]:
-                    #count_applicable_regions += 1
+                    # count_applicable_regions += 1
                     if i != len(genes_with_intergenic_approved)-2:
                         list_of_mutation_points.append(i+1)
                 elif (not isinstance(genes_with_intergenic_approved[i],str)) or (isinstance(genes_with_intergenic_approved[i],str) and '*' not in genes_with_intergenic_approved[i]):
