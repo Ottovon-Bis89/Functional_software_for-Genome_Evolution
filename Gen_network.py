@@ -36,7 +36,7 @@ def build_hash_table(current_node, hash_table, target_genome, weights):
                             op_weight = 0.50 * weights[3]
 
                         else:
-                            print("You got a problem, the op_type is :", op_type, " #1")
+                            print("You got a problem, the op_type is werong")
                             Node.children_weights.append('op_weight')
                             Node.children_operations.append((operations, 'operation_type'))
 
@@ -63,7 +63,7 @@ def build_hash_table(current_node, hash_table, target_genome, weights):
                         print("there is a problem at the .find_op_type function")
                         print("you got a problem, the op_type is:", op_type, '#2')
 
-                    Node.children_weights.append(op_weight)
+                    Node.children_weights.append(op_weight) 
                     Node.children_operations.append(operation, operation_type)
                     build_hash_table(child, hash_table, target_genome, weights)
 

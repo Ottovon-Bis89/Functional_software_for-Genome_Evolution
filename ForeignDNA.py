@@ -42,7 +42,8 @@ class Foreign_DNA:
 
         if len(difference) > 0:
             # define the ratio (1/5)
-            number_of_random_ints = (len(difference) * 3) - (len(difference))  #ratio can be changed here, the ratio is the number of genes to number of random integers in foreign dna fragment. Maximum should be five (5)
+            number_of_random_ints = (len(difference) * 3) - (len(difference))  #ratio can be changed here, the ratio is the number of genes to number of random integers in foreign dna fragment.
+            print(number_of_random_ints)
 
             # create foreign dna
             foreign_dna = []

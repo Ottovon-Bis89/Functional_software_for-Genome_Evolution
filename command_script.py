@@ -174,15 +174,14 @@ def run(args):
     print()
     print('Solutions: ')
     print()
+
     path_counter = 1
     for path in Paths_state:
-        print('Solution number ', path_counter)
+        print('#Solution number ', path_counter)
         for genome in path:
             print(genome)
         path_counter += 1
-    G = nx.Digraph()
-    nx.draw(G, with_labels=True, arrows=True)
-    plt.show()
+    
 
     print()
     print()

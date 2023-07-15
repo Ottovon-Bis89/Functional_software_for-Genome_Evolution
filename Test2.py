@@ -1,6 +1,6 @@
 import Gen_Node
 import Gen_xtremities
-import Foreign_DNA
+import ForeignDNA
 import sys
 
 
@@ -8,7 +8,7 @@ source_genome= [['*6', '1', '*7', '2', '*7', '3', '*7', '4', '*8', '1', '*7', '5
 target_genome= [['*7', '1', '*6', '2', '*7', '3', '*6', '4', '*7', '5', '*9', '6', '*6', '7', '*6', '8'],['*9', '9', '*10', '10', '*8', '11' , '*6', '26']] 
 
 
-fdna_1 = Foreign_DNA.foreign_dna(source_genome, target_genome)
+fdna_1 = ForeignDNA.foreign_dna(source_genome, target_genome)
 
 print(fdna_1) 
 print(len(fdna_1))

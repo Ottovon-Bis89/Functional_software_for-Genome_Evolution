@@ -214,7 +214,7 @@ for i in range(0, number_of_simulations):
     total_time = t1-t0
 
     #add run results to dataframe
-    df=df.append({'Operation_sequences':operation_sequences, 'Solution_sequence':evolver_scenario_operation_sequence, 'True_solution_found':number_of_solutions_found, 'Genolve_time':genolve_time, 'Total_time':total_time}, ignore_index=True)
+    df=pd.concat({'Operation_sequences':operation_sequences, 'Solution_sequence':evolver_scenario_operation_sequence, 'True_solution_found':number_of_solutions_found, 'Genolve_time':genolve_time, 'Total_time':total_time}, ignore_index=True)
 
     network.clear()
 

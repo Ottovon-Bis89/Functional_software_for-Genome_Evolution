@@ -21,6 +21,7 @@ class Gene_extremities:
                     chromosome_gene_extremities.append(abs(marker))
              # Add the new chromosome with gene extremities to the new genome
             genome_gene_extremities.append(chromosome_gene_extremities)
+            print(genome_gene_extremities)
         # Return the new genome with gene extremities
         return genome_gene_extremities
 

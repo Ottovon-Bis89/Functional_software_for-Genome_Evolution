@@ -18,7 +18,7 @@ class Node:
         It also chooses and inserts fragments of foreign DNA into the source genome as it is transformed into the target genome
         """
        
-        list_of_legal_operations = []   # Initialize an empty list to store legal operations
+        list_of_operations = []   # Initialize an empty list to store legal operations
         switch = True    # Set the switch variable to True, indicating the loop should start
         loop_counter = 0 # Initialize the loop counter to 0, representing the number of iterations
         foreign_Dna_counter = 0  # Initialize the foreign DNA counter to 0, counting occurrences of foreign DNA insertion
@@ -38,7 +38,7 @@ class Node:
             #     else:
             #         source_genome = source_genome[:]   # If the element is not present, update the source genome
             loop_counter += 1
-            if loop_counter > 0 : # Check if the loop counter is greater than 0, which indicates the iterations has started
+            if loop_counter != 0 : # Check if the loop counter is greater than 0, which indicates the iterations has started
 
                 gen_obj = Intergenic_region_generator.Intergenic_generator()
                 # check number of applicale intergenic regions, if 0 then create more intergenic regions
@@ -87,7 +87,7 @@ class Node:
                     # and assign the returned values to 'source_genome' and 'mutation_list'
                         source_genome, mutation_list = self.do_mutation(source_genome, required_mutation)
                         # source_genome = source_genome[:]
-                        list_of_legal_operations.append(mutation_list)   # Append 'mutation_list' to 'list_of_legal_operations'
+                        list_of_operations.append(mutation_list)   # Append 'mutation_list' to 'list_of_legal_operations'
                         switch = True  # Set 'switch' to True to continue the loop
                     else:   
                         # Enter a while loop that continues while there are  mutations or 'required_mutation' is not an empty tuple
@@ -128,7 +128,7 @@ class Node:
                                             final_mutations.append(mutation_list)  # Append 'mutation_list' to 'final_mutations'
 
                              # Append 'final_mutations' to 'list_of_legal_operations'
-                            list_of_legal_operations.append(final_mutations)
+                            list_of_operations.append(final_mutations)
                             # print("list1: ", list_of_legal_operations)
                            
                            
@@ -182,12 +182,13 @@ class Node:
                     # Get the element at the index of the choice of foreign of dna' from the 'foreign_dna' list, and
                     # Assign the element to 'chosen'
                     chosen = foreign_dna[choice_foreign_dna]
+                    print(chosen)
 
                     # add foreign DNA to the source genome
                     # Call the 'insert_foreign_dna' method of the 'foreign_obj' instance with 'source_genome' and 'chosen' as arguments
                     # Assign the returned values to 'source_genome' and 'list_of_operationss'
                     source_genome, list_of_operationss = foreign_obj.insert_foreign_dna(source_genome, chosen)
-                    # list_of_legal_operations.append(list_of_operationss)   # Append 'list_of_operationss' to 'list_of_legal_operations'
+                    # list_of_operations.append(list_of_operationss)   # Append 'list_of_operationss' to 'list_of_legal_operations'
 
                     mutation_genome = source_genome.copy()  # Create a copy of 'source_genome' and assign it to 'mutation_genome'
 
@@ -195,13 +196,12 @@ class Node:
                     # Assign the returned values to 'mutations' and 'required_mutation'
                     mutations, required_mutation = self.mutation_legal_operations(mutation_genome, target_genome)
                     if required_mutation:  # Check if 'mutations' is an empty list
-                        # print("rMUUt:", mutations)
-
+                       
                         # Call the 'do_mutation' method with 'source_genome' and 'required_mutation' as arguments
                         # Assign the returned values to 'source_genome' and 'mutation_list'
                         source_genome, mutation_list = self.do_mutation(mutation_genome, required_mutation)
                         # source_genome = source_genome[:]
-                        list_of_legal_operations.append(mutation_list)  # Append 'mutation_list' to 'list_of_legal_operations'
+                        list_of_operations.append(mutation_list)  # Append 'mutation_list' to 'list_of_legal_operations'
                         # print("list2: ", list_of_legal_operations)
                         switch = True   
         
@@ -287,7 +287,7 @@ class Node:
                     source_genome, mutation_list = self.do_mutation(source_genome, required_mutation)
                     # source_genome = source_genome[:]
 
-                    list_of_legal_operations.append(mutation_list) # Append the mutation list to the list of legal operations
+                    list_of_operations.append(mutation_list) # Append the mutation list to the list of legal operations
                     # check number of applicale region, if 0 then create new intergenic regions 
                     count_applicable_region = 0 # Initialize count_applicable_region variable to keep track of the applicable regions
 
@@ -343,7 +343,7 @@ class Node:
                                             # source_genome = source_genome[:]
                                             final_mutations.append(mutation_list)
                             # Append the final mutations to the list of legal operations
-                            list_of_legal_operations.append(final_mutations)
+                            list_of_operations.append(final_mutations)
                             
                             clean_chromosome = []
                             clean_genome = []
@@ -388,7 +388,7 @@ class Node:
             loop_counter += 1 # Increment the loop_counter by 1
 
             # Return the list_of_legal_operations
-        return list_of_legal_operations
+        return list_of_operations
     
     
 
@@ -993,20 +993,16 @@ class Node:
                 source_genome[chromosome_index] = mutated_chromosome
                 #Update the source_genome with the mutated chromosome
                 #create record to keep each type of mutation/operation
-                operation = {'Mut_Type': type,
-                            'Chr': chromosome_index + 1,
-                            'Gene': gene_to_duplicate,
-                            'Pos': position,
-                            'Type of dup': type_of_duplication,
-                            'Genome after mutation': source_genome}
+                operation = {'Mut_Type': type, 'Chr': chromosome_index + 1,'Gene': gene_to_duplicate,'Pos': position,'Type of dup': type_of_duplication,'Genome after mutation': source_genome}
 
-                list_of_mutations.append(operation) # Append the operation to the list_of_mutations
+                operation_str = str(operation).replace("\n", "")
+
+                list_of_mutations.append(operation_str) # Append the operation to the list_of_mutations
               
                 
         elif type == 'ins':
             position = actual_mutation[0]
             gene_to_insert = actual_mutation[1]
-            # print(str(chromosome_index)+"((((((((((((((((((((((((- This is the index of the chromosome")
             while chromosome_index  >= len(source_genome):
                 source_genome.append([])
             chromosome = source_genome[chromosome_index]   # Access the chromosome in the source_genome based on the chromosome_index
@@ -1021,23 +1017,20 @@ class Node:
 
                  # Perform the insertion operation and obtain the mutated chromosome
                 # Create a record to keep track of the mutation operation
-                operation = {'Mut_Type': type,
-                            'Chr': chromosome_index + 1,
-                            'Pos': len(chromosome)+1,
-                            'Gene': gene_to_insert,
-                            'Genome after mutation': source_genome}
-                list_of_mutations.append(operation)   # Append the operation to the list_of_mutations
+                operation = {'Mut_Type': type,'Chr': chromosome_index + 1,'Pos': len(chromosome)+1,'Gene': gene_to_insert,'Genome after mutation': source_genome}
+                operation_str = str(operation).replace("\n", "")
+
+                list_of_mutations.append(operation_str)   # Append the operation to the list_of_mutations
 
             elif(isinstance(chromosome[position-1], str) and '*' in chromosome[position-1]) and len(chromosome[position-1])>1:
                  # If the condition is true, perform the insertion operation
                 mutated_chromosome = self.insertion(chromosome, position, gene_to_insert)
                # Create a record to keep track of the mutation operation
-                operation = {'Mut_Type': type,
-                            'Chr': chromosome_index + 1,
-                            'Pos': position,
-                            'Gene': gene_to_insert,
-                            'Genome after mutation': source_genome}
-                list_of_mutations.append(operation)  # Append the operation to the list_of_mutations
+                operation = {'Mut_Type': type,'Chr': chromosome_index + 1,'Pos': position,'Gene': gene_to_insert,'Genome after mutation': source_genome}
+
+                operation_str = str(operation).replace("\n", "")
+
+                list_of_mutations.append(operation_str)  # Append the operation to the list_of_mutations
                
 
         elif type == 'del':
@@ -1057,12 +1050,12 @@ class Node:
                 mutated_chromosome = self.deletion(chromosome, position)
               
                # Create a record to keep track of the mutation operation
-                operation = {'Mut_Type': type,
-                            'Chr': chromosome_index + 1,
-                            'Pos': position,
-                            'Gene': gene_to_delete,
-                            'Genome after mutation': source_genome}
-                list_of_mutations.append(operation)   # Append the operation to the list_of_mutations
+                operation = {'Mut_Type': type,'Chr': chromosome_index + 1,'Pos': position,'Gene': gene_to_delete,'Genome after mutation': source_genome}
+
+                operation_str = str(operation).replace("\n", "")
+
+                list_of_mutations.append(operation_str)   # Append the operation to the list_of_mutations
+               
 
             # if len(source_genome) > len(target_genome):
             #     del source_genome[len(target_genome):]
