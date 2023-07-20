@@ -16,27 +16,27 @@ def pretty_print(list_of_operations):
 
 
 
-# def pretty_print(list_of_legal_operations):
-#     for item in sorted(list_of_legal_operations):
-#         for x in item:
-#             if isinstance(x, dict):
-#                 for key in sorted(x.keys()):
-#                     value = x[key]
-#                     print(f"  {key}:")
-#                     pretty_print(value)
-#             elif isinstance(x, list):
-#                 sorted_list = sorted(x)
-#                 for y in sorted_list:
-#                     if isinstance(y, dict):
-#                         for key in sorted(y.keys()):
-#                             value = y[key]
-#                             print(f"    {key}:")
-#                             pretty_print(value)
-#                     else:
-#                         print(f"    {y}")
-#             else:
-#                 print(f"{x}")
-#     print("\n")
+def pretty_print(list_of_legal_operations):
+    for item in sorted(list_of_legal_operations):
+        for x in item:
+            if isinstance(x, dict):
+                for key in sorted(x.keys()):
+                    value = x[key]
+                    print(f"  {key}:")
+                    pretty_print(value)
+            elif isinstance(x, list):
+                sorted_list = sorted(x)
+                for y in sorted_list:
+                    if isinstance(y, dict):
+                        for key in sorted(y.keys()):
+                            value = y[key]
+                            print(f"    {key}:")
+                            pretty_print(value)
+                    else:
+                        print(f"    {y}")
+            else:
+                print(f"{x}")
+    print("\n")
 
 
 

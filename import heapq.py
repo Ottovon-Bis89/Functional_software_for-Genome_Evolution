@@ -1,132 +1,209 @@
+
+# import heapq
+# import networkx as nx
+# import matplotlib.pyplot as plt
+# from GEN_NODE import Node
+# from ForeignDNA import Foreign_DNA
+
+
+# class Gen_net_work:
+
+#     def __init__(self, source_genome, target_genome, mutations):
+#         self.source_genome =tuple(map(tuple, source_genome))
+#         self.target_genome = tuple(map(tuple, target_genome))
+#         self.mutations = mutations
+#         self.node = Node()
+#         self.foreign =Foreign_DNA()
+
+#     def transform_genome(self):
+#         costs = {self.source_genome: 0}
+#         queue = [(0, self.source_genome)]
+#         previous = {self.source_genome: []}
+#         print("hhhhhhhhhhhhhhhhhhh")
+#         while queue:
+#             current_genome = heapq.heappop(queue)
+#             print(current_genome)
+#             if current_genome == self.target_genome:
+#                 paths = []
+#                 for path in previous[current_genome]:
+#                     new_path = path + [current_genome]
+#                     paths.append(new_path)
+#                     print(paths)
+#                 return paths
+                   
+#             mutations.setdefault(current_genome, {})
+#             for mutation, weight in mutations[current_genome].items():
+               
+#                 new_cost = costs[current_genome] + weight
+#                 if mutation not in costs or new_cost < costs[mutation]:
+#                     costs[mutation] = new_cost
+                   
+#                     heapq.heappush(queue, (new_cost, mutation))
+#                     previous.setdefault(mutation, [])
+#                     for path in previous[current_genome]:
+#                         new_path = path + [current_genome]
+#                         previous[mutation].append(new_path)
+#                 elif new_cost == costs[mutation]:
+#                     for path in previous[current_genome]:
+#                         new_path = path + [current_genome]
+#                         previous[mutation].append(new_path)
+
+#         return []
+
+#     def get_intermediates(self, path):
+#         intermediates = []
+#         for i in range(len(path) - 1):
+#             intermediates.append(self.apply_mutation(path[i], path[i + 1]))
+#             print("here:",intermediates)
+#         return intermediates
+
+
+
+#     def apply_mutation(self, current_genome, mutation):
+#         # Implement your mutation logic here
+#         if mutation == 'insertion':
+#             # Apply insertion mutation
+#             self.node.insertion()
+#         elif mutation == 'deletion':
+#             # Apply deletion mutation
+#             self.node.deletion()
+#         elif mutation == 'duplication':
+#             # Apply duplication mutation
+#             self.node.duplication()
+#         elif mutation == 'foreign_DNA':
+#             # Apply fDNA mutation
+#             self.foreign.insert_foreign_dna()
+
+#         # Return the resulting genome after mutation
+#         return current_genome
+
+
+
+#     def find_optimal_paths(self):
+#         optimal_paths = self.transform_genome()
+#         print(optimal_paths)
+#         if optimal_paths:
+#             min_cost = min(
+#                 sum(self.mutations[genome1][genome2] for genome1, genome2 in zip(path, path[1:])) for path in optimal_paths
+#             )
+#             print("Optimal Transformation Paths:")
+#             for i, path in enumerate(optimal_paths, start=1):
+#                 if sum(self.mutations[genome1][genome2] for genome1, genome2 in zip(path, path[1:])) == min_cost:
+#                     intermediates = self.get_intermediates(path)
+#                     print(f"Path {i}:")
+#                     for genome in path + intermediates:
+#                         print(genome)
+#                     print('---')
+#         else:
+#             print("No transformation paths exist.")
+
+#         # Create a directed acyclic graph (DAG) for visualization
+#         graph = nx.DiGraph()
+
+#         # Add nodes and edges to the graph
+#         for path in optimal_paths:
+#             for i in range(len(path) - 1):
+#                 graph.add_edge(path[i], path[i + 1], weight=self.mutations[path[i + 1]])
+
+#         # Set layout for the graph
+#         pos = nx.spring_layout(graph)
+
+#         # Draw the nodes and edges of the graph
+#         nx.draw_networkx_nodes(graph, pos)
+#         nx.draw_networkx_edges(graph, pos)
+#         nx.draw_networkx_labels(graph, pos)
+
+#         # Draw edge weights
+#         edge_labels = nx.get_edge_attributes(graph, 'weight')
+#         nx.draw_networkx_edge_labels(graph, pos, edge_labels)
+
+#         # Show the graph
+#         plt.title("Optimal Transformation Paths (DAG)")
+#         plt.axis('off')
+#         plt.show()
+
+
+# # Example usage
+# source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1']]
+
+# target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*8', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11', '*9']]
+
+# mutations = {
+#     'insertion': 0.15,
+#     'deletion': 0.05,
+#     'duplication': 0.30,
+#     'foreign_DNA': 0.50
+# }
+
+# gen_network = Gen_net_work(source_genome, target_genome, mutations)
+# gen_network.find_optimal_paths()
+
+
 import heapq
-import networkx as nx
-import matplotlib.pyplot as plt
+from collections import defaultdict
+from GEN_NODE import Node
 
 
-def transform_genome(start_genome, end_genome, mutations):
-    # Create a dictionary to store the cumulative costs of mutations for each genome
-    costs = {start_genome: 0}
+class ParsimoniousPathsFinder:
+    def __init__(self, mutations):
+        self.mutations = mutations
+        self.node = Node()  # Create an instance of the other class
 
-    # Create a priority queue to store the genomes and their cumulative costs
-    queue = [(0, start_genome)]
+    def find_parsimonious_paths(self, source_genome, target_genome):
+        costs = {source_genome: 0}
+        queue = [(0, source_genome)]
+        previous = defaultdict(list)
 
-    # Create a dictionary to store the previous genomes in the transformation paths
-    previous = {start_genome: []}
+        while queue:
+            current_genome = heapq.heappop(queue)
 
-    while queue:
-        current_cost, current_genome = heapq.heappop(queue)
-
-        # Check if we reached the end genome
-        if current_genome == end_genome:
-            # Generate all transformation paths with the optimal cumulative cost
-            paths = []
-            for path in previous[current_genome]:
-                new_path = path + [current_genome]
-                paths.append(new_path)
-            return paths
-
-        for mutation, weight in mutations[current_genome].items():
-            new_cost = costs[current_genome] + weight
-            if mutation not in costs or new_cost < costs[mutation]:
-                costs[mutation] = new_cost
-                heapq.heappush(queue, (new_cost, mutation))
-                previous.setdefault(mutation, [])
+            if current_genome == target_genome:
+                paths = []
                 for path in previous[current_genome]:
                     new_path = path + [current_genome]
-                    previous[mutation].append(new_path)
-            # If there is an alternative path with the same cost, add it to previous as well
-            elif new_cost == costs[mutation]:
-                for path in previous[current_genome]:
-                    new_path = path + [current_genome]
-                    previous[mutation].append(new_path)
+                    paths.append(new_path)
+                return paths
 
-    # If there is no path from start to end genome
-    return []
+            for required_mutation, weight in self.mutations.items():
+                new_cost = costs[current_genome] + weight
+                mutated_genome = Node.do_mutation(current_genome, required_mutation)
 
+                if mutated_genome not in costs or new_cost < costs[mutated_genome]:
+                    costs[mutated_genome] = new_cost
+                    heapq.heappush(queue, (new_cost, mutated_genome))
+                    previous[mutated_genome] = [path + [mutated_genome] for path in previous[current_genome]]
+                elif new_cost == costs[mutated_genome]:
+                    previous[mutated_genome].extend([path + [mutated_genome] for path in previous[current_genome]])
 
-def get_intermediates(path):
-    intermediates = []
-    for i in range(len(path) - 1):
-        intermediates.append(apply_mutation(path[i], path[i + 1]))
-    return intermediates
+        return []
 
-
-def apply_mutation(genome, mutation):
-    # Implement your mutation logic here
-    if mutation == 'insertion':
-        # Apply insertion mutation
-        pass
-    elif mutation == 'deletion':
-        # Apply deletion mutation
-        pass
-    elif mutation == 'duplication':
-        # Apply duplication mutation
-        pass
-    elif mutation == 'fDNA':
-        # Apply fDNA mutation
-        pass
-
-    # Return the resulting genome after mutation
-    return genome
+    def get_intermediates(self, path):
+        intermediates = []
+        for i in range(len(path) - 1):
+            intermediates.append(Node.do_mutation(path[i], path[i + 1]))
+        return intermediates
 
 
-# Example usage
-source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],
-                 ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1']]
-
-target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*8', '6', '*6', '7', '*6', '8'],
-                 ['*9', '9', '*8', '10', '*8', '11', "*9"]]
-
-# Convert source and target genomes to strings for dictionary access
-start_genome = str(source_genome)
-end_genome = str(target_genome)
+source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1']]
+target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*8', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11', '*9']]
 
 mutations = {
     'insertion': 0.15,
     'deletion': 0.05,
     'duplication': 0.30,
-    'fDNA': 0.50
+    'foreign_DNA': 0.50
 }
 
-optimal_paths = transform_genome(start_genome, end_genome, mutations)
-if optimal_paths:
-    # Find the minimum cumulative cost among all paths
-    min_cost = min(sum(mutations[genome1][genome2] for genome1, genome2 in zip(path, path[1:])) for path in optimal_paths)
+finder = ParsimoniousPathsFinder(mutations)
+parsimonious_paths = finder.find_parsimonious_paths(source_genome, target_genome)
 
-    print("Optimal Transformation Paths:")
-    for i, path in enumerate(optimal_paths, start=1):
-        # Only print the paths with the minimum cumulative cost
-        if sum(mutations[genome1][genome2] for genome1, genome2 in zip(path, path[1:])) == min_cost:
-            intermediates = get_intermediates(path)
-            print(f"Path {i}:")
-            for genome in path + intermediates:
-                print(genome)
-            print('---')
+if parsimonious_paths:
+    print("Parsimonious Paths:")
+    for i, path in enumerate(parsimonious_paths, start=1):
+        print(f"Path {i}:")
+        intermediates = finder.get_intermediates(path)
+        for genome in path + intermediates:
+            print(genome)
+        print("---")
 else:
-    print("No transformation paths exist.")
-
-
-    # Create a directed acyclic graph (DAG) for visualization
-    graph = nx.DiGraph()
-
-    # Add nodes to the graph
-    for path in optimal_paths:
-        for i in range(len(path) - 1):
-            graph.add_edge(path[i], path[i + 1], weight=mutations[path[i + 1]])
-
-    # Set layout for the graph
-    pos = nx.spring_layout(graph)
-
-    # Draw the nodes and edges of the graph
-    nx.draw_networkx_nodes(graph, pos)
-    nx.draw_networkx_edges(graph, pos)
-    nx.draw_networkx_labels(graph, pos)
-
-    # Draw edge weights
-    edge_labels = nx.get_edge_attributes(graph, 'weight')
-    nx.draw_networkx_edge_labels(graph, pos, edge_labels)
-
-    # Show the graph
-    plt.title("Optimal Transformation Paths (DAG)")
-    plt.axis('off')
-    plt.show()
+    print("No parsimonious paths exist.")

@@ -967,8 +967,6 @@ class Node:
         # Extract the mutation type and chromosome index from the required_mutation list
         type = required_mutation[0]
         chromosome_index = required_mutation[1]
-       
-        # print(str(required_mutation[0])+"++++++"+str(required_mutation[1])+"+++++"+str(required_mutation[2])+"This is what is stored in required mutation")
         actual_mutation = required_mutation[2]
 
         # Extract the actual_mutation from the required_mutation list
@@ -995,9 +993,9 @@ class Node:
                 #create record to keep each type of mutation/operation
                 operation = {'Mut_Type': type, 'Chr': chromosome_index + 1,'Gene': gene_to_duplicate,'Pos': position,'Type of dup': type_of_duplication,'Genome after mutation': source_genome}
 
-                operation_str = str(operation).replace("\n", "")
+                # operation_str = str(operation).replace("\n", "")
 
-                list_of_mutations.append(operation_str) # Append the operation to the list_of_mutations
+                list_of_mutations.append(operation) # Append the operation to the list_of_mutations
               
                 
         elif type == 'ins':
@@ -1018,9 +1016,9 @@ class Node:
                  # Perform the insertion operation and obtain the mutated chromosome
                 # Create a record to keep track of the mutation operation
                 operation = {'Mut_Type': type,'Chr': chromosome_index + 1,'Pos': len(chromosome)+1,'Gene': gene_to_insert,'Genome after mutation': source_genome}
-                operation_str = str(operation).replace("\n", "")
+                # operation_str = str(operation).replace("\n", "")
 
-                list_of_mutations.append(operation_str)   # Append the operation to the list_of_mutations
+                list_of_mutations.append(operation)   # Append the operation to the list_of_mutations
 
             elif(isinstance(chromosome[position-1], str) and '*' in chromosome[position-1]) and len(chromosome[position-1])>1:
                  # If the condition is true, perform the insertion operation
@@ -1028,9 +1026,9 @@ class Node:
                # Create a record to keep track of the mutation operation
                 operation = {'Mut_Type': type,'Chr': chromosome_index + 1,'Pos': position,'Gene': gene_to_insert,'Genome after mutation': source_genome}
 
-                operation_str = str(operation).replace("\n", "")
+                # operation_str = str(operation).replace("\n", "")
 
-                list_of_mutations.append(operation_str)  # Append the operation to the list_of_mutations
+                list_of_mutations.append(operation)  # Append the operation to the list_of_mutations
                
 
         elif type == 'del':
@@ -1052,9 +1050,9 @@ class Node:
                # Create a record to keep track of the mutation operation
                 operation = {'Mut_Type': type,'Chr': chromosome_index + 1,'Pos': position,'Gene': gene_to_delete,'Genome after mutation': source_genome}
 
-                operation_str = str(operation).replace("\n", "")
+                # operation_str = str(operation).replace("\n", "")
 
-                list_of_mutations.append(operation_str)   # Append the operation to the list_of_mutations
+                list_of_mutations.append(operation)   # Append the operation to the list_of_mutations
                
 
             # if len(source_genome) > len(target_genome):

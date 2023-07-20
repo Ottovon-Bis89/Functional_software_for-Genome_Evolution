@@ -90,7 +90,7 @@ with open('/home/22204911/Documents/Test_run/output.txtd') as f:
 data = list(zip(x, y))
 
 # Perform hierarchical clustering
-linkage_matrix = linkage(y, method="ward", metric="euclidean")
+linkage_matrix = linkage(y, method="complete", metric="euclidean")
 
 # Plot the dendrogram
 plt.figure(figsize=(10, 5))
