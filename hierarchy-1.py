@@ -31,7 +31,7 @@ with open('/home/22204911/Documents/extract4.txt') as f:
 # print(f'y: {y}')
 data = list(zip(x, y))
 # print(f'data: {data}')
-linkage_matrix = linkage(y, method = 'centroid', metric = 'euclidean')
+linkage_matrix = linkage(y, method = 'complete', metric = 'euclidean')
 # print(linkage_matrix)
 
 plt.figure(figsize = (15,15))

@@ -1,4 +1,4 @@
-import pandas as pd
+
 
 
 def extract_elements(gff_file, output_file):
@@ -92,6 +92,8 @@ def extract_elements(gff_file, output_file):
 gff_file_path = '/home/22204911/Downloads/ncbi_dataset.zip_yeast/ncbi_dataset/data/GCF_000146045.2/genomic.gff'
 output_file_path = '/home/22204911/Downloads/ncbi_dataset.zip_yeast/ncbi_dataset/data/GCF_000146045.2/output.csv'
 
+
 extract_elements(gff_file_path, output_file_path)
+
 
 

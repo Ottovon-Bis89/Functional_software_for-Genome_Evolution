@@ -12,31 +12,31 @@ t0 = time.time()
 
 
 def run(args):
-    genomeA_file = args.source_genome
-    genomeB_file = args.target_genome
+    source_genome_file = args.source_genome
+    target_genome_file = args.target_genome
     weight_ratios_file = args.ratios
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
     # outfile = open(args.output_file, 'w')
-    with open("genA0.txt") as f:
+    with open(source_genome_file) as f:
         line = [element.strip('\n').split(',') for element in f]
-    genomeA = []
+    genomeA_file = []
 
     for element in line:
         element = list(map(int, element))
-        genomeA.append(element)
+        genomeA_file.append(element)
         
 
-    with open("genB0.txt") as f:
+    with open(target_genome_file) as f:
         line = [element.strip('\n').split(',') for element in f]
-    genomeB = []
+    genomeB_file = []
 
     for element in line:
         element = list(map(int, element))
-        genomeB.append(element)
+        genomeB_file.append(element)
         
 
-    with open("Weight_ratios.txt") as f:
+    with open(weight_ratios_file) as f:
         line = [element.strip('\n').split(',') for element in f]
     weight_ratios = []
 
@@ -45,9 +45,9 @@ def run(args):
         weight_ratios.append(element)
 
     get_adjacencies = Gene_extremities()
-    adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
+    adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA_file)
 
-    adjacencies_genomeB = get_adjacencies.ordered_and_sorted_adjacencies(genomeB)
+    adjacencies_genomeB = get_adjacencies.ordered_and_sorted_adjacencies(genomeB_file)
 
     # Create start and target node
     start_node = Node(adjacencies_genomeA)
@@ -152,8 +152,8 @@ def run(args):
     print(
         '*****************************************************************Genome Evolution Results*********************************************************')
     print()
-    print('Source Genome: ', genomeA)
-    print('Target Genome: ', genomeB)
+    print('Source Genome: ', genomeA_file)
+    print('Target Genome: ', genomeB_file)
     print()
     print('Estimated number of rearrangement events: ', len(shortest_paths))
     print()

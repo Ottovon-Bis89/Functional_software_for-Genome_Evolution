@@ -60,7 +60,7 @@ if current_solution is not None:
     solutions.append(current_solution)
 
 # Write the data to an output file
-output_file_path = "/home/22204911/Documents/Test_run/extract4.txt"  # Replace with your output file path
+output_file_path = "/home/22204911/Documents/Test_run/extract5.txt"  # Replace with your output file path
 with open(output_file_path, 'w') as output_file:
     for solution in solutions:
         output_file.write(f'# {solution["solution"]}' + '  ')

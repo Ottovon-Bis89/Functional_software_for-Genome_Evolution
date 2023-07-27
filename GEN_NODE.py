@@ -178,11 +178,12 @@ class Node:
                     # Generate a random integer between 0 and 'foreign_dna_len'
                     # Assign the random integer to 'choice_foreign_dna'
                     choice_foreign_dna = randint(0, foreign_dna_len)
+                    # print(choice_foreign_dna)
 
                     # Get the element at the index of the choice of foreign of dna' from the 'foreign_dna' list, and
                     # Assign the element to 'chosen'
                     chosen = foreign_dna[choice_foreign_dna]
-                    print(chosen)
+                    # print("chosen:", chosen)
 
                     # add foreign DNA to the source genome
                     # Call the 'insert_foreign_dna' method of the 'foreign_obj' instance with 'source_genome' and 'chosen' as arguments
