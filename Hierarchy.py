@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
-from sklearn.cluster import KMeans
+from scipy.spatial.distance import cdist
 
 # Mapping of event codes to their classifications
 event_classification = {
@@ -20,7 +20,7 @@ event_classification = {
 }
 
 # Open the input file
-input_file_path = "/home/22204911/Documents/Test_run/output21.txt"  # Replace with your input file path
+input_file_path = "/home/22204911/Documents/Test_run/output24.txt"  # Replace with your input file path
 with open(input_file_path, 'r') as input_file:
     lines = input_file.readlines()
 
@@ -56,7 +56,7 @@ if current_solution is not None:
     solutions.append(current_solution)
 
 # Write the data to an output file
-output_file_path = "/home/22204911/Documents/Test_run/output.txtd"  # Replace with your output file path
+output_file_path = "/home/22204911/Documents/Test_run/output.txtnw"  # Replace with your output file path
 with open(output_file_path, 'w') as output_file:
     for solution in solutions:
         output_file.write(f'# {solution["solution"]}' + '  ')
@@ -71,17 +71,19 @@ i = 1
 x = []
 y = []
 
-with open('/home/22204911/Documents/Test_run/output.txtd') as f:
+with open('/home/22204911/Documents/Test_run/output.txtnw') as f:
 
     counter = 0
     for line in f:
         n = line.strip('').strip(',').split()
         if len(n) > 2:
             x.append(n[2])
+            print(x)
             y_2 = []
             for j in n[2:]:
                 y_2.append(j)
             y.append(y_2)
+            print(y)
 
         counter += 1
         if counter == 100:
@@ -89,11 +91,12 @@ with open('/home/22204911/Documents/Test_run/output.txtd') as f:
 
 data = list(zip(x, y))
 
+
 # Perform hierarchical clustering
-linkage_matrix = linkage(y, method="complete", metric="euclidean")
+linkage_matrix = cdist(y, x, method = 'complete', metric = 'Manhattan')
 
 # Plot the dendrogram
-plt.figure(figsize=(10, 5))
+plt.figure(figsize=(5, 10))
 dendrogram(linkage_matrix, labels=x)
 plt.title("Hierarchical Clustering of Evolution Events")
 plt.xlabel("Solutions")

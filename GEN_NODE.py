@@ -2,7 +2,7 @@
 from random import randint
 import Intergenic_region_generator
 import ForeignDNA
-
+import Print_to_File as PF
 
 class Node:
 
@@ -159,7 +159,7 @@ class Node:
                                 break
                             switch = False  # Set 'switch' to False for the loop to terminate
                 elif foreign_Dna_counter <= 5 or foreign_Dna_counter > 0:  # Check if the 'foreign_Dna_counter' is greater than  or equal to 0
-                    print("\tInserted foreign DNA")  # Print a message indicating that foreign DNA is being inserted
+                    # PF.append_to_file("Inserted foreign DNA\n")
                     foreign_Dna_counter += 1   # Increment the 'foreign_Dna_counter' by 1 after each insertion
                     #Here is list of foreign DNAs where fragments are sublists
                     foreign_obj = ForeignDNA.Foreign_DNA()   # Create an instance of the 'Foreign_DNA' class
@@ -225,8 +225,7 @@ class Node:
                                     mutation_type = 'dup'
 
                                 mutation = mutations[i]   # Get the mutation at the current index
-                                # print(mutation)
-
+                               
                                 for chromosome_number in range(len(mutation)):  # Iterate over the indices of 'mutation'
                                     if mutation[chromosome_number]:  # Check if the element at the current index is not an empty list
                                         chromosome_index = chromosome_number  # Assign the current index to 'chromosome_index'
@@ -241,8 +240,7 @@ class Node:
                                             # Assign the returned values to 'source_genome' and 'mutation_list'
                                             source_genome, mutation_list = self.do_mutation(mutation_genome, do_mutation)
                                             # source_genome = source_genome[:]print("list3: ", list_of_legal_operations)
-                            # print(" Fmut::  ",final_mutations)
-
+                          
                             # # #remove all unapplicable intergenic regions and call intergenerator
                             clean_chromosome = []
                             clean_genome = []
@@ -451,6 +449,7 @@ class Node:
                 if '*' not in str(target_chromosome[i]) and (target_chromosome[i]) not in new_chromosome:
                     insertion_target.append((i,target_chromosome[i])) # Append the position and gene as a tuple to the insertion_target list
             insertion_genome.append(insertion_target)    # Append the insertion_target to the insertion_genome list
+            print("ins:", insertion_genome)
             insertion_target = []
         
         #create the missing chromosomes in the source genome
@@ -461,7 +460,6 @@ class Node:
        
         #1.2 find genes in source genome and not in target genome[Create out list that contains tuples of (position,gene)]
 
-       
         # Create empty lists to store the deletion genome, deletion target, and occurred genes
         deletion_genome = []
         deletion_target = []
@@ -496,6 +494,7 @@ class Node:
                     deletion_target.append((position, gene)) # Append the position and gene as a tuple to the deletion_target list
 
             deletion_genome.append(deletion_target)  # Append the deletion_target to the deletion_genome list
+            # print("del:", deletion_genome)
         
             deletion_target = []    # Reset the deletion_target list for the next chromosome
             
@@ -597,138 +596,66 @@ class Node:
             insertion = True
 
     # Determine the mutation type based on the presence of different types of mutations
-        # if insertion and deletion and duplication:
-        # If all three types of mutations are present
-        #     pick = randint(0,2)
-        #     if pick == 0:
-        # # Choose insertion mutation
-        #         for i in range(len(insertion_genome)):
-        #             new_chromosome = insertion_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("ins",i, new_chromosome[picker])
-        #                 break
-        #     elif pick == 1:
-        #     # Choose deletion mutation
-        #         for i in range(len(deletion_genome)):
-        #             new_chromosome = deletion_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("del",i, new_chromosome[picker])
-        #                 break
-        #     elif pick == 2:
-        #     # Choose duplication mutation
-        #         for i in range(len(duplication_genome)):
-        #             new_chromosome = duplication_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("dup",i, new_chromosome[picker])
-        #                 break
         if insertion and deletion and duplication:
-        # Perform insertion mutation
-            for i in range(len(insertion_genome)):
-                new_chromosome = insertion_genome[i]
-                if new_chromosome != []:
-                    picker = randint(0, len(new_chromosome) - 1)
-                    do_mutation = ("ins", i, new_chromosome[picker])
-                    break
-
-            # If no insertion mutation was performed, move to deletion mutation
-            if "do_mutation" not in locals():
-                for i in range(len(deletion_genome)):
-                    new_chromosome = deletion_genome[i]
+        # If all three types of mutations are present
+            pick = randint(0,2)
+            if pick == 0:
+        # Choose insertion mutation
+                for i in range(len(insertion_genome)):
+                    new_chromosome = insertion_genome[i]
                     if new_chromosome != []:
-                        picker = randint(0, len(new_chromosome) - 1)
-                        do_mutation = ("del", i, new_chromosome[picker])
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("ins",i, new_chromosome[picker])
                         break
-
-            # If no deletion mutation was performed, move to duplication mutation
-            if "do_mutation" not in locals():
-                for i in range(len(duplication_genome)):
-                    new_chromosome = duplication_genome[i]
-                    if new_chromosome != []:
-                        picker = randint(0, len(new_chromosome) - 1)
-                        do_mutation = ("dup", i, new_chromosome[picker])
-                        break
-
-        # elif insertion and deletion:
-        # # If insertion and deletion mutations are present
-        #     pick = randint(0,1)
-        #     if pick == 0:
-        #     # Choose insertion mutation
-        #         for i in range(len(insertion_genome)):
-        #             new_chromosome = insertion_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("ins",i, new_chromosome[picker])
-        #                 break
-        #     elif pick == 1:
-        #     # Choose deletion mutation
-        #         for i in range(len(deletion_genome)):
-        #             new_chromosome = deletion_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("del",i, new_chromosome[picker])
-        #                 break
-        elif insertion and deletion:
-        # Perform insertion mutation
-            for i in range(len(insertion_genome)):
-                new_chromosome = insertion_genome[i]
-                if new_chromosome != []:
-                    picker = randint(0, len(new_chromosome) - 1)
-                    do_mutation = ("ins", i, new_chromosome[picker])
-                    break
-
-            # If no insertion mutation was performed, move to deletion mutation
-            if "do_mutation" not in locals():
-                for i in range(len(deletion_genome)):
-                    new_chromosome = deletion_genome[i]
-                    if new_chromosome != []:
-                        picker = randint(0, len(new_chromosome) - 1)
-                        do_mutation = ("del", i, new_chromosome[picker])
-                        break
-
-        # elif deletion and duplication:
-        # # If deletion and duplication mutations are present
-        #     pick = randint(0,1)
-        #     if pick == 0:
-        #     # Choose deletion mutation
-        #         for i in range(len(deletion_genome)):
-        #             new_chromosome = deletion_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("del",i, new_chromosome[picker])
-        #                 break
-        #     elif pick == 1:
-        #     # Choose duplication mutation
-        #         for i in range(len(duplication_genome)):
-        #             new_chromosome = duplication_genome[i]
-        #             if new_chromosome != []:
-        #                 picker = randint(0, len(new_chromosome)-1)
-        #                 do_mutation = ("dup",i, new_chromosome[picker])
-        #                 break
-        elif deletion and duplication:
-        # If deletion and duplication mutations are present
-            # perform deletion mutation
+            elif pick == 1:
+            # Choose deletion mutation
                 for i in range(len(deletion_genome)):
                     new_chromosome = deletion_genome[i]
                     if new_chromosome != []:
                         picker = randint(0, len(new_chromosome)-1)
                         do_mutation = ("del",i, new_chromosome[picker])
                         break
-            #If no deletion mutation was performed, move to duplication mutation
-                if "do_mutation" not in locals():
-            # perform duplication mutation
-                    for i in range(len(duplication_genome)):
-                        new_chromosome = duplication_genome[i]
-                        if new_chromosome != []:
-                            picker = randint(0, len(new_chromosome)-1)
-                            do_mutation = ("dup",i, new_chromosome[picker])
-                            break
-        elif insertion and duplication:
-        # If insertion and duplication mutations are present
-            # pick = randint(0,1)
-            # if pick == 0:
+            elif pick == 2:
+            # Choose duplication mutation
+                for i in range(len(duplication_genome)):
+                    new_chromosome = duplication_genome[i]
+                    if new_chromosome != []:
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("dup",i, new_chromosome[picker])
+                        break
+        #***********************
+        # if insertion and deletion and duplication:
+        # # Perform insertion mutation
+        #     for i in range(len(insertion_genome)):
+        #         new_chromosome = insertion_genome[i]
+        #         if new_chromosome != []:
+        #             picker = randint(0, len(new_chromosome) - 1)
+        #             do_mutation = ("ins", i, new_chromosome[picker])
+        #             break
+
+        #     # If no insertion mutation was performed, move to deletion mutation
+        #     if "do_mutation" not in locals():
+        #         for i in range(len(deletion_genome)):
+        #             new_chromosome = deletion_genome[i]
+        #             if new_chromosome != []:
+        #                 picker = randint(0, len(new_chromosome) - 1)
+        #                 do_mutation = ("del", i, new_chromosome[picker])
+        #                 break
+
+        #     # If no deletion mutation was performed, move to duplication mutation
+        #     if "do_mutation" not in locals():
+        #         for i in range(len(duplication_genome)):
+        #             new_chromosome = duplication_genome[i]
+        #             if new_chromosome != []:
+        #                 picker = randint(0, len(new_chromosome) - 1)
+        #                 do_mutation = ("dup", i, new_chromosome[picker])
+        #                 break
+
+
+        elif insertion and deletion:
+        # If insertion and deletion mutations are present
+            pick = randint(0,1)
+            if pick == 0:
             # Choose insertion mutation
                 for i in range(len(insertion_genome)):
                     new_chromosome = insertion_genome[i]
@@ -736,15 +663,94 @@ class Node:
                         picker = randint(0, len(new_chromosome)-1)
                         do_mutation = ("ins",i, new_chromosome[picker])
                         break
-            # elif pick == 1:
+            elif pick == 1:
+            # Choose deletion mutation
+                for i in range(len(deletion_genome)):
+                    new_chromosome = deletion_genome[i]
+                    if new_chromosome != []:
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("del",i, new_chromosome[picker])
+                        break
+        #******************
+        # elif insertion and deletion:
+        # # Perform insertion mutation
+        #     for i in range(len(insertion_genome)):
+        #         new_chromosome = insertion_genome[i]
+        #         if new_chromosome != []:
+        #             picker = randint(0, len(new_chromosome) - 1)
+        #             do_mutation = ("ins", i, new_chromosome[picker])
+        #             break
+
+        #     # If no insertion mutation was performed, move to deletion mutation
+        #     if "do_mutation" not in locals():
+        #         for i in range(len(deletion_genome)):
+        #             new_chromosome = deletion_genome[i]
+        #             if new_chromosome != []:
+        #                 picker = randint(0, len(new_chromosome) - 1)
+        #                 do_mutation = ("del", i, new_chromosome[picker])
+        #                 break
+        #**************************
+        elif deletion and duplication:
+        # If deletion and duplication mutations are present
+            pick = randint(0,1)
+            if pick == 0:
+            # Choose deletion mutation
+                for i in range(len(deletion_genome)):
+                    new_chromosome = deletion_genome[i]
+                    if new_chromosome != []:
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("del",i, new_chromosome[picker])
+                        break
+            elif pick == 1:
+            # Choose duplication mutation
+                for i in range(len(duplication_genome)):
+                    new_chromosome = duplication_genome[i]
+                    if new_chromosome != []:
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("dup",i, new_chromosome[picker])
+                        break
+
+
+        # elif deletion and duplication:
+        # # If deletion and duplication mutations are present
+        #     # perform deletion mutation
+        #         for i in range(len(deletion_genome)):
+        #             new_chromosome = deletion_genome[i]
+        #             if new_chromosome != []:
+        #                 picker = randint(0, len(new_chromosome)-1)
+        #                 do_mutation = ("del",i, new_chromosome[picker])
+        #                 break
+        #     #If no deletion mutation was performed, move to duplication mutation
+        #         if "do_mutation" not in locals():
+        #     # perform duplication mutation
+        #             for i in range(len(duplication_genome)):
+        #                 new_chromosome = duplication_genome[i]
+        #                 if new_chromosome != []:
+        #                     picker = randint(0, len(new_chromosome)-1)
+        #                     do_mutation = ("dup",i, new_chromosome[picker])
+        #                     break
+
+        elif insertion and duplication:
+        # If insertion and duplication mutations are present
+            pick = randint(0,1)
+            if pick == 0:
+            # Choose insertion mutation
+                for i in range(len(insertion_genome)):
+                    new_chromosome = insertion_genome[i]
+                    if new_chromosome != []:
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("ins",i, new_chromosome[picker])
+                        break
+            elif pick == 1:
             #If no insertion mutation was performed, move to duplication mutation
-                if "do_mutation" not in locals():
-                    for i in range(len(duplication_genome)):
-                        new_chromosome = duplication_genome[i]
-                        if new_chromosome != []:
-                            picker = randint(0, len(new_chromosome)-1)
-                            do_mutation = ("dup",i, new_chromosome[picker])
-                            break
+                # if "do_mutation" not in locals():
+                for i in range(len(duplication_genome)):
+                    new_chromosome = duplication_genome[i]
+                    if new_chromosome != []:
+                        picker = randint(0, len(new_chromosome)-1)
+                        do_mutation = ("dup",i, new_chromosome[picker])
+                        break
+
         elif insertion:
         # If only insertion mutation is present
             for i in range(len(insertion_genome)):
