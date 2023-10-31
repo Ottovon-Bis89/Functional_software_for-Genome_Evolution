@@ -93,7 +93,7 @@ data = list(zip(x, y))
 
 
 # Perform hierarchical clustering
-linkage_matrix = cdist(y, x, method = 'complete', metric = 'Manhattan')
+linkage_matrix = cdist(y, x, method = 'complete', metric = 'Euclidean')
 
 # Plot the dendrogram
 plt.figure(figsize=(5, 10))

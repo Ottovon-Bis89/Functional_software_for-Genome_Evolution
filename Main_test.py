@@ -1,14 +1,15 @@
 import GEN_NODE
-import Print_to_File as PF
+import Helper_Methods as PF
 from tqdm import tqdm
 import hashlib
 
-itterations = 3
+itterations = 2
 
 gen_n_obj = GEN_NODE.Node()
 
-source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'], ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1']]
-target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '6', '*6', '7', '*6', '8'],['*9', '9','*8', '10', '*8', '11', "*9"]]
+# source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5','*9','5'], ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1']]
+# target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '6', '*6', '7', '*6', '8'],['*9', '9','*8', '10', '*8', '11', '*9']]
+
 
 # source_genome = [['*8', '1', '*9', '2', '*7', '3', '*6' , '4', '*10', '15'], ['*7', '-8', '*9', '-7','*6' ,'6', '*9', '-5', '*8', '-14', '*9', '-13', '*8' ,'-12'], ['*8', '9', '*7', '11'], ['*8','-20','*7', '-19', '*9','-18', '*7','-17','*8', '-16','*10', '-32','*9', '10','*8', '-31','*7', '-30', '*6','-29','*7', '-28','*8', '-27'], ['*8','21','*8', '22', '*8','23','*8' ,'24','*8' ,'25','*8' ,'26'], ['*8','-33'], ['*8','34','*8', '35', '*8','36', '*8','37','*8','38','*8', '39','*8', '40']]
 # target_genome = [['*8','1', '*8','2', '*8','3', '*8','4','*8', '5', '*8','5' ,'*8','6', '*8','7','*8', '8'], ['*8','9', '*8','10','*8', '11'], ['*8','12','*8', '13','*8', '14','*8', '15', '*9', '13'], ['*8','16','*8', '17','*8', '18','*8', '19','*8', '20'], ['*8','21', '*8','22', '*8','23','*8', '24','*8','25','*8', '26'], ['*8','27','*8', '28', '*8','29', '*8','30','*8', '31','*8', '32','*8', '33'], ['*8','34', '*8','35','*8', '36','*8','37', '*8','38', '*8','39','*8','40']]
@@ -30,9 +31,9 @@ target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '
 # source_genome = [['*8', '1', '*6', '5','*6', '4', '*6','3', '*6','9' ], ['*8','10', '*10', '22', '*9', '37', '*9','33']]
 # target_genome = [['*8','1','*8','4','*10','5', '*9','6'], ['*8','10','*9', '33','*7', '33', '*7', '40']]
 
-# target_genome = [['*6', '1','*9', '2', '*7', '3'],['*8', '4','*6','5'],['*6', '6','*10', '7','*10', '8', '*9', '9'],['*9', '10', '*10', '11', '*10', '12'],['*9', '13','*9', '14'],['*7','15', '*10', '16'],['*6', '17'],['*6','18'],['*6', '19', '*10' '20', '*6', '21'],['*6', '22']] 
-# source_genome = [['*6','1','*6','3'],['*6','5'],['*9','8','*7','6','*9', '4', '*9','7', '*9','9'],['*8','13','*10','10','*9','12'],['*9','14'],['*9','16'],['*6', '-15','*9', '17'],['*9','19', '*8', '18'],['*9','20','*7', '-2','*9','21'],['*9','-11','*9','22']] 
-# # # #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+target_genome = [['*6', '1', '*9', '2', '*7', '3'],['*8', '4', '*6', '5'],['*6', '6', '*10', '7', '*10', '8', '*9', '9'],['*9', '10', '*10', '11', '*10', '12'],['*9', '13', '*9', '14'],['*7', '15', '*10', '16'],['*6', '17'],['*6', '18'],['*6', '19', '*10', '20', '*6', '21'],['*6', '22']] 
+source_genome = [['*6', '1', '*6', '3'],['*6', '5'],['*9', '8', '*7', '6', '*9', '4', '*9', '7', '*9', '9'],['*8', '13', '*10', '10', '*9', '12'],['*9', '14'],['*9', '16'],['*6', '-15','*9', '17'],['*9','19', '*8', '18'],['*9', '20', '*7', '-2', '*9', '21'],['*9', '-11', '*8', '22']] 
+# # # # # #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 # source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5'],['*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1', '*8', '4', '*9', '1', '*7', '3', '*8', '1', '*8', '2'], ['*8', '9', '*7', '11'], ['*7', '20', '*8', '19', '*9', '18', '*6', '17', '*8', '16', '*6', '32', '*9', '10', '*8', '31', '*9', '30', '*7', '29', '*8', '28', '*6', '27'], ['*8', '21', '*7', '22', '*7', '23', '*8', '24', '*7', '25', '*6', '26'], ['*8', '33'], ['*7', '34', '*9', '35', '*7', '36', '*8', '37']]
 # target_genome = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11'], ['*8', '12', '*6', '13', '*7', '14', '*8', '15'],['*7', '16', '*6', '17', '*6', '18', '*8', '19', '*10', '20'], ['*9', '21', '*6', '22', '*7', '23', '*8', '24', '*8', '25', '*7', '26'], ['*8', '27', '*9', '28', '*9', '29', '*9', '30', '*8', '31', '*9', '32', '*8', '33'], ['*6', '34', '*6', '35', '*6', '36', '*7', '37', '*7', '38', '*6', '39', '*10', '40']]
 
@@ -40,13 +41,13 @@ target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '
 '''
 Printing file containing the solution set
 '''
-PF.create_new_file()
-PF.append_to_file("Target_genome:")
-PF.append_to_file(PF.list_to_string(target_genome))
-PF.append_to_file("\nSource_genome:")
-PF.append_to_file(PF.list_to_string(source_genome))
-PF.append_new_line()
-PF.append_new_line()
+# PF.create_new_file()
+# PF.append_to_file("Target_genome:")
+# PF.append_to_file(PF.list_to_string(target_genome))
+# PF.append_to_file("\nSource_genome:")
+# PF.append_to_file(PF.list_to_string(source_genome))
+# PF.append_new_line()
+# PF.append_new_line()
 
 # solution_sets = {}
 # solution_num = 1
@@ -85,7 +86,9 @@ solution_sets = {}
 solution_num = 1
 
 for _ in tqdm(range(itterations), total=itterations):
-    list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
+    for _ in range(itterations):
+
+        list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
     mutation_solution = ""
 
     for item in list_of_operations:
@@ -103,9 +106,9 @@ for _ in tqdm(range(itterations), total=itterations):
         solution_num += 1
         solution_sets[sha256_hash] = mutation_solution
 
-        PF.append_to_file("\nEstimated total number of mutations:")
-        PF.append_to_file(str(len(list_of_operations)))
-        PF.append_to_file("\nPrinting solution sets........\n\n")
+        PF.append_to_file("solution_set.txt","\nEstimated total number of mutations:")
+        PF.append_to_file("solution_set.txt",str(len(list_of_operations)))
+        PF.append_to_file("solution_set.txt","\nPrinting solution sets........\n\n")
 
         for item in list_of_operations:
             operations = item[0]
@@ -115,13 +118,85 @@ for _ in tqdm(range(itterations), total=itterations):
             Gene = f"Gene: {operations['Gene']}"
             Genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}\n"
 
-
-            PF.append_to_file(Mut_Type)
-            PF.append_to_file(Chr)
-            PF.append_to_file(Pos)
-            PF.append_to_file(Gene)
+            PF.append_to_file("solution_set.txt",Mut_Type)
+            PF.append_to_file("solution_set.txt",Chr)
+            PF.append_to_file("solution_set.txt",Pos)
+            PF.append_to_file("solution_set.txt",Gene)
             PF.append_new_line()
-            PF.append_to_file(Genome_after_mutation)
+            PF.append_to_file("solution_set.txt",Genome_after_mutation)
             PF.append_new_line()
 
 PF.End_of_file()
+
+# # import hashlib
+
+# def append_to_solution_file(file_path, data):
+#     with open(file_path, 'a') as solution_file:
+#         solution_file.write(data + '\n')
+
+# def format_mutation_data(mutation):
+#     operations = mutation[0]
+#     mutation_info = f"Mut_Type: {operations['Mut_Type']}, Chr: {operations['Chr']}, Pos: {operations['Pos']}, Gene: {operations['Gene']}"
+#     genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}"
+#     return f"{mutation_info}\n{genome_after_mutation}"
+
+# def main():
+#     solution_sets = {}
+#     solution_num = 1
+#     list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
+
+#     for mutation_solution in list_of_operations:
+#         sha256_hash = hashlib.sha256(mutation_solution.encode()).hexdigest()
+
+#         if sha256_hash not in solution_sets:
+#             solution_sets[sha256_hash] = mutation_solution
+
+#             append_to_solution_file("solution_set.txt", "Estimated total number of mutations:")
+#             append_to_solution_file("solution_set.txt", str(len(list_of_operations)))
+#             append_to_solution_file("solution_set.txt", "Printing solution sets........\n")
+
+#             mutation_data = format_mutation_data(mutation_solution)
+#             append_to_solution_file("solution_set.txt", mutation_data)
+
+#     # Close the file or perform any other cleanup operations here
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+# print("Target_genome:",target_genome)
+# print("\nSource_genome:",source_genome)
+
+# list_of_operations  = gen_n_obj.get_operations(source_genome, target_genome)
+
+# # if source_genome==target_genome:
+# #     print("Source genome same as target genome")
+
+# # else:
+# #     print("Source genome is different from target genome, possibly due to evolution")
+# # print()
+# # print("Initializing genome transformation process........")
+# # print("\npredicting possible evolutionary events...")
+
+
+# print(f"Estimated total number of mutations: {len(list_of_operations)}\n")
+# print("Printing solution sets........\n")
+
+# def pretty_print(list_of_operations):
+#     for key, value in list_of_operations.items():
+#         print(f"{key}: {value}")
+#     print("\n")
+
+# for item in list_of_operations:
+#     for x in item:
+#         if (type(x) == dict):
+#             pretty_print(x)
+#         elif type(x) == list:
+#             for y in x:
+#                 if (type(y) == dict):
+#                     pretty_print(y)
+#                 else:
+#                     print(y)
+#         else:
+#             print(x)

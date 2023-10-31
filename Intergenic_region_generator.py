@@ -35,17 +35,23 @@ class Intergenic_generator():
 
                 # Generate a random intergenic region for each gene
                 random_bp = random.randint(6, 10)
+                
                 start = chromosome[j]
+
                 region = '*' + str(random_bp)
                 genes_with_intergenic_chromosome.append(start)
+                
                 # if j != length-1:
 
                   # for every gene, append an intergenic region
                 genes_with_intergenic_chromosome.append(region)
                 
+                
                 # Append the genes with intergenic regions to the final result list
+        
             genes_with_intergenic_region.append(genes_with_intergenic_chromosome)
             # print(genes_with_intergenic_region)
+            
             genes_with_intergenic_chromosome = []  # Reset genes with intergenic chromosome list for next iteration
 
         # Return the modified list containing genes with intergenic regions
