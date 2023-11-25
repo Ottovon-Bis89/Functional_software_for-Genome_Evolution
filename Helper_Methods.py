@@ -16,12 +16,12 @@ def list_to_string(my_list):
 file_path = 'solution_set.txt'
 
 def create_new_file(file_path):
-    with open(file_path, 'w+') as file:
-        # file.write("***************************************************************************Genome Evolution Results*********************************************************")
-        #file.write("\n\n")
-        pass
-
+    file = open(file_path, 'w+')
+    file.write("***************************************************************************Genome Evolution Results*********************************************************")
+    file.write("\n\n")
+      
 def append_to_file(file_path, my_string):
+    
     with open(file_path, 'a') as file:
         file.write(my_string)
 

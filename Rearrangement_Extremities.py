@@ -1,289 +1,413 @@
+from logger import log
 class Gene_extremities:
+
 
     def __init__(self):
 
         pass
 
     def gene_extremities(self, genome):
-        # Initialize an empty list to store the new genome with gene extremities
+        
+        '''
+        Generates a list of gene extremities for each chromosome in the given genome.
+
+        Parameters:
+        - genome (list): A list of chromosomes, where each chromosome is represented as a list of markers.
+
+        Returns:
+        list: A list of gene extremities for each chromosome in the genome. Each chromosome's gene extremities
+              are represented as a list of numeric values.
+
+        Algorithm:
+        1. Initialize an empty list `genome_gene_extremities` to store gene extremities for each chromosome.
+        2. Iterate through each chromosome in the genome.
+            a. Initialize an empty list `chromosome_gene_extremities` to store gene extremities for the current chromosome.
+            b. Iterate through each marker in the chromosome.
+                i. If the marker is an integer and greater than or equal to 0, add (marker + 0.5) to the gene extremities.
+                ii. If the marker is a string and does not contain '*', add (abs(int(marker)) + 0.5) to the gene extremities.
+            c. Add the gene extremities for the current chromosome to `genome_gene_extremities`.
+        3. Return the final list of gene extremities for each chromosome in the genome.
+
+        '''
+       
         genome_gene_extremities = []
-        # Loop over each chromosome in the genome
         for chromosome in genome:
-            chromosome_gene_extremities = [] # Initialize an empty list to store the new chromosome with gene extremities
-            for marker in chromosome:   # Loop over each marker in the chromosome
-                 # If the marker is non-negative, add two new markers: one equal to the original marker, and one equal to the original marker plus 0.5
-                if int(marker) >= 0: 
-                    chromosome_gene_extremities.append(marker)
-                    chromosome_gene_extremities.append(marker + 0.5)
-                # If the marker is negative, add two new markers: one equal to the absolute value of the original marker plus 0.5, and one equal to the absolute value of the original marker
-                else:
-                    chromosome_gene_extremities.append(abs(marker) + 0.5)
-                    chromosome_gene_extremities.append(abs(marker))
-             # Add the new chromosome with gene extremities to the new genome
+            chromosome_gene_extremities = [] 
+            for marker in chromosome:  
+              
+                if type(marker)==int:
+                    marker_int = int(marker)
+                    if marker_int >= 0:
+                        chromosome_gene_extremities.append(marker + 0.5)
+              
+                elif type(marker)==str and '*' not in marker:
+                    chromosome_gene_extremities.append(abs(int(marker)) + 0.5)
+                    
             genome_gene_extremities.append(chromosome_gene_extremities)
-            print(genome_gene_extremities)
-        # Return the new genome with gene extremities
+           
         return genome_gene_extremities
+    
 
     def create_adjacency_list(self, genome):
-        adjacencies = [] #Initialize an empty list to store the new gene adjacency tuples
-        # Call the gene_extremities method to obtain a list of gene extremities for the input genome
+
+        '''
+
+        Creates an adjacency list based on the given genome.
+
+        Parameters:
+        - genome (list): A list representing the genome.
+
+        Returns:
+        list: An adjacency list representing the relationships between elements in the genome.
+
+        Algorithm:
+        1. Obtain gene extremities using Gene_extremities.gene_extremities method.
+        2. Iterate over each chromosome in gene_extremities.
+        3. For each chromosome, iterate over its elements.
+        4. If the element is the first or last in the chromosome, add it to adjacencies.
+        5. If the element is not the first or last, add a tuple of the current element and the next element to adjacencies.
+        6. Return the final adjacency list.
+
+        '''
+
+        adjacencies = []
         gene_extremities = Gene_extremities.gene_extremities(self, genome)
-         # Loop over each chromosome in the gene extremities list
+
         for chromosome in gene_extremities:
-            i = 0    # Initialize the index variable to 0
-            while i < len(chromosome):   # Loop over each marker in the chromosome
-                # If the marker is at the beginning or end of the chromosome, add a single marker adjacency tuple
+            i = 0  
+            while i < len(chromosome):   
                 if chromosome[i] == chromosome[0] or chromosome[i] == chromosome[-1]: 
                     adjacencies.append((chromosome[i]))
                     i += 1
-                # If the markers are adjacent on the chromosome, add a double marker adjacency tuple
+               
                 else:
                     adjacencies.append((chromosome[i], chromosome[i + 1]))
                     i += 2
-        # Return the list of adjacency tuples
+
         return adjacencies
 
 
+
     def ordered_and_sorted_adjacencies(self, genome):
-        # Call the create_adjacency_list method to obtain a list of adjacencies for the input genome
+
+        """
+        Retrieves the ordered and sorted list of adjacencies from the given genome.
+
+        This method takes a genome as input, creates an adjacency list using the 
+        Gene_extremities.create_adjacency_list method, and then orders and sorts 
+        the adjacencies. The resulting list includes telomeres and sorted adjacencies.
+
+        Parameters:
+        - genome (type): The genome for which adjacencies are to be retrieved.
+
+        Returns:
+        - list: A sorted list of adjacencies, including telomeres.
+
+        Note:
+        - The input genome should be a valid sequence for accurate results.
+        """
+
+
         adjacencies = Gene_extremities.create_adjacency_list(self, genome)
-        # Initialize empty lists to store sorted adjacencies and telomeres
+        
         sorted_adjacencies = []
         telomeres = []
-         # Loop over each element in the adjacencies list
         for element in adjacencies:
-          # If the element is a tuple, add it to the adjacencies list after sorting the tuple elements
+          
             if type(element) is tuple:
-                if int(element[0]) < int(element[1]):     # Check if the first element of current is an integer (has no fractional part) and greater than the second element
-                    sorted_adjacencies.append(element)       #append the element to the sorted adjacencies list
+                if int(element[0]) < int(element[1]):     
+                    sorted_adjacencies.append(element)       
                 else:
                     sorted_adjacencies.append((element[1], element[0]))
-            # If the element is not a tuple, add it to the telomeres list
             else:
                 telomeres.append(element)
-         # Sort the adjacency tuples in ascending order and append them to the sorted telomeres list
+        
         sorted_adjacencies.sort()
         telomeres.sort()
         sorted_Adjacencies = telomeres + sorted_adjacencies
 
-        # Return the sorted adjacency list
         return sorted_Adjacencies
 
 
 
     def find_next_extremity(self, current, next_extremity):
-         # Determine which element of the current extremity tuple is the next extremity to be reached
+
+        """
+        Finds the next extremity based on the current extremity and a specified next extremity.
+
+        This method determines the next extremity by checking the equality of the first element of the current extremity
+        with the specified next extremity. If they are equal, it further checks the decimal part of the second element
+        of the current extremity to determine the next extremity.
+
+        Parameters:
+        - current (tuple): The current extremity represented as a tuple (x, y).
+        - next_extremity: The specified next extremity.
+
+        Returns:
+        - next_extremity: The next extremity calculated based on the input parameters.
+        """
+         
         if current[0] == next_extremity:  
-        # Determine the value of the next extremity based on whether the current extremity element is an integer or not
+        
             if current[1] % 1 == 0:
-                next = current[1] + 0.5  #If current is an integer, set next_extremity as current + 0.5
-            else:
-                next = current[1] - 0.5  # If current is not an integer, set next_extremity as current - 0.5
-         # Check if the first element of current is an integer (has no fractional part)
+                next = current[1] + 0.5 
+                next = current[1] - 0.5 
         else:
             if current[0] % 1 == 0: 
-                next = current[0] + 0.5   #If current is an integer, set next_extremity as current + 0.5
+                next = current[0] + 0.5  
             else:
-                next = current[0] - 0.5    # If current is not an integer, set next_extremity as current - 0.5
+                next = current[0] - 0.5    
 
-        #return the next extremity
         return next
+    
 
     def find_next_adjacency(self, next_extremity, chromosome, not_telomeres):
-        # iterate over each element in not_telomeres along with its index
+        '''
+        This method processes elements in the 'not_telomeres' list, selecting elements whose first or second element
+        matches the 'next_extremity'. The selected element is then appended to the 'chromosome' list, and removed from
+        the 'not_telomeres' list. The 'Gene_extremities.find_next_extremity' method is called to find the next extremity
+        based on the current element and the current 'next_extremity'. The updated 'next_extremity', 'chromosome', and
+        'not_telomeres' lists are returned.
+        
+        @param not_telomeres The list of elements to be processed.
+        @param next_extremity The current extremity to be matched against the elements in 'not_telomeres'.
+        @param chromosome The list to which the selected elements are appended.
+        @return An array containing the updated 'next_extremity', 'chromosome', and 'not_telomeres' lists.
+        
+        '''
+    
         for element in not_telomeres:  
-         # if either the start or second element is the next extremity
+            
             if element[0] == next_extremity or element[1] == next_extremity:
                 current = element
-            # add the current adjacency to the chromosome
                 chromosome.append(current)
-                not_telomeres.remove(current)  # remove the current element from not_telomeres based on its index
-                 # update the next extremity to be the end of the current adjacency
+                not_telomeres.remove(current)  
+
                 next_extremity = Gene_extremities.find_next_extremity(self, current, next_extremity)  
 
-                return next_extremity, chromosome, not_telomeres    # return the updated values of next extremity, chromosome, and not_telomeres
-        return [next_extremity]   # if no adjacent element was found, return the current next extremity
+                return next_extremity, chromosome, not_telomeres    
+        return [next_extremity]  
 
 
 
     def find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres):
-        # Find the next adjacency in the cycle
+        """
+        Finds an adjacency cycle starting from the given 'next_extremity' in the specified 'chromosome'.
+        
+        Parameters:
+        - next_extremity (int): The starting extremity to search for the adjacency cycle.
+        - chromosome (list): The list representing the chromosome.
+        - not_telomeres (list): List of extremities that should not be considered as telomeres.
+
+        Returns:
+        Tuple[int, list, list]: A tuple containing the following:
+            - int: The next extremity in the adjacency cycle.
+            - list: The chromosome.
+            - list: The list of extremities excluding telomeres.
+        """
+
+       
         next_adjacency = Gene_extremities.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
 
-        # Loop until the length of next_adjacency is not equal to 1
         while len(next_adjacency) != 1:
 
-            next_extremity = next_adjacency[0]   # Set next_extremity as the first element of next_adjacency
+            next_extremity = next_adjacency[0]   
 
-         # Find the next adjacency based on next_extremity
             next_adjacency = Gene_extremities.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
-
-        # If the length of next_adjacency becomes 1
+        
         else:
-            next_extremity = next_adjacency[0]   # Set next_extremity as the first element of next_adjacency
+            next_extremity = next_adjacency[0]  
 
-            # Return the values of next_extremity, chromosome, and not_telomeres
             return next_extremity, chromosome, not_telomeres 
+        
+
+        
 
     def find_chromosomes(self, adjacencies):
-         # Separate telomeres and not telomeres
-        telomeres = [element for element in adjacencies if type(element) is not tuple]
-        not_telomeres = [element for element in adjacencies if type(element) is tuple]
 
-         # Initialize output lists for chromosome, linear chromosome and circular chromosome
+        """
+        Finds linear and circular chromosomes from a list of gene adjacencies.
+
+        Parameters:
+        - adjacencies (list): A list containing gene adjacencies, where each element is either an integer (telomere) or a tuple (gene adjacency).
+
+        Returns:
+        tuple: A tuple containing two lists - linear_chromosomes and circular_chromosomes.
+            linear_chromosomes (list): List of linear chromosomes, each represented as a list of gene adjacencies.
+            circular_chromosomes (list): List of circular chromosomes, each represented as a list of gene adjacencies.
+
+        Algorithm:
+        - Separate telomeres and gene adjacencies into two lists: telomeres and not_telomeres.
+        - Initialize empty lists for linear_chromosomes and circular_chromosomes.
+        - Iterate through telomeres:
+            - Start a new chromosome with the first telomere.
+            - Extend the chromosome until the next telomere is found.
+            - Add the completed chromosome to linear_chromosomes.
+        - Iterate through not_telomeres:
+            - Start a new chromosome with the first gene adjacency.
+            - Extend the chromosome until a circular chromosome is found or the adjacency cycle is completed.
+            - Add the completed chromosome to either linear_chromosomes or circular_chromosomes based on the result.
+        """
+        
+        telomeres = [element for element in adjacencies if type(element) is not tuple]
+        not_telomeres = [element for element in adjacencies if type(element) is tuple]      
+
         linear_chromosomes = []
         circular_chromosomes = []
         chromosome = []
         i = 0
-
-        # Find linear chromosomes from the telomeres list
-        # Loop until the length of telomeres is greater than 0
+    
         while len(telomeres) > 0:
-
-            i += 1    # Increment the counter i
-            current = telomeres[0]  # Get the first element from the telomeres list
-
-            telomeres.remove(current)  # Remove the current element from the telomeres list
-            chromosome.append(current)  # Append the current element to the chromosome list
-
-            # Get the next extremity
-            if current % 1 == 0:   # Check if the current value is an integer (has no fractional part)
-                next_extremity = current + 0.5   # If current is an integer, set next_extremity as current + 0.5
+            i += 1   
+            current = telomeres[0]  
+            telomeres.remove(current)  
+            chromosome.append(current) 
+           
+            if current % 1 == 0: 
+                next_extremity = current + 0.5  
             else:
-                next_extremity = current - 0.5   # If current is not an integer, set next_extremity as current - 0.5
+                next_extremity = current - 0.5   
 
-           # If single gene chromosome, check if its linear or circular chromosome
-            if next_extremity in telomeres:  # Check if next_extremity is present in the telomeres list
-                current = next_extremity     # Set current as next_extremity
+            if next_extremity in telomeres:  
+                current = next_extremity    
 
-                telomeres.remove(current)    # Remove the current element from the telomeres list
-                chromosome.append(current)   # Append the current element to the chromosome list
-                linear_chromosomes.append(chromosome)  # Append the current chromosome to the linear_chromosomes list
-                chromosome = []  # Reset the chromosome list to an empty list
+                telomeres.remove(current)    
+                chromosome.append(current)   
+                linear_chromosomes.append(chromosome) 
+                chromosome = []  
 
-           # If next_extremity is not present in the telomeres list, find the adjacency cycle
+          
             else:
                 adjacency_cycle = Gene_extremities.find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres)
-                next_extremity = adjacency_cycle[0]   # Update next_extremity with the first element of the adjacency cycle
+                next_extremity = adjacency_cycle[0]   
+                if next_extremity in telomeres:  
+                    current = next_extremity    
+                    telomeres.remove(current)  
+                    chromosome.append(current)   
+                    linear_chromosomes.append(chromosome)   
+                    chromosome = []  
 
-                if next_extremity in telomeres:  # Check if the updated next_extremity is present in the telomeres list
-                    current = next_extremity     # Set current as next_extremity
-                    telomeres.remove(current)    # Remove the current element from the telomeres list
-                    chromosome.append(current)   # Append the current element to the chromosome list
-                    linear_chromosomes.append(chromosome)   # Append the current chromosome to the linear_chromosomes list
-                    chromosome = []  # Reset the chromosome list to an empty list
+      
+        while len(not_telomeres) > 0: 
+            current = not_telomeres[0]  
+            not_telomeres.remove(current)  
+            chromosome.append(current)     
 
-        # Find circular chromosomes from the not telomeres list
-        while len(not_telomeres) > 0: #Loop until the length of not_telomeres is greater than 0
-            current = not_telomeres[0]  # Get the first element from the not_telomeres list
-            not_telomeres.remove(current)  # Remove the current element from the not_telomeres list
-            chromosome.append(current)     # Append the current element to the chromosome list
-
-          # Check if the first element of current is an integer (has no fractional part)
+         
             if current[0] % 1 == 0:
-                next_extremity = current[0] + 0.5   # If the first element is an integer, set next_extremity as current[0] + 0.5
+                next_extremity = current[0] + 0.5   
             else:
-                next_extremity = current[0] - 0.5    # If the first element is not an integer, set next_extremity as current[0] - 0.5
+                next_extremity = current[0] - 0.5   
 
-            # If single gene chromosome, check if it is a circular chromosome.
-            if next_extremity == current[1]:   # Check if next_extremity is equal to the second element of current
-                circular_chromosomes.append(chromosome)  # Append the current chromosome to the circular_chromosomes list
-                chromosome = []  # Reset the chromosome list to an empty list
-
-           # If next_extremity is not equal to the second element of current, find adjacency cycle
+           
+            if next_extremity == current[1]:   
+                circular_chromosomes.append(chromosome)  
+                chromosome = []  
+           
             else:
-            # Find the adjacency cycle based on next_extremity, chromosome, and not_telomeres
+           
                 adjacency_cycle = Gene_extremities.find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres)
-                next_extremity = adjacency_cycle[0]  # Update next_extremity with the first element of the adjacency cycle
+                next_extremity = adjacency_cycle[0]  
 
-                # if at end of circular chromosome, Check if next_extremity is equal to the second element of the first gene in the chromosome
+               
                 if next_extremity == chromosome[0][1]:  
 
-                    circular_chromosomes.append(chromosome)  # Append the current chromosome to the circular_chromosomes list
-                    chromosome = []  # Reset the chromosome list to an empty list
+                    circular_chromosomes.append(chromosome)
+                    chromosome = []
 
-        # Return the linear_chromosomes and circular_chromosomes lists
+       
         return linear_chromosomes, circular_chromosomes
 
 
     def find_genome(self, adjacencies):
-        genome = []   # initialize genome as empty list
 
-        # Find chromosomes using the Extremities_and_adjacencies class and store the results in the 'chromosomes' variable
+        """
+        Finds the genome from the given list of adjacencies.
+
+        Parameters:
+        - adjacencies (list): A list of adjacencies representing chromosomes.
+
+        Returns:
+        - genome (list): A list containing the discovered genome.
+
+        The function processes linear and circular chromosomes from the given adjacencies
+        and constructs a genome based on the adjacency information.
+
+        Linear chromosomes are processed by extracting genes from adjacent pairs. Each gene is
+        represented as an integer, and its sign indicates the direction in the chromosome.
+
+        Circular chromosomes are processed similarly, with the addition of marking them as circular ('o')
+        in the genome list.
+        """
+
+
+        genome = []   
+
         chromosomes = Gene_extremities.find_chromosomes(self, adjacencies)
 
-        # Separate the linear_chromosomes and circular_chromosomes from the 'chromosomes' variable
         linear_chromosomes = chromosomes[0]
         circular_chromosomes = chromosomes[1]
 
-        # Iterate over each chromosome in the linear_chromosomes list
         for chromosome in linear_chromosomes:
-            chrom = []   # Create an empty list to store the transformed chromosome
-            gene = 0     # initialize gene variable as 0
-            chromosome_length = len(chromosome)  # get length of chromosome
+            chrom = []   
+            gene = 0    
+            chromosome_length = len(chromosome)  
 
-            for i in range(chromosome_length - 1):  # Iterate over the range of indices from 0 to chromosome_length - 1
+            for i in range(chromosome_length - 1):  
 
-                if i == 0:  # Check if the current index is 0
-                    gene = chromosome[i]  # Get the gene value from the chromosome at index i
+                if i == 0: 
+                    gene = chromosome[i]  
 
-                    if gene % 1 == 0: # Check if the gene is an integer (has no fractional part)
-                        chrom.append(int(gene))  # If the gene is an integer, append its integer value to the 'chrom' list
-                    
-                    # If the gene is not an integer, append its negative integer value to the 'chrom' list
+                    if gene % 1 == 0:
+                        chrom.append(int(gene))  
+                   
                     else:
                         chrom.append(-int(gene))  
 
-                else:  # If the current index is not 0
+                else:  
                 
-                    # Check if the integer value of the gene matches the first element of the gene pair at index i in the chromosome
                     if int(gene) == int(chromosome[i][0]):
 
-                        gene = chromosome[i][1]  # If it matches, update the gene with the second element of the gene pair
+                        gene = chromosome[i][1]  
                     else:
-                        gene = chromosome[i][0]   # If it doesn't match, update the gene with the first element of the gene pair
-
+                        gene = chromosome[i][0]   
                     
-                    # Check if the gene is an integer (has no fractional part)
+                   
                     if gene % 1 == 0:
-                        chrom.append(int(gene))  # If the gene is an integer, append its integer value to the 'chrom' list
+                        chrom.append(int(gene))  
                     else:
-                        chrom.append(-int(gene))  # If the gene is not an integer, append its negative integer value to the 'chrom' list
+                        chrom.append(-int(gene)) 
 
-            genome.append(chr)  # Append the 'chrom' list to the 'genome' list
+            genome.append(chr)  
 
-        # Iterate over each chromosome in the circular_chromosomes list
         for chromosome in circular_chromosomes: 
-            chrom = []   # Create an empty list to store the transformed chromosome
-            gene = []    #Initialize the gene variable as an empty list
-            chromosome_length = len(chromosome)  # get length of current chromosome
+            chrom = []   
+            gene = []   
+            chromosome_length = len(chromosome) 
 
-            # iterate over adjacencies in chromosome
-            chr.append('o')  # Append 'o' to represent a circular chromosome
-            for i in range(0, chromosome_length):   # Iterate over the range of indices from 0 to chromosome_length
+            chr.append('o')  
+            for i in range(0, chromosome_length):   
 
-                if i == 0:  # Check if the current index is 0
-                    gene = chromosome[i][0]  # Get the first gene from the gene pair at index i in the chromosome
-                    if gene % 1 == 0:  # Check if the gene is an integer (has no fractional part)
-                        chrom.append(int(gene))   # If the gene is an integer, append its integer value to the 'chrom' list
+                if i == 0:  
+                    gene = chromosome[i][0] 
+                    if gene % 1 == 0:  
+                        chrom.append(int(gene))   
                     else:
                         chrom.append(-int(gene))
 
-                # Check if the integer value of the gene matches the first element of the gene pair at index i in the chromosome
                 else:
                     if int(gene) == int(chromosome[i][0]): 
 
-                        gene = chromosome[i][1]   # If it matches, update the gene with the second element of the gene pair
+                        gene = chromosome[i][1]   
                     else:
-                        gene = chromosome[i][0]  # If it doesn't match, update the gene with the first element of the gene pair
+                        gene = chromosome[i][0]  
 
-                    if gene % 1 == 0:  # Check if the gene is an integer (has no fractional part)
-                        chrom.append(int(gene))  # If the gene is an integer, append its integer value to the 'chrom' list
+                    if gene % 1 == 0:  
+                        chrom.append(int(gene))  
                     else:
-                        chrom.append(-int(gene))   # If the gene is not an integer, append its negative integer value to the 'chrom' list
+                        chrom.append(-int(gene))   
 
-            genome.append(chrom)   # Append the 'chrom' list to the 'genome' list
+            genome.append(chrom)  
             
-         # Append the 'chrom' list to the 'genome' list
+         
         return genome
