@@ -1,0 +1,18 @@
+##########################################################################################################
+
+time:  13.298691272735596
+
+number of simulations:  100
+number of sequence blocks:  9
+number of rearrangements:  8
+type of weighting ratio:  Same as solution weight ratios
+
+average number of solutions:  540.06
+
+average solution length:  5.013070882175598
+
+percentage time true solution was found:  0.0
+
+ratios as: inv:trp1:b_trl:u_trl:fis:fus:trp2
+[1.5762900915385667, 0.8077891773817004, 0.42195835724936204, 0.718701798294757, 0.7133447194706676, 0.5911861325890405, 0.18380060565150416]
+##########################################################################################################
