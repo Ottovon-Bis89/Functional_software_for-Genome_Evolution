@@ -350,7 +350,7 @@ class Node:
                 source_genome[chromosome_index] = mutated_chromosome
 
                 operation = {
-                    "Mut_Type": mutation_type,
+                    "Mut": mutation_type,
                     "Chr": chromosome_index + 1,
                     "Gene": gene_to_duplicate,
                     "Pos": position,
@@ -378,7 +378,7 @@ class Node:
                 )
 
                 operation = {
-                    "Mut_Type": mutation_type,
+                    "Mut": mutation_type,
                     "Chr": chromosome_index + 1,
                     "Pos": len(chromosome) + 1,
                     "Gene": gene_to_insert,
@@ -396,7 +396,7 @@ class Node:
                 )
 
                 operation = {
-                    "Mut_Type": mutation_type,
+                    "Mut": mutation_type,
                     "Chr": chromosome_index + 1,
                     "Pos": position,
                     "Gene": gene_to_insert,
@@ -423,7 +423,7 @@ class Node:
                 mutated_chromosome = self.deletion(chromosome, position)
 
                 operation = {
-                    "Mut_Type": mutation_type,
+                    "Mut": mutation_type,
                     "Chr": chromosome_index + 1,
                     "Pos": position,
                     "Gene": gene_to_delete,
@@ -434,50 +434,68 @@ class Node:
 
         return source_genome, list_of_mutations
 
-    def insertion( self, source_chromosome, position_applicable_region, gene, larger_length=False):
-        # log.debug("insertion")
-        """
-        This function performs an insertion operation in the source genome by inserting a gene at the specified position.
+    # def insertion( self, source_chromosome, position_applicable_region, gene, larger_length=False):
+    # #     # log.debug("insertion")
+    # #     """
+    # #     This function performs an insertion operation in the source genome by inserting a gene at the specified position.
         
-        Parameters:
-        - source_chromosome: The source chromosome (list) where the insertion will be performed.
-        - position_applicable_region: The position within the chromosome where the insertion is applicable.
-        - gene: The gene to be inserted at the specified position.
-        - larger_length: A boolean flag indicating if the insertion should be performed at a position beyond the current length of the chromosome.
-        Returns:
-        - The updated source chromosome after the insertion operation.
-        """
+    # #     Parameters:
+    # #     - source_chromosome: The source chromosome (list) where the insertion will be performed.
+    # #     - position_applicable_region: The position within the chromosome where the insertion is applicable.
+    # #     - gene: The gene to be inserted at the specified position.
+    # #     - larger_length: A boolean flag indicating if the insertion should be performed at a position beyond the current length of the chromosome.
+    # #     Returns:
+    # #     - The updated source chromosome after the insertion operation.
+    # #     """
+
+    #     if larger_length:
+    #         insertion_index = 0
+    #         while (insertion_index < len(source_chromosome) and gene > source_chromosome[insertion_index]):
+                
+    #             insertion_index += 1
+                
+    #         if insertion_index > len(source_chromosome):
+    #             source_chromosome.append(gene)
         
-        print("sourve before")
-        print(source_chromosome)
-        print("----------")
-        if larger_length:
-            insertion_index = 0
-            while (insertion_index < len(source_chromosome) and gene > source_chromosome[insertion_index]):
-                print("check1")
-                print(insertion_index)
-                print(len(source_chromosome))
-                print(insertion_index < len(source_chromosome))
-                print("-------------------")
-                print(gene)
-                print(source_chromosome[insertion_index])
-                print(gene > source_chromosome[insertion_index])
-                print("check2")
-                insertion_index += 1
+    #         else:
+    #             source_chromosome.insert(insertion_index, gene)
+                    
+    #     else:
+    #         source_chromosome[position_applicable_region] = gene
+
+    #     return source_chromosome
+    
 
 
-            if insertion_index >= len(source_chromosome):
-                source_chromosome.append(gene)  # Insert gene at the end of the chromosome
-                print("greater")
-                print(source_chromosome)
-            else:
-                source_chromosome.insert(insertion_index, gene)
-                print("less")
-                print(source_chromosome)
+    # def insertion( self, source_chromosome, position_applicable_region, gene, larger_length=True):
+
+    #     source_chromosome[position_applicable_region-1] = gene
+
+    #     return source_chromosome
+
+    def insertion(self, source_chromosome, position_applicable_region, gene, larger_length=True):
+        if position_applicable_region <= 0 or position_applicable_region > len(source_chromosome):
+            source_chromosome.append(gene)
+            #raise ValueError("position_applicable_region is out of range for source_chromosome")
+
         else:
-            source_chromosome[position_applicable_region] = gene
+            source_chromosome[position_applicable_region-1] = gene
 
+            
         return source_chromosome
+
+
+  
+
+    
+
+
+
+       
+    
+       
+
+
     
 
     def deletion(self, source_chromosome, position_applicable_region):

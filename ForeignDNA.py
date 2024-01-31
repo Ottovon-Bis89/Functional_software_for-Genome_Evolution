@@ -45,12 +45,12 @@ class Foreign_DNA:
 
         if len(difference) > 0:
             # define the ratio (1/5)
-            number_of_random_ints = (len(difference) * 3) - (len(difference))  #ratio can be changed here, the ratio is the number of genes to number of random integers in foreign dna fragment.
+            number_of_random_ints = (len(difference) * 2) - (len(difference))  #ratio can be changed here, the ratio is the number of genes to number of random integers in foreign dna fragment.
             
             foreign_dna = []
             count = 0
             while count < (number_of_random_ints):
-                gene = randint(1, 40)
+                gene = randint(1, 25)
                 if len(foreign_dna) >= 1:
                     if gene not in foreign_dna:
                         foreign_dna.append(gene)
@@ -61,15 +61,15 @@ class Foreign_DNA:
            
             foreign_dna = difference + foreign_dna
             foreign_dna = list(set(foreign_dna))
-            if len(foreign_dna) < ((len(difference)) * 3):  
+            if len(foreign_dna) < ((len(difference)) * 2):  
                 count = len(foreign_dna)
-                while (len(foreign_dna) < ((len(difference)) * 3)):
-                    gene = randint(1, 40)
+                while (len(foreign_dna) < ((len(difference)) * 2)):
+                    gene = randint(1, 25)
                     if gene not in foreign_dna:
                         foreign_dna.append(gene)
                         count += 1
             
-            number_of_fragments = randint(1,50)
+            number_of_fragments = randint(1,5)
             len_fragments = 1
             
            
@@ -113,7 +113,7 @@ class Foreign_DNA:
             foreign_dna = []
             count = 0
             while count < (number_of_random_ints):
-                gene = randint(1, 40)
+                gene = randint(1, 25)
                 if len(foreign_dna) >= 1:
                     if gene not in foreign_dna:
                         foreign_dna.append(gene)
@@ -121,7 +121,7 @@ class Foreign_DNA:
                 else:
                     foreign_dna.append(gene)
             
-            number_of_fragments = randint(1,50)
+            number_of_fragments = randint(1,5)
             len_fragments = 1
             list_of_fragments = []
             fragment = []

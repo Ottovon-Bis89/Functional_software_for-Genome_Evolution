@@ -3,18 +3,19 @@ import Helper_Methods as HM
 from tqdm import tqdm
 import hashlib
 from logger import log
+from Weight import *
 
-itterations = 1
+itterations =1
 
 gen_n_obj = GEN_NODE.Node()
 
-# source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5','*9'], ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1','*9']]
-# target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '6', '*6', '7', '*6', '5','*7','8','*9'],['*9', '9','*8', '10', '*8', '11', '*9']]
+# # # source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5','*9'], ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1','*9']]
+# # # target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '6', '*6', '7', '*6', '5','*7','8','*9'],['*9', '9','*8', '10', '*8', '11', '*9']]
 
 target_genome = [[1, 2],[3, 4, 5],[6, 7],[8, 9, 10],[11],[12, 13, 14],[15, 16, 17, 18],[19, 20],[21, 22, 23]]
 source_genome = [[1, 4, 2],[3, 5],[6],[8],[9, -13, 11],[12, 14],[15, 17, 22, 18],[19, 16, 20],[21, 7, 10, 23]]
 
-log.debug("HELLO")
+# log.debug("HELLO")
 
 # source_genome = [['*8','1','*9','2','*7','3','*6','4','*10','15'], ['*7','-8','*9','-7','*6','6','*9','-5','*8','-14','*9','-13','*8','-12'], ['*8','9','*7','11'], ['*8','-20','*7','-19','*9','-18','*7','-17','*8','-16','*10','-32','*9','10','*8','-31','*7','-30','*6','-29','*7','-28','*8','-27'], ['*8','21','*8','22','*8','23','*8','24','*8','25','*8','26'], ['*8','-33'], ['*8','34','*8', '35','*8','36','*8','37','*8','38','*8','39','*8','40']]
 # target_genome = [['*8','1', '*8','2', '*8','3', '*8','4','*8', '5', '*8' ,'6', '*8','7','*8', '8'], ['*8','9', '*8','10','*8', '11'], ['*8','12','*8', '13','*8', '14','*8', '15', '*9'], ['*8','16','*8', '17','*8', '18','*8', '19','*8', '20'], ['*8','21', '*8','22', '*8','23','*8', '24','*8','25','*8', '26'], ['*8','27','*8', '28', '*8','29', '*8','30','*8', '31','*8', '32','*8', '33'], ['*8','34', '*8','35','*8', '36','*8','37', '*8','38', '*8','39','*8','40']]
@@ -47,49 +48,7 @@ log.debug("HELLO")
 # target_genome = [['*5', '1', '*6', '2', '*7', '3', '*9', '4', '*8', '5', '*7', '6', '*6', '7', '*6', '8'],['*9', '9', '*8', '10', '*8', '11'], ['*8', '12', '*6', '13', '*7', '14', '*8', '15'],['*7', '16', '*6', '17', '*6', '18', '*8', '19', '*10', '20'], ['*9', '21', '*6', '22', '*7', '23', '*8', '24', '*8', '25', '*7', '26'], ['*8', '27', '*9', '28', '*9', '29', '*9', '30', '*8', '31', '*9', '32', '*8', '33'], ['*6', '34', '*6', '35', '*6', '36', '*7', '37', '*7', '38', '*6', '39', '*10', '40']]
 
 
-'''
-Printing file containing the solution set
-'''
-# HM.create_new_file()
-# HM.append_to_file("Target_genome:")
-# HM.append_to_file(HM.list_to_string(target_genome))
-# HM.append_to_file("\nSource_genome:")
-# HM.append_to_file(HM.list_to_string(source_genome))
-# HM.append_new_line()
-# HM.append_new_line()
 
-# solution_sets = {}
-# solution_num = 1
-
-# for _ in tqdm(range(itterations), total=itterations):
-    
-#     list_of_operations  = gen_n_obj.get_operations(source_genome, target_genome)
-#     mutation_solution = ""
-    
-#     for item in list_of_operations:
-#         operations = item[0]
-#         mutation_solution += str(operations['Mut_Type'])
-#         mutation_solution += str(operations['Chr'])
-#         mutation_solution += str(operations['Pos'])
-#         mutation_solution += str(operations['Gene'])
-
-#     hashvalue = hash(mutation_solution)
-#     if solution_sets.get(hashvalue) is None:
-#         HM.append_new_solution_heading(solution_num)
-#         solution_num += 1
-#         solution_sets[hashvalue] = mutation_solution
-
-#         HM.append_to_file("\nEstimated total number of mutations:")
-#         HM.append_to_file(str(len(list_of_operations)))
-#         HM.append_to_file("\nPrinting solution sets........\n\n")
-
-#         for item in list_of_operations:
-#             operations = item[0]
-#             Mut_Type = f"Mut_Type: {operations['Mut_Type']}, "
-#             Chr = f"Chr: {operations['Chr']}, "
-#             Pos = f"Pos: {operations['Pos']}, "
-#             Gene = f"Gene: {operations['Gene']}"
-#             Genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}\n"
 
 solution_sets = {}
 solution_num = 1
@@ -102,15 +61,16 @@ for _ in tqdm(range(itterations), total=itterations):
 
         list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
     mutation_solution = ""
-    # print(list_of_operations)
     for item in list_of_operations:
-        # print(item)
+
         operations = item[0]
-        mutation_solution += str(operations['Mut_Type'])
+        mutation_solution += str(operations['Mut'])
         mutation_solution += str(operations['Chr'])
         mutation_solution += str(operations['Pos'])
         mutation_solution += str(operations['Gene'])
-
+    print(len(list_of_operations))
+    W = weight()
+    print(W.calc_cumulative_ratio(list_of_operations))
     # Use SHA-256 to calculate the hash value
     sha256_hash = hashlib.sha256(mutation_solution.encode()).hexdigest()
 
@@ -125,13 +85,13 @@ for _ in tqdm(range(itterations), total=itterations):
 
         for item in list_of_operations:
             operations = item[0]
-            Mut_Type = f"Mut_Type: {operations['Mut_Type']}, "
+            Mut = f"Mut: {operations['Mut']}, "
             Chr = f"Chr: {operations['Chr']}, "
             Pos = f"Pos: {operations['Pos']}, "
             Gene = f"Gene: {operations['Gene']}"
             Genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}\n"
 
-            HM.append_to_file("solution_set.txt",Mut_Type)
+            HM.append_to_file("solution_set.txt",Mut)
             HM.append_to_file("solution_set.txt",Chr)
             HM.append_to_file("solution_set.txt",Pos)
             HM.append_to_file("solution_set.txt",Gene)
@@ -141,40 +101,26 @@ for _ in tqdm(range(itterations), total=itterations):
 
 HM.End_of_file()
 
-# # import hashlib
-
-# def append_to_solution_file(file_path, data):
-#     with open(file_path, 'a') as solution_file:
-#         solution_file.write(data + '\n')
-
-# def format_mutation_data(mutation):
-#     operations = mutation[0]
-#     mutation_info = f"Mut_Type: {operations['Mut_Type']}, Chr: {operations['Chr']}, Pos: {operations['Pos']}, Gene: {operations['Gene']}"
-#     genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}"
-#     return f"{mutation_info}\n{genome_after_mutation}"
-
 # def main():
-#     solution_sets = {}
-#     solution_num = 1
-#     list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
+#     parser = argparse.ArgumentParser(
+#         description='A program that outputs all the possible set of evolutionary events that can describe the evolution of one genome into another')
+#     parser.add_argument("-t", help="this is the set of genes representing the target genome", dest='target_genome',
+#                         required=True)
+#     parser.add_argument("-s", help="this is the set of genes representing the source genome",
+#                         dest='source_genome', required=True, )
+#     parser.add_argument("-r",
+#                         help='the ratios in which each rearrangement is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions',
+#                         dest='ratios', required=True)
+#     parser.add_argument("-o", help="the name of the output file that will contain the set of rearrangements",
+#                         dest='output_file', required=True)
+#     parser.set_defaults(func=run)
+#     args = parser.parse_args()
+#     args.func(args)
 
-#     for mutation_solution in list_of_operations:
-#         sha256_hash = hashlib.sha256(mutation_solution.encode()).hexdigest()
-
-#         if sha256_hash not in solution_sets:
-#             solution_sets[sha256_hash] = mutation_solution
-
-#             append_to_solution_file("solution_set.txt", "Estimated total number of mutations:")
-#             append_to_solution_file("solution_set.txt", str(len(list_of_operations)))
-#             append_to_solution_file("solution_set.txt", "Printing solution sets........\n")
-
-#             mutation_data = format_mutation_data(mutation_solution)
-#             append_to_solution_file("solution_set.txt", mutation_data)
-
-#     # Close the file or perform any other cleanup operations here
 
 # if __name__ == "__main__":
 #     main()
+
 
 
 
