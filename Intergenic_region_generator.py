@@ -1,78 +1,133 @@
-
+  
 import random
+from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
+from new_Node import Node
+from Network_wrDCJ import Network
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.cm import ScalarMappable
 
-class IntergenicGenerator:
+net_work = Network()
+class Constraint:
     def __init__(self):
-        '''
-        Constructor for the IntergenicGenerator class.
-        This class is used to generate intergenic regions and manipulate genomic data.
-        '''
-        pass 
-
-    def inter_generator(self, numbered_genes_list):
-        '''
-        Function to generate intergenic regions in a list of numbered genes.
-
-        The function adds random numbers to the intergenic regions (non-coding regions between genes)
-        of genes which will be used as identifiers or mutation points for evolutionary events.
-        These numbers represent the number of base pairs between (length of intergenic region) genes.
-        These numbers are preceded by an asterisk (*) to differentiate them from the normal
-        genes (sequence blocks) since they are all numbers.
-
-        :param numbered_genes_list: A list of numbered genes to generate intergenic regions for.
-        :return: A list of genes with intergenic regions added.
-        '''
-        genes_with_intergenic_chromosome = []
-        genes_with_intergenic_region = []
-
-        for i in range(len(numbered_genes_list)):
-            chromosome = numbered_genes_list[i]
-            length = len(chromosome)
-
-            for j in range(length):
-                if j == 0:
-                    random_bp = random.randint(6, 10)
-                    region = '*' + str(random_bp)
-                    genes_with_intergenic_chromosome.append(region)
-
-                random_bp = random.randint(6, 10)
-                start = chromosome[j]
-                region = '*' + str(random_bp)
-                genes_with_intergenic_chromosome.append(start)
-                genes_with_intergenic_chromosome.append(region)
-
-            genes_with_intergenic_region.append(genes_with_intergenic_chromosome)
-            genes_with_intergenic_chromosome = []
-
-        return genes_with_intergenic_region
-
-    def intergenic_regions(self, genes_with_intergenic_genome):
-        '''
-        Function to find applicable intergenic regions and remove non-mutable regions.
-
-        This function removes numeric base pair values from intergenic regions that cannot mutate
-        and checks for viable intergenic regions.
-
-        :param genes_with_intergenic_genome: A list of genes with intergenic regions.
-        :return: A modified list with applicable intergenic regions.
-        '''
-        for genes_with_intergenic_region in genes_with_intergenic_genome:
-            for i in range(len(genes_with_intergenic_region)):
-                if i % 2 == 0 or i == 0:
-                    region = genes_with_intergenic_region[i]
-                    if len(region) > 2:
-                        value = region[1] + region[2]
-                    else:
-                        value = region[1]
-                    if int(value) < 5:
-                        genes_with_intergenic_region[i] = '*'
-        return genes_with_intergenic_genome
+        pass
+    
 
 
+
+    def inter_generator(self, adjacencies_list):
+        intergenic_regions = []
+        for i in adjacencies_list:
+            random_bp = random.randint(1, 10)
+            intergenic_regions.append('*' + str(random_bp))
+        return intergenic_regions
+
+
+    def operation_intergenic_regions(self, intergenic_regions, list_of_legal_operations):
+        operations_with_intergenic = []
+        for operation in list_of_legal_operations:  
+            if isinstance(operation, tuple):
+                
+                if len(operation) == 3 and isinstance(operation[0], tuple):
+                    start_tuple, start, end = operation
+                    start_tuple_with_intergenic = (start_tuple[0], random.choice(intergenic_regions), start_tuple[1])
+                    operations_with_intergenic.append((start_tuple_with_intergenic, start, end))
+
+                elif len(operation) == 3 and isinstance(operation[-1], tuple):
+                    start, end, end_tuple = operation
+                    end_tuple_with_intergenic = (end_tuple[0], random.choice(intergenic_regions), end_tuple[1])
+                    operations_with_intergenic.append((start, end, end_tuple_with_intergenic))
+
+                elif len(operation)==2 and isinstance(operation[0][1], tuple):
+                    start, end =  operation
+                    if isinstance(start, tuple):
+                        new_start = start[0]
+                        new_start_end = start[1]
+                    
+                    if isinstance(end, tuple):
+                        new_end_start = end[0]
+                        new_end = end[1]
+                    operations_with_intergenic.append((((new_start[0],random.choice(intergenic_regions),new_start[1]),(new_start_end[0],random.choice(intergenic_regions),new_start_end[1])),((new_end_start[0],random.choice(intergenic_regions),new_end_start[1]),(new_end[0],random.choice(intergenic_regions),new_end[1]))))
+
+            else:
+                operations_with_intergenic.append(operation)
+        return operations_with_intergenic
+
+    
+
+    def intergenic_weight(self, net_work, intergenic_regions, list_of_legal_operations):
+        #print("legal ops in gen : "+str(list_of_legal_operations))  # print the operations
+        # new_operation_weight = 0
+        # new_op_weight = 0
+
+        operation_weight = net_work.operation_weight
+        op_weight = net_work.op_weight
+        
+        for operation in list_of_legal_operations:
+            #print("Entered first loop")  # print a message when the first loop is entered
+            if not isinstance(operation, tuple):
+                continue
+            bp = 0 
+            
+            if len(operation) == 3:
+                for element in operation:
+                    #rint("Entered second loop")  # print a message when the second loop is entered
+                    if isinstance(element, str) and '*' in element:
+                        bp = int(element[1:])  
+                        print("bp:", bp)  
+
+            elif len(operation) == 2 and  (isinstance(operation[0], tuple) and isinstance(operation[1], tuple)):
+                for outer_tuple in operation:
+                    #print("Entered third loop")  
+                    if isinstance(outer_tuple, tuple):
+                        for element in outer_tuple:
+                            # print("Entered fourth loop")  # print a message when the fourth loop is entered
+                            if isinstance(element, str) and '*' in element:
+                                bp = int(element.split('*')[1])  
+                                print("bp:", bp) 
+
+            if bp >= 5:
+                operation_weight = 0.8 * operation_weight
+                print(operation_weight)
+                op_weight = 0.8 * op_weight
+            else:
+                operation_weight = 0.2 * operation_weight
+                op_weight = 0.2 *  op_weight
+                print(op_weight)
+
+        return operation_weight, op_weight
+
+
+
+
+
+
+    
 
 # # Example usage:
-# genomeA = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], [34, 35, 36, 37, 38, 39, 40, 41, 42], [43], [44], [45, 46], [47], [48], [49, 50]] # Provide your genomic data here
-# intergenic_gen = IntergenicGenerator()
-# list_of_genome_with_intergenic = intergenic_gen.inter_generator(genomeA)
-# list_of_genome_with_applicable_intergenic = intergenic_gen.intergenic_regions(list_of_genome_with_intergenic)
-# # Write data to a file, if needed.
+# genomeA = [[1,2,3,4,15],[-8,-7,6,-5,-14,-13,-12],[9,11],[-20,-19,-18,-17,-16,-32,10,-31,-30,-29,-28,-27,33],[21,22,23,24,25,26],[-33],[34,35,36,37,38,39,40]]
+# genomeB = [[1,2,3,4,5,6,7,8],[9,10,11],[12,13,14,15],[16,17,18,19,20],[21,22,23,24,25,26],[27,28,29,30,31,32,33,33],[34,35,36,37,38,39,40]]
+
+# adjacencies = Extremities_and_adjacencies()
+# # adjacencies_list = adjacencies.ordered_and_sorted_adjacencies(genomeB)
+# # adjacencies_genomeA = adjacencies.ordered_and_sorted_adjacencies(genomeA)
+# adjacencies_genomeB = adjacencies.ordered_and_sorted_adjacencies(genomeB)
+# #         #sprint(adjacencies_genomeB)
+# target_node = Node(adjacencies_genomeB)
+# list_of_legal_operations = target_node.get_legal_operations(adjacencies_genomeB)
+# #genomeB = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]]
+# # genomeB = [[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]]
+
+# # data_gen = DataGenerator()
+# # genomeA = data_gen.check_genes(genomeA)
+# # genomeB = data_gen.check_genes(genomeB)
+# # print("checked : " + str(genomeA))
+# intergenic_generator = IntergenicGenerator(genomeA, genomeB)
+
+# intergenic_gen = IntergenicGenerator. inter_generator(genomeB)
+# intergenic_gen = IntergenicGenerator.inter_generator(genomeA)
+# adjacencies_with_intergenic = intergenic_gen.inter_generator(genomeB)
+# intergenic_regions = intergenic_gen.inter_generator()
+# adjacencies_intergenic = intergenic_gen.adjacencies_intergenic_regions(intergenic_regions)
+
+# print(adjacencies_intergenic)

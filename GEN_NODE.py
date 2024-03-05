@@ -139,8 +139,8 @@ class Node:
                 insert_intergenic_region = gen_obj.inter_generator(clean_genome)
                 source_genome = gen_obj.intergenic_regions(insert_intergenic_region)
 
-                num_FDNA = randint(0, 3) 
-                if (num_FDNA <= 2 and foreign_Dna_counter != 0):  
+                num_FDNA = randint(0, 2) 
+                if (num_FDNA != 0 and foreign_Dna_counter != 0):  
                     mutations, required_mutation = legalOps.mutation_legal_operations(source_genome, target_genome)
                     if (required_mutation):  
                         source_genome, mutation_list = self.do_mutation(source_genome, required_mutation)
@@ -213,7 +213,9 @@ class Node:
 
                     chosen = foreign_dna[choice_foreign_dna]
 
-                    source_genome, f_dna_mutation = foreign_obj.insert_foreign_dna(source_genome, chosen)
+                    source_genome, F_DNA = foreign_obj.insert_foreign_dna(source_genome, chosen)
+
+                    list_of_operations.append(F_DNA)
 
                     
                     mutations, required_mutation = legalOps.mutation_legal_operations(source_genome, target_genome)
@@ -224,6 +226,7 @@ class Node:
 
                         if mutation_list != []:
                             list_of_operations.append(mutation_list) 
+                          
                         switch = True
 
                     else:
@@ -299,7 +302,7 @@ class Node:
         @return A tuple containing the updated source genome and a list of mutation records.
         """
 
-        # log.debug("do mutation")
+        log.debug("do mutation")
         
 
         list_of_mutations = []
@@ -434,6 +437,7 @@ class Node:
 
         return source_genome, list_of_mutations
 
+
     # def insertion( self, source_chromosome, position_applicable_region, gene, larger_length=False):
     # #     # log.debug("insertion")
     # #     """
@@ -467,13 +471,8 @@ class Node:
     
 
 
-    # def insertion( self, source_chromosome, position_applicable_region, gene, larger_length=True):
-
-    #     source_chromosome[position_applicable_region-1] = gene
-
-    #     return source_chromosome
-
     def insertion(self, source_chromosome, position_applicable_region, gene, larger_length=True):
+        
         if position_applicable_region <= 0 or position_applicable_region > len(source_chromosome):
             source_chromosome.append(gene)
             #raise ValueError("position_applicable_region is out of range for source_chromosome")
@@ -483,18 +482,7 @@ class Node:
 
             
         return source_chromosome
-
-
-  
-
     
-
-
-
-       
-    
-       
-
 
     
 

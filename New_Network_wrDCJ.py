@@ -1,48 +1,64 @@
-from Class_wrDCJ_Node import Node
+#from Class_wrDCJ_Node import Node
+from new_Node import Node
 from networkx import DiGraph
+from Class_extremities_and_adjacencies import Extremities_and_adjacencies
+
+get_genome = Extremities_and_adjacencies()
 
 
 def build_hash_table(current_node, hash_table, adjacenciesB, weights):
+    '''
+     Builds a hash table representing the state space of "Genolve".
+    The algorithm explores possible operations on a given node and recursively builds
+    the state space tree while updating the hash table to avoid redundant computations.
+    
+    @param current_node The current node in the state space tree.
+    @param hash_table The hash table used to store previously visited states.
+    @param adjacencies_genomeB The adjacency information for Genome B.
+    @param weights The weights used to calculate operation weights.
+ 
+    '''
     node = current_node
+
 
     # if the previous operation was a cicularization (i.e. a trp0) do:
 
     if node.join_adjacency != 0:
 
-        operations = node.get_reinsertion_operations(adjacenciesB)
+        operations = node.get_decircularization_operations(adjacenciesB)
 
         for operation in operations:
 
-            child_state = node.take_action(operation)[0]  # perform operation
+            child_state = node.take_action(operation)[0]  
             check_hash_table = check_hash_key(child_state,
-                                              hash_table)  # check whether the intermediate create exists already
+                                              hash_table) 
 
-            # if it is a trp1 type operation
+
             if node.join_adjacency in operation[0]:
                 operation_type = 'trp1'
                 operation_weight = 0.5 * weights[1]
+                #operation_weight = 1 * weights[1]
 
-
-            # else it is a trp2 type operation
             else:
                 operation_type = 'trp2'
                 operation_weight = 1.5 * weights[1]
 
-            if check_hash_table[0]:  # if the intermediate exists
 
-                child = check_hash_table[1]  # let the child = (point to) the intermediate node in the hash table
-                node.children.append(child)  # add the child to the list of children of the current node
+            if check_hash_table[0]:  
+
+                child = check_hash_table[1]  
+                node.children.append(child)  
                 node.children_weights.append(
-                    operation_weight)  # add the weight of the operation that generated the child to the list of weights
+                    operation_weight)  
                 node.children_operations.append((operation,
-                                                 operation_type))  # add the operation and its type to the list of operations that generated the node children
+                                                 operation_type))
 
 
-            else:  # if the intermediate does not exist in the hash table
-                child = Node(child_state)  # create a node for the state
-                child.join_adjacency = 0
+            else:  
+                child = Node(child_state)
+                child.join_adjacency=0
                 hash_key = hash(str(child.state))
-                hash_table.update({hash_key: child})  # add child node to hash table
+                hash_table.update({hash_key: child})
                 node.children.append(child)
                 node.children_weights.append(operation_weight)
                 node.children_operations.append((operation, operation_type))
@@ -51,8 +67,7 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
 
 
 
-    else:  # if the previous operation was not a circularization, i.e. the current intermediary genome consists of
-        # only linear chromosomes
+    else:  
 
         operations = node.get_legal_operations(adjacenciesB)
 
@@ -64,30 +79,30 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
 
             check_hash_table = check_hash_key(child_state, hash_table)
 
-            if check_hash_table[0]:  # if the child exists in the hash table:
+            if check_hash_table[0]:
                 child = check_hash_table[1]
                 node.children.append(child)
 
                 child.find_chromosomes(child.state)
 
-                if len(child.circular_chromosomes) != 0:  # if a circularization occurred
+                if len(child.circular_chromosomes) != 0:
                     node.children_weights.append(0.5 * weights[1])
                     node.children_operations.append((operation, 'trp0'))
 
-                    if type(operation[-1][0]) is tuple and type(operation[-1][1]) is tuple:
+                    if isinstance(operation[-1][0],tuple) and isinstance(operation[-1][1], tuple):
 
                         for adjacency in operation[-1]:
                             if adjacency in child.circular_chromosomes[0]:
                                 child.join_adjacency = adjacency
 
 
-                    elif type(operation[-1][0]) is tuple:
+                    elif isinstance(operation[-1][0], tuple):
                         if operation[-1][0] in child.circular_chromosomes[0]:
                             child.join_adjacency = operation[-1][0]
                         else:
                             print('error')
 
-                    elif type(operation[-1][1]) is tuple:
+                    elif isinstance(operation[-1][1], tuple):
                         if operation[-1][1] in child.circular_chromosomes[0]:
                             child.join_adjacency = operation[-1][1]
                         else:
@@ -125,6 +140,19 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
                         operation_type = op_type
                         op_weight = 1 * weights[0]
 
+                    elif op_type == 'ins':
+                        operation_type = op_type
+                        op_weight = 1 * weights[5]
+
+                    elif op_type == 'dele':
+                        operation_type = op_type
+                        op_weight =  1 * weights[3]
+
+                    elif op_type == 'dup':
+                        operation_type = op_type
+                        op_weight =  1 * weights[4]
+
+
                     else:
                         print('You have got a problem, the op type is: ', op_type, '   #2')
 
@@ -138,29 +166,29 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
 
                 if len(child.circular_chromosomes) != 0:  # if a circular chromosome has been created:
 
-                    if type(operation[-1][0]) is tuple and type(operation[-1][1]) is tuple:
+                    if isinstance(operation[-1][0], tuple) and isinstance(operation[-1][1],tuple):
 
                         for adjacency in operation[-1]:
                             if adjacency in child.circular_chromosomes[0]:
                                 child.join_adjacency = adjacency
 
 
-                    elif type(operation[-1][0]) is tuple:
+                    elif isinstance(operation[-1][0], tuple):
                         if operation[-1][0] in child.circular_chromosomes[0]:
                             child.join_adjacency = operation[-1][0]
                         else:
                             print('error')
 
-                    elif type(operation[-1][1]) is tuple:
+                    elif isinstance(operation[-1][1], tuple):
                         if operation[-1][1] in child.circular_chromosomes[0]:
                             child.join_adjacency = operation[-1][1]
                         else:
                             print('error')
 
                     else:
-                        # if operation[-1][0] in child.circular_chromosomes[0]:
+                        #if operation[-1][0] in child.circular_chromosomes[0]:
                         if operation[-1] in child.circular_chromosomes[0]:
-                            # child.join_adjacency = operation[-1][0]
+                            #child.join_adjacency = operation[-1][0]
                             child.join_adjacency = operation[-1]
                         else:
                             print('error')
@@ -170,12 +198,13 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
                     node.children.append(child)
                     node.children_operations.append((operation, 'trp0'))
                     node.children_weights.append(0.5 * weights[1])
+                    #node.children_weights.append(1 * weights[1])
 
                     build_hash_table(child, hash_table, adjacenciesB, weights)
 
 
 
-                else:  # else if no circular chromosome has been created:
+                else:
                     child.join_adjacency = 0
                     hash_key = hash(str(child.state))
                     hash_table.update({hash_key: child})
@@ -200,6 +229,19 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
                     elif op_type == 'b_trl':
                         operation_type = op_type
                         op_weight = 1 * weights[2]
+                    
+                    elif op_type == 'dup':
+                        operation_type = op_type
+                        op_weight = 0.3 * weights[4]
+
+                    elif op_type == 'ins':
+                        operation_type = op_type
+                        op_weight = 0.15 * weights[5]
+
+                    elif op_type == 'dele':
+                        operation_type = op_type
+                        op_weight = 0.05 * weights[3]
+
                     else:
                         print("There's a problem at the .find_optype node function")
                         print('You have got a problem, the op type is: ', op_type, '    #4')
@@ -211,6 +253,23 @@ def build_hash_table(current_node, hash_table, adjacenciesB, weights):
 
 
 def check_hash_key(child_state, hash_table):
+    """
+    Checks if a given hash key for a child state exists in the provided hash table.
+
+    Parameters:
+    - child_state (any): The child state for which the hash key needs to be checked.
+    - hash_table (dict): The hash table to check for the existence of the hash key.
+
+    Returns:
+    - tuple: A tuple containing a boolean value indicating whether the key exists in the hash table
+             and the corresponding value if the key exists, otherwise None.
+
+    Example:
+    >>> state = [1, 2, 3]
+    >>> table = {123: 'value'}
+    >>> check_hash_key(state, table)
+    (True, 'value')
+    """
     key = hash(str(child_state))
     if key in hash_table.keys():
         return True, hash_table.get(key)
@@ -218,12 +277,25 @@ def check_hash_key(child_state, hash_table):
 
 
 def build_network(hash_table):
+    """
+    Builds a directed graph network based on a given hash table.
+
+    This function takes a hash table as input and constructs a directed graph (DiGraph) network. It extracts unique nodes and their children from the hash table, creating nodes in the network for each unique value. Weighted edges are added to represent the relationships between nodes and their children.
+
+    Parameters:
+        hash_table (dict): A hash table containing nodes and their children with associated weights.
+
+    Returns:
+        networkx.DiGraph: A directed graph representing the relationships between nodes and their children.
+    """
+
     network = DiGraph()
     nodes = []
     weighted_edges = []
     weights = []
 
     list_of_values = hash_table.values()
+
     for value in list_of_values:
         if value not in nodes:
             nodes.append(value)

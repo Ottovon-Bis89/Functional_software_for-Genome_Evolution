@@ -44,13 +44,13 @@ class Foreign_DNA:
         difference = list(set(target_genome) - set(source_genome))
 
         if len(difference) > 0:
-            # define the ratio (1/5)
-            number_of_random_ints = (len(difference) * 2) - (len(difference))  #ratio can be changed here, the ratio is the number of genes to number of random integers in foreign dna fragment.
+            # define the ratio (1/2)
+            number_of_random_ints = (len(difference) * 2) - (len(difference)) 
             
             foreign_dna = []
             count = 0
             while count < (number_of_random_ints):
-                gene = randint(1, 25)
+                gene = randint(1, 10)
                 if len(foreign_dna) >= 1:
                     if gene not in foreign_dna:
                         foreign_dna.append(gene)
@@ -64,12 +64,12 @@ class Foreign_DNA:
             if len(foreign_dna) < ((len(difference)) * 2):  
                 count = len(foreign_dna)
                 while (len(foreign_dna) < ((len(difference)) * 2)):
-                    gene = randint(1, 25)
+                    gene = randint(1, 10)
                     if gene not in foreign_dna:
                         foreign_dna.append(gene)
                         count += 1
             
-            number_of_fragments = randint(1,5)
+            number_of_fragments = randint(1,10)
             len_fragments = 1
             
            
@@ -107,13 +107,13 @@ class Foreign_DNA:
 
         else:
            
-            number_of_random_ints = randint(1,5)
+            number_of_random_ints = randint(1,10)
 
             
             foreign_dna = []
             count = 0
             while count < (number_of_random_ints):
-                gene = randint(1, 25)
+                gene = randint(1, 10)
                 if len(foreign_dna) >= 1:
                     if gene not in foreign_dna:
                         foreign_dna.append(gene)
@@ -121,7 +121,7 @@ class Foreign_DNA:
                 else:
                     foreign_dna.append(gene)
             
-            number_of_fragments = randint(1,5)
+            number_of_fragments = randint(1,10)
             len_fragments = 1
             list_of_fragments = []
             fragment = []
@@ -214,7 +214,16 @@ class Foreign_DNA:
             mutated = source_chromosome + fragment_with_intergenic_regions
 
         source_genome[rand_chromosome] = mutated
-        return source_genome,  ['F_DNA',rand_chromosome, position, fragment_with_intergenic_regions, mutated]
+        
+        operation = {
+                    "Mut": 'F_DNA',
+                    "Chr": rand_chromosome,
+                    "Gene": fragment_with_intergenic_regions,
+                    "Pos": position,
+                    #"Mutated Chromosome": fragment_with_intergenic_regions,
+                    "Genome after mutation": source_genome,
+                }
+        return source_genome,  [operation]
 
 
     

@@ -1,10 +1,8 @@
 from networkx import all_shortest_paths
-from Rearrangement_Node import Node
-from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
-import Rearrangement_Network
-#from new_Node import Node
-from Data_generator import DataGenerator
-import Intergenic_region_generator
+#from Class_wrDCJ_Node import Node
+from new_Node import Node
+from Class_extremities_and_adjacencies import Extremities_and_adjacencies
+import New_Network_wrDCJ
 import time
 import argparse
 import sys
@@ -13,13 +11,13 @@ t0 = time.time()
 
 
 def run(args):
-    genomeA = args.source_genome
-    genomeB = args.target_genome
-    weight_ratios = args.ratios
+    genomeA_file = args.source_genome
+    genomeB_file = args.target_genome
+    weight_ratios_file = args.ratios
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
     # outfile = open(args.output_file, 'w')
-    with open("/home/22204911/Documents/New_Test/T4_A.txt") as csv:
+    with open("/home/22204911/Documents/Test2/MTZ.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeA = []
 
@@ -27,7 +25,7 @@ def run(args):
         element = list(map(int, element))
         genomeA.append(element)
 
-    with open("/home/22204911/Documents/New_Test/T4_B.txt") as csv:
+    with open("/home/22204911/Documents/Test2/FJSA.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeB = []
 
@@ -35,20 +33,13 @@ def run(args):
         element = list(map(int, element))
         genomeB.append(element)
 
-    with open("/home/22204911/Documents/New_Test/Weight_ratios.txt") as csv:
+    with open("/home/22204911/Documents/Test2/Weight_ratios.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     weight_ratios = []
 
     for element in line:
         element = list(map(int, element))
         weight_ratios.append(element)
-    
-    # gen_obj = Intergenic_region_generator.IntergenicGenerator()
-    # data_gen = DataGenerator()
-    # genomeA = data_gen.check_genes(genomeA)
-    # genomeB = data_gen.check_genes(genomeB)
-    # genomeA = data_gen.generate_intergenic_regions(genomeA)
-    # genomeB = data_gen.generate_intergenic_regions(genomeB)
 
     get_adjacencies = Extremities_and_adjacencies()
     adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
@@ -74,14 +65,14 @@ def run(args):
         else:
             weights.append(max_number / element)
 
-    Rearrangement_Network.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights)
+    New_Network_wrDCJ.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights)
 
-    network = Rearrangement_Network.build_network(hash_table)
+    network = New_Network_wrDCJ.build_network(hash_table)
 
     shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
 
     j = 1
-    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = 0  # initialize counters for this path
+    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins = tot_dele = tot_dup =0  # initialize counters for this path
 
     Paths_state = []
     Paths_state_weight = []
@@ -117,7 +108,7 @@ def run(args):
     for path in shortest_paths:
 
         i = 0
-        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = 0   # initialize counters for this path
+        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = ins = dele = dup = 0   # initialize counters for this path
         while i < len(path):
 
             current = path[i]
@@ -140,6 +131,12 @@ def run(args):
                     fus += 1
                 elif operation_type == 'fis':
                     fis += 1
+                elif operation_type == 'ins':
+                    ins += 1
+                elif operation_type == 'dele':
+                    dele += 1
+                elif operation_type == 'dup':
+                    dup += 1
             i += 1
 
         tot_b_trl += b_trl
@@ -149,6 +146,9 @@ def run(args):
         tot_trp2 += trp2
         tot_fus += fus
         tot_fis += fis
+        tot_ins += ins
+        tot_dele += dele
+        tot_dup += dup
         j += 1
 
     print(
@@ -159,26 +159,24 @@ def run(args):
     print()
     print('Number of most parsimonious solutions: ', len(shortest_paths))
     print()
-    print('Average number of operations per solution (Edit Distance): ',
+    print('Average number of operations per solution: ',
           float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
               2 * (tot_trp2 / len(shortest_paths))) + float(tot_b_trl / len(shortest_paths)) + float(
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
-              tot_fus / len(shortest_paths)))
+              tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print()
     print('Average number of each operation per solution:')
     print('Inversions: ', float(tot_inv / len(shortest_paths)), '  Transpositions type 1: ',
           float(tot_trp1 / len(shortest_paths)), '  Transpositions type 2: ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
-          float(tot_u_trl / len(shortest_paths)),
-          '  Fusions: ', float(tot_fus / len(shortest_paths)),
-          '  Fissions: ', float(tot_fis / len(shortest_paths)))
+          float(tot_u_trl / len(shortest_paths)), '  Fusions: ', float(tot_fus / len(shortest_paths)), '  Fissions: ', float(tot_fis / len(shortest_paths)), 'Insertions: ', float(tot_ins/len(shortest_paths)), 'Deletions: ', float(tot_dele/len(shortest_paths)), 'Duplications: ', float(len/(shortest_paths)))
     print()
     print()
     print('Solutions: ')
     print()
     path_counter = 1
     for path in Paths_state:
-        print('#Solution number ', path_counter)
+        print('Solution number ', path_counter)
         for genome in path:
             print(genome)
         path_counter += 1

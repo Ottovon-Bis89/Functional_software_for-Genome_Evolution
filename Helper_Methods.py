@@ -38,7 +38,7 @@ def append_new_solution_heading(solution_num):
 def End_of_file():
     with open(file_path, 'a') as file:
         file.write("\n\n")
-        file.write("********************************************************************************End of Analysis************************************************************")
+        file.write("********************************************************************************Evolution Completed Successfully************************************************************")
 
 '''
 Additional methods for GEN NODE

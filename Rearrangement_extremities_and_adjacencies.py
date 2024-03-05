@@ -1,13 +1,10 @@
-from logger import log
-class Gene_extremities:
-
+class Extremities_and_adjacencies:
 
     def __init__(self):
 
         pass
 
     def gene_extremities(self, genome):
-        
         '''
         Generates a list of gene extremities for each chromosome in the given genome.
 
@@ -29,31 +26,23 @@ class Gene_extremities:
         3. Return the final list of gene extremities for each chromosome in the genome.
 
         '''
-       
         genome_gene_extremities = []
         for chromosome in genome:
-            chromosome_gene_extremities = [] 
-            for marker in chromosome:  
-              
-                if type(marker)==int:
-                    marker_int = int(marker)
-                    if marker_int >= 0:
-                        chromosome_gene_extremities.append(marker)
-                        chromosome_gene_extremities.append(marker + 0.5)
-              
-                elif type(marker)==str and '*' not in marker:
-                    chromosome_gene_extremities.append(abs(int(marker)) + 0.5)
-                    chromosome_gene_extremities.append(abs(int(marker)))
-                    
+            chromosome_gene_extremities = []
+            for marker in chromosome:
+                if int(marker) >= 0:
+                    chromosome_gene_extremities.append(marker)
+                    chromosome_gene_extremities.append(marker + 0.5)
+                else:
+                    chromosome_gene_extremities.append(abs(marker) + 0.5)
+                    chromosome_gene_extremities.append(abs(marker))
             genome_gene_extremities.append(chromosome_gene_extremities)
-           
+
         return genome_gene_extremities
-    
 
     def create_adjacency_list(self, genome):
 
         '''
-
         Creates an adjacency list based on the given genome.
 
         Parameters:
@@ -71,27 +60,21 @@ class Gene_extremities:
         6. Return the final adjacency list.
 
         '''
-
         adjacencies = []
-        gene_extremities = Gene_extremities.gene_extremities(self, genome)
-
+        gene_extremities = Extremities_and_adjacencies.gene_extremities(self, genome)
         for chromosome in gene_extremities:
-            i = 0  
-            while i < len(chromosome):   
-                if chromosome[i] == chromosome[0] or chromosome[i] == chromosome[-1]: 
+            i = 0
+            while i < len(chromosome):
+                if chromosome[i] == chromosome[0] or chromosome[i] == chromosome[-1]:
                     adjacencies.append((chromosome[i]))
                     i += 1
-               
                 else:
                     adjacencies.append((chromosome[i], chromosome[i + 1]))
                     i += 2
-
+       
         return adjacencies
 
-
-
     def ordered_and_sorted_adjacencies(self, genome):
-
         """
         Retrieves the ordered and sorted list of adjacencies from the given genome.
 
@@ -108,32 +91,29 @@ class Gene_extremities:
         Note:
         - The input genome should be a valid sequence for accurate results.
         """
-
-
-        adjacencies = Gene_extremities.create_adjacency_list(self, genome)
-        
-        sorted_adjacencies = []
+        adjacencies = Extremities_and_adjacencies.create_adjacency_list(self, genome)
+        adjs = []
         telomeres = []
         for element in adjacencies:
-          
-            if type(element) is tuple:
-                if int(element[0]) < int(element[1]):     
-                    sorted_adjacencies.append(element)       
+            if isinstance(element, tuple):
+                if int(element[0]) < int(element[1]):
+                    adjs.append(element)
                 else:
-                    sorted_adjacencies.append((element[1], element[0]))
+                    adjs.append((element[1], element[0]))
             else:
                 telomeres.append(element)
-        
-        sorted_adjacencies.sort()
+
+       
+        adjs.sort()
+       
         telomeres.sort()
-        sorted_Adjacencies = telomeres + sorted_adjacencies
+        sorted_adjacencies = telomeres+adjs
 
-        return sorted_Adjacencies
 
+        return sorted_adjacencies
 
 
     def find_next_extremity(self, current, next_extremity):
-
         """
         Finds the next extremity based on the current extremity and a specified next extremity.
 
@@ -148,21 +128,17 @@ class Gene_extremities:
         Returns:
         - next_extremity: The next extremity calculated based on the input parameters.
         """
-        
-        if current[0] == next_extremity:  
-        
+        if current[0] == next_extremity:
             if current[1] % 1 == 0:
-                next = current[1] + 0.5 
+                next = current[1] + 0.5
             else:
-                next = current[1] - 0.5 
+                next = current[1] - 0.5
         else:
-            if current[0] % 1 == 0: 
-                next = current[0] + 0.5  
+            if current[0] % 1 == 0:
+                next = current[0] + 0.5
             else:
-                next = current[0] - 0.5    
-
+                next = current[0] - 0.5
         return next
-    
 
     def find_next_adjacency(self, next_extremity, chromosome, not_telomeres):
         '''
@@ -178,20 +154,14 @@ class Gene_extremities:
         @return An array containing the updated 'next_extremity', 'chromosome', and 'not_telomeres' lists.
         
         '''
-    
-        for element in not_telomeres:  
-            
+        for element in not_telomeres:
             if element[0] == next_extremity or element[1] == next_extremity:
                 current = element
                 chromosome.append(current)
-                not_telomeres.remove(current)  
-
-                next_extremity = Gene_extremities.find_next_extremity(self, current, next_extremity)  
-
-                return next_extremity, chromosome, not_telomeres    
-        return [next_extremity]  
-
-
+                not_telomeres.remove(current)
+                next_extremity = Extremities_and_adjacencies.find_next_extremity(self, current, next_extremity)
+                return next_extremity, chromosome, not_telomeres
+        return [next_extremity]
 
     def find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres):
         """
@@ -209,25 +179,20 @@ class Gene_extremities:
             - list: The list of extremities excluding telomeres.
         """
 
-       
-        next_adjacency = Gene_extremities.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
+        next_adjacency = Extremities_and_adjacencies.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
 
         while len(next_adjacency) != 1:
 
-            next_extremity = next_adjacency[0]   
+            next_extremity = next_adjacency[0]
+            next_adjacency = Extremities_and_adjacencies.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
 
-            next_adjacency = Gene_extremities.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
-        
+
         else:
-            next_extremity = next_adjacency[0]  
+            next_extremity = next_adjacency[0]
 
-            return next_extremity, chromosome, not_telomeres 
-        
-
-        
+            return next_extremity, chromosome, not_telomeres
 
     def find_chromosomes(self, adjacencies):
-
         """
         Finds linear and circular chromosomes from a list of gene adjacencies.
 
@@ -251,79 +216,84 @@ class Gene_extremities:
             - Extend the chromosome until a circular chromosome is found or the adjacency cycle is completed.
             - Add the completed chromosome to either linear_chromosomes or circular_chromosomes based on the result.
         """
-        
+
         telomeres = [element for element in adjacencies if type(element) is not tuple]
-        not_telomeres = [element for element in adjacencies if type(element) is tuple]      
+        not_telomeres = [element for element in adjacencies if type(element) is tuple]
 
         linear_chromosomes = []
         circular_chromosomes = []
         chromosome = []
         i = 0
-    
+
+        # find linear chromosomes
         while len(telomeres) > 0:
-            i += 1   
-            current = telomeres[0]  
-            telomeres.remove(current)  
-            chromosome.append(current) 
-           
-            if current % 1 == 0: 
-                next_extremity = current + 0.5  
+
+            i += 1
+            current = telomeres[0]
+
+            telomeres.remove(current)
+            chromosome.append(current)
+
+            if current % 1 == 0:
+                next_extremity = current + 0.5
             else:
-                next_extremity = current - 0.5   
+                next_extremity = current - 0.5
 
-            if next_extremity in telomeres:  
-                current = next_extremity    
+            # if single gene chromosome
+            if next_extremity in telomeres:
+                current = next_extremity
 
-                telomeres.remove(current)    
-                chromosome.append(current)   
-                linear_chromosomes.append(chromosome) 
-                chromosome = []  
+                telomeres.remove(current)
+                chromosome.append(current)
+                linear_chromosomes.append(chromosome)
+                chromosome = []
 
-          
+            # else find adjacency cycle
             else:
-                adjacency_cycle = Gene_extremities.find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres)
-                next_extremity = adjacency_cycle[0]   
-                if next_extremity in telomeres:  
-                    current = next_extremity    
-                    telomeres.remove(current)  
-                    chromosome.append(current)   
-                    linear_chromosomes.append(chromosome)   
-                    chromosome = []  
+                adjacency_cycle = Extremities_and_adjacencies.find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres)
+                next_extremity = adjacency_cycle[0]
 
-      
-        while len(not_telomeres) > 0: 
-            current = not_telomeres[0]  
-            not_telomeres.remove(current)  
-            chromosome.append(current)     
+                if next_extremity in telomeres:
+                    current = next_extremity
+                    telomeres.remove(current)
+                    chromosome.append(current)
+                    linear_chromosomes.append(chromosome)
+                    chromosome = []
 
-         
+        # find circular chromosomes
+        while len(not_telomeres) > 0:
+            current = not_telomeres[0]
+            not_telomeres.remove(current)
+            chromosome.append(current)
+
+            # find next extremity:
             if current[0] % 1 == 0:
-                next_extremity = current[0] + 0.5   
+                next_extremity = current[0] + 0.5
             else:
-                next_extremity = current[0] - 0.5   
+                next_extremity = current[0] - 0.5
 
-           
-            if next_extremity == current[1]:   
-                circular_chromosomes.append(chromosome)  
-                chromosome = []  
-           
+            # if it is a single gene chromosome:
+            if next_extremity == current[1]:
+                ordered_circular_chromosome = []
+
+                circular_chromosomes.append(chromosome)
+                chromosome = []
+
+            # go find adjacency cycle
             else:
-           
-                adjacency_cycle = Gene_extremities.find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres)
-                next_extremity = adjacency_cycle[0]  
+                adjacency_cycle = Extremities_and_adjacencies.find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres)
+                next_extremity = adjacency_cycle[0]
 
-               
-                if next_extremity == chromosome[0][1]:  
+                # if at end of circular chromosome
+                if next_extremity == chromosome[0][1]:
+                    ordered_circular_chromosome =[]
 
                     circular_chromosomes.append(chromosome)
                     chromosome = []
 
-       
         return linear_chromosomes, circular_chromosomes
 
-
     def find_genome(self, adjacencies):
-
         """
         Finds the genome from the given list of adjacencies.
 
@@ -343,75 +313,73 @@ class Gene_extremities:
         in the genome list.
         """
 
-
-        genome = []   
-
-        chromosomes = Gene_extremities.find_chromosomes(self, adjacencies)
-
+        genome = []
+        chromosomes = Extremities_and_adjacencies.find_chromosomes(self, adjacencies)
         linear_chromosomes = chromosomes[0]
         circular_chromosomes = chromosomes[1]
 
         for chromosome in linear_chromosomes:
-            chrom = []   
-            gene = 0    
-            chromosome_length = len(chromosome)  
+            chrom = []
+            gene=0
+            chromosome_length = len(chromosome)
 
-            for i in range(chromosome_length - 1):  
+            for i in range(0, chromosome_length-1):
 
-                if i == 0: 
-                    gene = chromosome[i]  
 
-                    if gene % 1 == 0:
-                        chrom.append(int(gene))  
-                   
+                if i==0:
+                    gene = chromosome[i]
+                    if gene%1 == 0:
+                        chrom.append(int(gene))
                     else:
-                        chrom.append(-int(gene))  
+                        chrom.append(-int(gene))
 
-                else:  
-                
+
+                else:
+
                     if int(gene) == int(chromosome[i][0]):
 
-                        gene = chromosome[i][1]  
+                        gene=chromosome[i][1]
                     else:
-                        gene = chromosome[i][0]   
-                    
-                   
-                    if gene % 1 == 0:
-                        chrom.append(int(gene))  
+                        gene = chromosome[i][0]
+
+                    if gene%1 == 0:
+                        chrom.append(int(gene))
                     else:
-                        chrom.append(-int(gene)) 
+                        chrom.append(-int(gene))
 
-            genome.append(chrom)  
 
-        for chromosome in circular_chromosomes: 
-            chrom = []   
-            gene = []   
-            chromosome_length = len(chromosome) 
+            genome.append(chrom)
 
-            chrom.append('o')  
-            for i in range(0, chromosome_length):   
 
-                if i == 0:  
-                    gene = chromosome[i][0] 
-                    if gene % 1 == 0:  
-                        chrom.append(int(gene))   
+        for chromosome in circular_chromosomes:
+            chrom =[]
+            gene = []
+            chromosome_length = len(chromosome)
+
+            chrom.append('o')
+            for i in range(0, chromosome_length):
+
+                if i==0:
+                    gene = chromosome[i][0]
+                    if gene%1 == 0:
+                        chrom.append(int(gene))
                     else:
                         chrom.append(-int(gene))
 
                 else:
-                    if int(gene) == int(chromosome[i][0]): 
+                    if int(gene) == int(chromosome[i][0]):
 
-                        gene = chromosome[i][1]   
+                        gene=chromosome[i][1]
                     else:
-                        gene = chromosome[i][0]  
+                        gene = chromosome[i][0]
 
-                    if gene % 1 == 0:  
-                        chrom.append(int(gene))  
+                    if gene%1 == 0:
+                        chrom.append(int(gene))
                     else:
-                        chrom.append(-int(gene))   
+                        chrom.append(-int(gene))
 
-            genome.append(chrom) 
-            # print(genome)
-            
-         
+            genome.append(chrom)
+
         return genome
+
+
