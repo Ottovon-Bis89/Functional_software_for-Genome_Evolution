@@ -5,8 +5,8 @@ from new_Node import Node
 #from Class_wrDCJ_Node import Node
 from Network_wrDCJ import Network
 #import Rearrangement_network
-from Intergenic_region_generator import Constraint
-from Data_generator import DataGenerator
+#from New_weight import Constraints
+#from Data_generator import DataGenerator
 import sys
 
 genomeA = []
@@ -25,6 +25,13 @@ with open("/home/22204911/Documents/New_Test/FJSA.txt") as f:
         genomeB.append(element)
     print("target_genomeB:"  ,genomeB)
 
+with open("/home/22204911/Documents/New_Test/Weight_ratios.txt") as f:
+    line = [element.strip('\n').split(',') for element in f]
+    weights = []
+    for element in line:
+        element = list(map(int, element))
+        weights.append(element)
+
     # gen_obj = Intergenic_region_generator.IntergenicGenerator()
     # data_generator = DataGenerator()
     # # source_genome = data_generator.check_genes(source_genomeA)
@@ -37,8 +44,8 @@ with open("/home/22204911/Documents/New_Test/FJSA.txt") as f:
     # print("target_genomeB:"  ,target_genomeB)
     # print("source_genomeA:" ,source_genomeA)
       
-    
-    intergen = Constraint()
+    # current_node = Node
+    # intergen = Constraints()
     get_adjacencies = Extremities_and_adjacencies()
     net_work = Network()
     adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
@@ -46,18 +53,23 @@ with open("/home/22204911/Documents/New_Test/FJSA.txt") as f:
 
     start_node = Node(adjacencies_genomeA)
     target_node = Node(adjacencies_genomeB)
-    list_of_legal_operations = target_node.get_legal_operations(adjacencies_genomeB)
-    # print(list_of_legal_operations)
+    list_of_legal_operations = start_node.get_legal_operations(adjacencies_genomeB)
+    print(list_of_legal_operations)
+    #ope_weight, ope_weight= net_work.build_hash_table(current_node,  adjacencies_genomeB,  weights)
+   
+
     adjacsA = get_adjacencies.create_adjacency_list(genomeA)
     adjacsB = get_adjacencies.create_adjacency_list(genomeB)
-    intergic_regions = intergen.inter_generator(adjacencies_genomeB)
-    legal_ops = start_node.get_legal_operations(adjacencies_genomeB)
-    print('legal:', legal_ops)
-    operations = intergen.operation_intergenic_regions(intergic_regions, legal_ops)
+    # intergic_regions = intergen.inter_generator(adjacencies_genomeB)
+    # legal_ops = start_node.get_legal_operations(adjacencies_genomeB)
+    # print('legal:', legal_ops)
+    # operations = intergen.operation_intergenic_regions(intergic_regions, legal_ops)
     # print("intergenic regions : " + str(intergic_regions))
     # print("operations" + str(operations))
-    for op in operations:
-        op_weight = intergen.intergenic_weight(intergic_regions, op)
+    # for op in operations:
+    #     ope_weight = intergen.intergenic_weight(net_work, intergic_regions, op)
+    #     print(net_work.operation_weight)
+    #     print('opp:', net_work.op_weight)
     # # chrom_A = get_adjacencies.find_chromosomes(adjacsA)
     # chrom_B = get_adjacencies.find_chromosomes(adjacsB)
     # print("chromA: ", chrom_A)

@@ -42,37 +42,37 @@ def reverse_rearrangement_series(target_genome, rearrangement_series):
     for element in rearrangement_series[::-1]:
         if element[0][1] == 'inv':
             operation_type = 'inv'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             operation = (element[0][0][1], element[0][0][0])
             true_scenario.append((intermediate, (operation_type, operation)))
 
         elif element[0][1] == 'trp1':
             operation_type = 'trp0'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             operation = (element[0][0][1], element[0][0][0])
             true_scenario.append((intermediate, (operation_type, operation)))
 
         elif element[0][1] == 'trp0':
             operation_type = 'trp1'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             operation = (element[0][0][1], element[0][0][0])
             true_scenario.append((intermediate, (operation_type, operation)))
 
         elif element[0][1] == 'b_trl':
             operation_type = 'b_trl'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             operation = (element[0][0][1], element[0][0][0])
             true_scenario.append((intermediate, (operation_type, operation)))
 
         elif element[0][1] == 'u_trl':
             operation_type = 'u_trl'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             operation = (element[0][0][1], element[0][0][0])
             true_scenario.append((intermediate, (operation_type, operation)))
 
         elif element[0][1] == 'fis':
             operation_type = 'fus'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             if element[0][0][2] < element[0][0][1]:
                 operation = (element[0][0][2], element[0][0][1], element[0][0][0])
             else:
@@ -81,7 +81,7 @@ def reverse_rearrangement_series(target_genome, rearrangement_series):
 
         elif element[0][1] == 'fus':
             operation_type = 'fis'
-            intermediate = get_adjacencies.adjacencies_to_genome(element[1])
+            intermediate = get_adjacencies.find_genome(element[1])
             if element[0][0][1] < element[0][0][0]:
                 operation = (element[0][0][2], element[0][0][1], element[0][0][0])
             else:

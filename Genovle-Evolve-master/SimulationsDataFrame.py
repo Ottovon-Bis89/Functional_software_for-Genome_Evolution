@@ -42,8 +42,8 @@ for i in range(0, number_of_simulations):
     reverse_the_series = GenomeEvolver.reverse_rearrangement_series(target_genome, rearrangement_series)
     source_genome = reverse_the_series[1]
     solution = reverse_the_series[2]
-    target_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(target_genome)
-    source_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(source_genome)
+    target_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(target_genome)
+    source_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(source_genome)
 
 
     # if on the off chance the new source genome is exactly the same as the target genome, redo
@@ -54,8 +54,8 @@ for i in range(0, number_of_simulations):
         reverse_the_series = GenomeEvolver.reverse_rearrangement_series(target_genome, rearrangement_series)
         source_genome = reverse_the_series[1]
         solution = reverse_the_series[2]
-        target_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(target_genome)
-        source_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(source_genome)
+        target_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(target_genome)
+        source_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(source_genome)
 
     #determing the operations used to evolve the target genome
     solution_operations = [d for (c, d) in solution]
@@ -153,7 +153,7 @@ for i in range(0, number_of_simulations):
 
             ###
             adjacencies = current_intermediate.state
-            genome = get_adjacencies.adjacencies_to_genome(adjacencies)
+            genome = get_adjacencies.find_genome(adjacencies)
             path_state.append((genome, (operation_type, operation)))
             ###
 

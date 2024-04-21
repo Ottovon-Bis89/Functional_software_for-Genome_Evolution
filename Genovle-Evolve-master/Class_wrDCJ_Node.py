@@ -501,7 +501,7 @@ class Node:
             print("Error in take_action function")
 
         # order and sort
-        ordered_and_sorted = Node.order_and_sort(self, state_copy)
+        ordered_and_sorted = Node.sorted_adjacencies_and_telomeres(self, state_copy)
 
         return ordered_and_sorted, operation_type
 

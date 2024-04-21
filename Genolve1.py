@@ -1,8 +1,13 @@
 from networkx import all_shortest_paths
-from Rearrangement_Node import Node
+#from Rearrangement_Node import Node
+#from Class_wrDCJ_Node import Node
 from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
-import Rearrangement_Network
-#from new_Node import Node
+#import Rearrangement_Network
+#import New_Network_wrDCJ
+from Intergenic_region_generator import Constraint
+from Spatial_weight import Spatial3DWeight 
+from Network_wrDCJ import Network
+from new_Node import Node
 from Data_generator import DataGenerator
 import Intergenic_region_generator
 import time
@@ -19,7 +24,7 @@ def run(args):
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
     # outfile = open(args.output_file, 'w')
-    with open("/home/22204911/Documents/New_Test/T4_A.txt") as csv:
+    with open("/home/22204911/Documents/New_Test/T9_A.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeA = []
 
@@ -27,7 +32,7 @@ def run(args):
         element = list(map(int, element))
         genomeA.append(element)
 
-    with open("/home/22204911/Documents/New_Test/T4_B.txt") as csv:
+    with open("/home/22204911/Documents/New_Test/T9_B.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeB = []
 
@@ -42,15 +47,16 @@ def run(args):
     for element in line:
         element = list(map(int, element))
         weight_ratios.append(element)
-    
-    # gen_obj = Intergenic_region_generator.IntergenicGenerator()
-    # data_gen = DataGenerator()
-    # genomeA = data_gen.check_genes(genomeA)
-    # genomeB = data_gen.check_genes(genomeB)
-    # genomeA = data_gen.generate_intergenic_regions(genomeA)
-    # genomeB = data_gen.generate_intergenic_regions(genomeB)
+        
+    #gen_obj = Intergenic_region_generator.IntergenicGenerator()
+    #data_gen = DataGenerator()
+    #genomeA = data_gen.check_genes(genomeA)
+    #genomeB = data_gen.check_genes(genomeB)
+    #genomeA = data_gen.generate_intergenic_regions(genomeA)
+    #genomeB = data_gen.generate_intergenic_regions(genomeB)
 
     get_adjacencies = Extremities_and_adjacencies()
+    networkDCJ = Network()
     adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
 
     adjacencies_genomeB = get_adjacencies.ordered_and_sorted_adjacencies(genomeB)
@@ -65,7 +71,7 @@ def run(args):
     hash_table.update({hash_key_start: start_node})
     hash_table.update({hash_key_target: target_node})
 
-    # finding rearrangement weights
+    # finding events weights
     max_number = max(weight_ratios[0])
     weights = []
     for element in weight_ratios[0]:
@@ -73,15 +79,19 @@ def run(args):
             weights.append(max_number ^ 2)
         else:
             weights.append(max_number / element)
+            #print(weights)
 
-    Rearrangement_Network.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights)
+    networkDCJ.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights)
+    print("fuckit")
+    print(networkDCJ.operation_weight)
+    print(networkDCJ.op_weight)
 
-    network = Rearrangement_Network.build_network(hash_table)
+    network = networkDCJ.build_network(hash_table)
 
     shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
 
     j = 1
-    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins =tot_dele =tot_dup =tot_fDNA =0  # initialize counters for this path
+    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins =tot_dele =tot_dup = tot_fDNA =0  # initialize counters for this path
 
     Paths_state = []
     Paths_state_weight = []
@@ -157,8 +167,8 @@ def run(args):
         tot_trp2 += trp2
         tot_fus += fus
         tot_fis += fis
-        tot_ins  += ins
-        tot_dele  += dele
+        tot_ins += ins
+        tot_dele += dele
         tot_dup += dup
         tot_fDNA  += fDNA
         j += 1
@@ -169,7 +179,7 @@ def run(args):
     print('Source Genome: ', genomeA)
     print('Target Genome: ', genomeB)
     print()
-    print('Number of most parsimonious solutions: ', len(shortest_paths))
+    print('Number of Evolutionary solutions: ', len(shortest_paths))
     print()
     print('Average number of evolutionary events per solution (Edit Distance): ',
           float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
@@ -177,7 +187,7 @@ def run(args):
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)) + float(tot_fDNA/len(shortest_paths)))
     print()
-    print('Average number of each operation per solution:')
+    print('Average number of each evolutionary event per solution:')
     print('Inversions: ', float(tot_inv / len(shortest_paths)), '  Transpositions type 1: ',
           float(tot_trp1 / len(shortest_paths)), '  Transpositions type 2: ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
@@ -189,6 +199,8 @@ def run(args):
     print()
     path_counter = 1
     for path in Paths_state:
+    
+    	
         print('#Solution number ', path_counter)
         for genome in path:
             print(genome)

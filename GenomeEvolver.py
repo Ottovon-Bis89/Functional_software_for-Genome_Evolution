@@ -103,9 +103,9 @@ def reverse_rearrangement_series(target_genome, rearrangement_series):
 
     return (target_genome, evolved_genome, reverse_scenario)
 
-target_genome = create_target_genome(50)
+target_genome = create_target_genome(23)
 start_genome = Evolve(target_genome)
-rearrangement_series = start_genome.evolve_with_random_rearrangements(8)
+rearrangement_series = start_genome.evolve_with_random_rearrangements(9)
 reverse_the_series = reverse_rearrangement_series(target_genome, rearrangement_series)
 source_genome = reverse_the_series[1]
 solution = reverse_the_series[2]

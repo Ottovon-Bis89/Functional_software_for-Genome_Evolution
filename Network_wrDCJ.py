@@ -41,12 +41,13 @@ class Network:
                 if node.join_adjacency in operation[0]:
                     operation_type = 'trp1'
                     self.operation_weight = 0.5 * weights[1]
-                    print(self.operation_weight)
+                    # print('operation1:', self.operation_weight)
                     #operation_weight = 1 * weights[1]
 
                 else:
                     operation_type = 'trp2'
                     self.operation_weight = 1.5 * weights[1]
+                    #print('operation2:', self.operation_weight)
 
 
                 if check_hash_table[0]:  
@@ -77,6 +78,7 @@ class Network:
                 operation_result = node.take_action(operation)
                 child_state = operation_result[0]
                 op_type = operation_result[1]
+                #print(operation_result[1])
                 
 
                 check_hash_table = self.check_hash_key(child_state, hash_table)
@@ -123,27 +125,33 @@ class Network:
                         if op_type == 'fis':
                             operation_type = op_type
                             self.op_weight = 1 * weights[4]
+                            #print('operation3:', self.op_weight)
                             # print(self.op_weight)
 
                         elif op_type == 'fus':
                             operation_type = op_type
                             self.op_weight = 1 * weights[5]
+                            #print('operation4:', self.op_weight)
 
                         elif op_type == 'u_trl':
                             operation_type = op_type
                             self.op_weight = 1 * weights[3]
+                            #print('operation5:', self.op_weight)
 
                         elif op_type == 'b_trl':
                             operation_type = op_type
                             self.op_weight = 1 * weights[2]
+                            #rint('operation6:', self.op_weight)
 
                         elif op_type == 'inv':
                             operation_type = op_type
                             self.op_weight = 1 * weights[0]
+                            #print('operation8:', self.op_weight)
                         
                         elif op_type == 'ins':
                             operation_type = op_type
                             self.op_weight = 0.15 * weights[5]
+                            #print('operation9:', self.op_weight)
                         
                         elif op_type == 'dup':
                             operation_type = op_type
@@ -152,6 +160,7 @@ class Network:
                         elif op_type == 'dele':
                             operation_type = op_type
                             self.op_weight = 0.05 * weights[3]
+                            #print('operation10:', self.op_weight)
                         
                             
 
@@ -236,7 +245,7 @@ class Network:
                         elif op_type == 'ins':
                             operation_type = op_type
                             self.op_weight = 0.15 * weights[5]
-                            print(self.op_weight)
+                            # print(self.op_weight)
                             
                         elif op_type == 'dup':
                             operation_type = op_type

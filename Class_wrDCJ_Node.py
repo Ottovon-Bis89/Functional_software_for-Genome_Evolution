@@ -383,6 +383,7 @@ class Node:
         result, operation_type = take_action(some_operation)
 
         '''
+        
         state_copy = self.state.copy()
         operation_type = None
 
@@ -391,7 +392,6 @@ class Node:
 
             # fission
             if type(operation[0]) is tuple:
-
                 state_copy.remove(operation[0])
                 state_copy.append(operation[1])
                 state_copy.append(operation[2])
@@ -401,8 +401,7 @@ class Node:
             else:
                 state_copy.remove(operation[0])
                 state_copy.remove(operation[1])
-
-                # ensure gene extremities in correct order for downstream comparisions with genome B extremities
+                
                 if operation[2][0] < operation[2][1]:
                     state_copy.append(operation[2])
                 else:

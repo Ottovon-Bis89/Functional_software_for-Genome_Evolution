@@ -1,6 +1,8 @@
+# from Intergenic_region_generator import Constraint
+# nw = Constraints()
 class Node:
 
-    def __init__(self, state=[]):
+    def __init__(self, state=None):
         self.state = state
         self.children = []
         self.children_weights = []
@@ -9,7 +11,7 @@ class Node:
         self.circular_chromosomes = []
         self.next_operation = 0
         self.next_operation_weight = 1
-        self.join_adjacency = 0
+        self.join_adjacency = 0 
 
         get_chromosomes = Node.find_chromosomes(self, self.state)
         self.linear_chromosomes = get_chromosomes[0]
@@ -165,7 +167,6 @@ class Node:
                 next_extremity = current[0] - 0.5
 
             if next_extremity == current[1]:
-                ordered_circular_chromosome = []
 
                 circular_chromosomes.append(chromosome)
                 chromosome = []
@@ -212,7 +213,6 @@ class Node:
                     p , q = element
                     u = v = 0
                     
-
                     for marker in adjacenciesA_copy:
                         if isinstance(marker, tuple):
                             if marker[0] == p or marker[1] == p:
@@ -264,7 +264,6 @@ class Node:
                                 else:
                                     pass
 
-
                         else:
                             
                             if isinstance(v, tuple):
@@ -310,14 +309,26 @@ class Node:
                             list_of_legal_operations.append((operation))
                         else:
                             pass
-                            
+
+                        
+                    # if u == p:
+                    #     adjacenciesA_copy.append(p)
+                    #     adjacenciesA_copy.append(u)
+                    #     operation = ((p), (u))
+                    #     #if operation not in list_of_legal_operations:
+                    #     list_of_legal_operations.append((operation))
+                    #     #else:
+                    #      #   pass
+
+                        
+
 
         return list_of_legal_operations
 
 
     
 
-    def take_action(self, operation):
+    def take_action(self,operation):
         '''
         The method performs a series of operations on a given state based on the input operation.
         it handles different types of operations, including fusion, fission, inversions, translocations, and transpositions.
@@ -336,9 +347,13 @@ class Node:
         result, operation_type = take_action(some_operation)
 
         '''
+        # constraint_instance = Constraint() 
+        # intergenic_regions = Constraint.inter_generator()
+        # operation = constraint_instance.operation_intergenic_regions(intergenic_regions)
+        
         state_copy = self.state.copy()
         operation_type = None
-
+        
         # if it is a fusion, fission, insertion, deletion or duplication:
         if len(operation) == 3:
 
@@ -349,38 +364,43 @@ class Node:
                 state_copy.append(operation[1])
                 state_copy.append(operation[2])
                 operation_type = 'fis'
-
-            #fusion
             else:
                 state_copy.remove(operation[0])
                 state_copy.remove(operation[1])
-                operation_type == 'dele'
                 
             # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[2][0] < operation[2][1]:
                     state_copy.append(operation[2])
-
                 else:
                     state_copy.append((operation[2][1], operation[2][0]))
 
                 operation_type = 'fus'
 
-        # else it is another rearrangment
+        # if the other rearrangements
         elif len(operation) == 2:
-            # inversions, transpositions, balanced translcations :
+            # inversions, transpositions, balanced translcations, insertions, deletions :
             if isinstance(operation[0][0], tuple) and isinstance(operation[0][1], tuple):
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
-                operation_type = 'dele'
 
-                for sub_operation in operation[1]:
-                    if sub_operation[0] < sub_operation[1]:
-                        state_copy.append(sub_operation)
-                    else:
-                        state_copy.append((sub_operation[1], sub_operation[0]))
-                    operation_type = 'ins'
+                # for sub_operation in operation[1]:
+                #     if sub_operation[0] < sub_operation[1]:
+                #         state_copy.append(sub_operation)
+                #     else:
+                #         state_copy.append((sub_operation[1], sub_operation[0]))
+                # operation_type = 'ins'
 
+                if operation[1][0][0] < operation[1][0][1]:
+                    state_copy.append(operation[1][0])
+                else:
+                    state_copy.append((operation[1][0][1], operation[1][0][0]))
 
+                if operation[1][1][0] < operation[1][1][1]:
+                    state_copy.append(operation[1][1])
+                else:
+                    state_copy.append((operation[1][1][1], operation[1][1][0]))
+                operation_type = 'ins'
+                
                 #transpositions happen in two steps
                 #balanced tranlocations - the adjacencies to cute are on different chromosomes
                 #inversions - the adjacencies to cut are on the same chromosome
@@ -392,7 +412,7 @@ class Node:
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
-                # transpotion to end of chromosome
+                #transpotion to end of chromosome
                 if len(circular_chromosomes) != 0:
                     operation_type = 'trp_reinsertion'
 
@@ -403,38 +423,25 @@ class Node:
                     for chromosome in linear_chromosomes:
                         if operation[0][0] in chromosome:
                             test_chromosome = chromosome
-                            if test_chromosome.count(operation[0][0]) == 2:
-                                operation_type == 'dup'
-                        else:
-                            chromosome.append(operation[0][0])
-                            test_chromosome = chromosome
-                            operation_type = 'ins'
-                  
-                        if operation[0][1] in test_chromosome:
-                            operation_type = 'inv'
+            
+                    if operation[0][1] in test_chromosome:
+                        operation_type = 'inv'
 
-                        elif operation[0][1] not  in test_chromosome:
-                            operation_type = 'b_trl'
-                        else:
-                            test_chromosome.append(operation[0][1])
-                            operation_type = 'ins' 
-
+                    else:
+                        operation_type = 'b_trl'
+                    
 
             # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
             elif not isinstance(operation[0][0], tuple) or not isinstance(operation[0][-1], tuple):
 
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
-
                 operation_type = 'dele'
 
                 # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[1][0][0] < operation[1][0][1]:
-                    state_copy.append(operation[1][0])
-                else:
-                    state_copy.append((operation[1][0][1], operation[1][0][0]))
 
-                state_copy.append(operation[1][1])
+                    state_copy.extend([(min(operation[1][0]), max(operation[1][0])), operation[1][1]])
 
                 #transpositions occur in two steps
                 chromosomes = self.find_chromosomes(self.state)
@@ -456,35 +463,56 @@ class Node:
                     
                     for chromosome in linear_chromosomes:
                         if adjacency in chromosome:
-                            test_chromosome = chromosome
-                            if test_chromosome.count(adjacency) == 2:
-                                operation_type = 'dup'
-                        else:
-                            chromosome.append(adjacency)
-                            test_chromosome = chromosome
-
-                        operation_type = 'ins'
-
-                        if telomere in test_chromosome:
-                            if test_chromosome.index(telomere) == 0 or test_chromosome.index(telomere) == len(test_chromosome) - 1:
-                                operation_type = 'inv'
+                            adjacency_index = chromosome.index(adjacency)
+                            if adjacency_index != 0 and adjacency_index != len(chromosome) - 1:
+                                operation_type = 'ins'
                             else:
-                                test_chromosome.remove(telomere)
-                            operation_type = 'dele'
+                                operation_type = 'u_trl'
 
-                        elif telomere not in test_chromosome:
-                            test_chromosome.append(telomere)
-                            operation_type = 'ins'
+                        elif chromosome.count(adjacency) > 1: 
+                            operation_type = 'dup'
 
                         else:
-                            operation_type = 'u_trl'
-                               
-                                    
+                            operation_type = 'dele'#changes here ins
+
+                        if telomere in chromosome:
+                            telomere_index = chromosome.index(telomere)
+                            if telomere_index == 0 or telomere_index == len(chromosome) - 1:
+                                operation_type = 'u_trl'
+                            else:
+                                operation_type = 'ins'
+                        else:
+                            operation_type = 'dele' #changes here utrl
+
+                        if adjacency not in chromosome:
+                            chromosome.append(adjacency)
+                            if chromosome.index(adjacency) != 0 or chromosome.index(adjacency) != len(chromosome) - 1:
+                                operation_type = 'u_trl'
+                            else:
+                                operation_type = 'ins'
+
+
+                    # for element in operation[0]:
+                    #     if isinstance(element, tuple):
+                    #         adjacency = element
+                    #     else:
+                    #         telomere = element
+                    # for chromosome in linear_chromosomes:
+
+                    #     if adjacency in chromosome:
+                    #         operation_type = 'ins'
+                    #     else:
+                    #         operation_type = 'dele'
+
+                    #     if telomere in chromosome:
+                    #         operation_type = 'ins'
+                    #     else:
+
+                    #         operation_type = 'u_trl'
+                            
         else:
-            # RAISE AN ERROR
             print("Error in take_action function")
 
-        # order and sort
         ordered_and_sorted = Node.sorted_adjacencies_and_telomeres(self, state_copy)
 
         return ordered_and_sorted, operation_type
@@ -542,7 +570,6 @@ class Node:
         for element in adjacencies:
             if isinstance(element, tuple):
 
-                #if it is a single gene adjacency e.g. (4.5, 4.0)
                 if int(element[0]) == int(element[1]):
                     if element[0]%1 == 0:
                        gene_adjacencies.append(element)

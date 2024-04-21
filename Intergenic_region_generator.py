@@ -2,28 +2,31 @@
 import random
 from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
 from new_Node import Node
-from Network_wrDCJ import Network
+# from Network_wrDCJ import Network
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 
-net_work = Network()
+#net_work = Network()
+node_instance = Node()
+
+
 class Constraint:
-    def __init__(self):
-        pass
+    def __init__(self, node_instance):
+        self.node_instance = node_instance
     
 
-
-
-    def inter_generator(self, adjacencies_list):
+    def inter_generator(self):
         intergenic_regions = []
-        for i in adjacencies_list:
+        for _ in range(0):
             random_bp = random.randint(1, 10)
             intergenic_regions.append('*' + str(random_bp))
+            print(intergenic_regions)
         return intergenic_regions
 
 
-    def operation_intergenic_regions(self, intergenic_regions, list_of_legal_operations):
+    def operation_intergenic_regions(self, intergenic_regions):
+        list_of_legal_operations = self.node_instance.get_legal_operations()
         operations_with_intergenic = []
         for operation in list_of_legal_operations:  
             if isinstance(operation, tuple):
@@ -51,49 +54,43 @@ class Constraint:
 
             else:
                 operations_with_intergenic.append(operation)
+                # print(operations_with_intergenic)
         return operations_with_intergenic
 
     
 
-    def intergenic_weight(self, net_work, intergenic_regions, list_of_legal_operations):
-        #print("legal ops in gen : "+str(list_of_legal_operations))  # print the operations
-        # new_operation_weight = 0
-        # new_op_weight = 0
-
+    def intergenic_weight(self, net_work, operations_with_intergenic):
+        
         operation_weight = net_work.operation_weight
         op_weight = net_work.op_weight
         
-        for operation in list_of_legal_operations:
-            #print("Entered first loop")  # print a message when the first loop is entered
+        for operation in operations_with_intergenic:
             if not isinstance(operation, tuple):
                 continue
             bp = 0 
             
             if len(operation) == 3:
                 for element in operation:
-                    #rint("Entered second loop")  # print a message when the second loop is entered
                     if isinstance(element, str) and '*' in element:
                         bp = int(element[1:])  
                         print("bp:", bp)  
 
             elif len(operation) == 2 and  (isinstance(operation[0], tuple) and isinstance(operation[1], tuple)):
                 for outer_tuple in operation:
-                    #print("Entered third loop")  
                     if isinstance(outer_tuple, tuple):
                         for element in outer_tuple:
-                            # print("Entered fourth loop")  # print a message when the fourth loop is entered
                             if isinstance(element, str) and '*' in element:
                                 bp = int(element.split('*')[1])  
                                 print("bp:", bp) 
 
-            if bp >= 5:
-                operation_weight = 0.8 * operation_weight
-                print(operation_weight)
-                op_weight = 0.8 * op_weight
-            else:
+            if bp <= 4:
                 operation_weight = 0.2 * operation_weight
-                op_weight = 0.2 *  op_weight
-                print(op_weight)
+                # print('op:', operation_weight)
+                op_weight = 0.2 * op_weight
+            else:
+                operation_weight = 0.8 * operation_weight
+                op_weight = 0.8 *  op_weight
+                # print(op_weight)
 
         return operation_weight, op_weight
 
