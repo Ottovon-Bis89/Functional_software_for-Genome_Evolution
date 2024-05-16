@@ -123,7 +123,7 @@ def main():
 # 	# sequence_2_values = wigglefile.read_wiggle_file(filename2)
 # 	# probability, N, n, K, k = hg.get_hypergeometric_probability(bin_width,  sequence_1_values, sequence_2_values)
 # 	# print(probability, "N =",N, "n =",n, "K =", K, "k =",k)
-	f = open("hypergeometric_output14.txt", "a")
+	f = open("hypergeometric_output13.txt", "a")
     
     # Write a header for the table
 	f.write("Hi-C\tRecomb\tN\tn\tK\tk\tProbability\n")
@@ -135,8 +135,8 @@ def main():
 			for j in range(1, 17):
 				print('Hi-C: ' + str(i))
 				print('Recomb: ' + str(j))
-				filename1 = '/home/22204911/Documents/Recombination_points/chrom' + str(j) + '_recomb.txt'
-				filename2 = '/home/22204911/Documents/Hi_c_interaction/chrom' + str(i) + '_hi_c.txt'
+				filename1 = '/home/von/Documents/Recombination_points/chrom' + str(j) + '_recomb.txt'
+				filename2 = '/home/von/Documents/Hi_c_interaction/chrom' + str(i) + '_hi_c.txt'
 				wigglefile = class_wiggle.Wiggle()
 				sequence_1_values = wigglefile.read_wiggle_file(filename1)
 				sequence_2_values = wigglefile.read_wiggle_file(filename2)
@@ -159,14 +159,14 @@ def main():
 	for i in range(0,1):
 		run_with_bin_width(1000)
 	
+	# for bin_width in range(500, 5001, 10):
+	# 	run_with_bin_width(bin_width)
+	
 	# bin_width == 1000
 	# 	for _in range(1000):
 	# 	run_with_bin_width(bin_width)
 			
 	
-	
-
-
 
 	f.close()
 
