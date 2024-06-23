@@ -66,6 +66,11 @@ class hypergeometric:
 			return True
 		else:
 			return False
+		
+		
+	# def does_list_contain_non_zero_value(self, short_list):
+	# 	return any(value != 0 for value in short_list)
+
 
 	def find_overlap_with_bins(self, bin_width,  bins_of_sequence_1, sequence_2_values):
 		k_bin_list = []
@@ -79,10 +84,12 @@ class hypergeometric:
 			if bins_of_sequence_1[bin_number] != 0 and contains_non_zero_value:
 				k_bin_list.append(bin_number)
 		return k_bin_list
+	
 
 	def number_of_bin_overlaps(self, bin_width,  bins1, sequence_2_values):
 		k_bin_list = self.find_overlap_with_bins(bin_width, bins1, sequence_2_values)
 		return len(k_bin_list)
+	
 
 	def number_of_non_zero_bins(self, bins):
 		number_of_entries = len(bins)
@@ -101,15 +108,6 @@ class hypergeometric:
 		probability = self.calculate_hypergeometric(N, n, K, k)
 		return (probability, N, n, K, k)
 
-# def main():
-# 	hg = hypergeometric()
-# 	# print(hg)
-# 	bin_width = 1
-# 	# Full path to the text format file of "events".  The file should contain an entry for each nucleotide
-# 	# with a 0 if there is no "event" at the nucleotide, and 1 if there is an "event".  The file is in
-# 	# text format with no wiggle style headers or entries.  See ""
-
-# 	
 
 def main():
 	hg = hypergeometric()
@@ -123,20 +121,20 @@ def main():
 # 	# sequence_2_values = wigglefile.read_wiggle_file(filename2)
 # 	# probability, N, n, K, k = hg.get_hypergeometric_probability(bin_width,  sequence_1_values, sequence_2_values)
 # 	# print(probability, "N =",N, "n =",n, "K =", K, "k =",k)
-	f = open("hypergeometric_output13.txt", "a")
+	f = open("hypergeometric_output17.txt", "a")
     
     # Write a header for the table
-	f.write("Hi-C\tRecomb\tN\tn\tK\tk\tProbability\n")
+	f.write("Chp_sq\tRecomb\tN\tn\tK\tk\tProbability\n")
 
 
     # Repeat run function with specified bin widths
 	def run_with_bin_width(bin_width):
 		for i in range(1, 17):
 			for j in range(1, 17):
-				print('Hi-C: ' + str(i))
+				print('ChiP_sep: ' + str(i))
 				print('Recomb: ' + str(j))
-				filename1 = '/home/von/Documents/Recombination_points/chrom' + str(j) + '_recomb.txt'
-				filename2 = '/home/von/Documents/Hi_c_interaction/chrom' + str(i) + '_hi_c.txt'
+				filename1 = '/home/von/Documents/Recomb.wiggle/chrom' + str(j) + '_recomb.txt'
+				filename2 = '/home/von/Documents/ch_seq.wiggle/chrom' + str(i) + '_seq.txt'
 				wigglefile = class_wiggle.Wiggle()
 				sequence_1_values = wigglefile.read_wiggle_file(filename1)
 				sequence_2_values = wigglefile.read_wiggle_file(filename2)
@@ -148,28 +146,12 @@ def main():
 			# out = f"{i}\t{j}\t{N}\t{n}\t{K}\t{k}\t{probability}\n"
 			# f.write(out)
 		
-
-		# if count != 1000:
-		# 	run_with_bin_width(1000)
-		#Recursively call the function with an increased bin width
-		# if bin_width < 1000:
-		# 	run_with_bin_width(bin_width)
-
 		# Start the recursion with bin_width = 100
 	for i in range(0,1):
 		run_with_bin_width(1000)
 	
-	# for bin_width in range(500, 5001, 10):
-	# 	run_with_bin_width(bin_width)
-	
-	# bin_width == 1000
-	# 	for _in range(1000):
-	# 	run_with_bin_width(bin_width)
-			
-	
 
 	f.close()
-
 
 
 if __name__ == "__main__":

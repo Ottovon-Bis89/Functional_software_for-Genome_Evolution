@@ -25,8 +25,6 @@ class Wiggle:
 			data.append(int(line.strip('\n')))
 		return(data)
 
-
-
 	
 	
 	def NormalizeWiggleFile(self, filename, conversion_factor):
