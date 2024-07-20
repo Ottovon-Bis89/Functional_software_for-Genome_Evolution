@@ -1,7 +1,7 @@
 from networkx import all_shortest_paths
 #from Class_wrDCJ_Node import Node
 from new_Node import Node
-from Class_extremities_and_adjacencies import Extremities_and_adjacencies
+from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
 import New_Network_wrDCJ
 import time
 import argparse

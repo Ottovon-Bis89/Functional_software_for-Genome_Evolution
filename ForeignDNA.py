@@ -1,231 +1,108 @@
-from random import randint
+
+import random
+import argparse
+import os
 
 class Foreign_DNA:
-
     def __init__(self):
-        self.state = []
+        pass
 
-
-    
-    def foreign_dna_pool(self, source_genome, target_genome):
-        
+    def foreign_dna_pool(self, genomeA, genomeB, num_fragments=5):
         """
         Finds the difference in genes between the source and target genomes. Creates a pool of random integers and
-        generates foreign DNA fragments from the pool. Fragments are tagged with an underscore(_) for identification
-        in the source genome and to be ignored by the delete function during the transformation process.
-        
-        :param source: The source genome.
-        :param target: The target genome.
+        generates foreign DNA fragments from the pool. Fragments are tagged with an underscore (_) for identification.
+
+        :param genomeA: The source genome.
+        :param genomeB: The target genome.
+        :param num_fragments: The number of fragments to produce.
         :return: A list of foreign DNA fragments.
         """
-       
-        source_genome = []
-        target_genome = []
+        def clean_gene(gene):
+            """Converts gene to positive integer ignoring any underscore or negative sign."""
+            return abs(int(gene.replace("_", ""))) if isinstance(gene, str) else abs(gene)
 
+        # Flatten the source and target genomes, considering only the integer part
+        genomeA_flat = [clean_gene(gene) for chrom in genomeA for gene in chrom]
+        genomeB_flat = [clean_gene(gene) for chrom in genomeB for gene in chrom]
 
-        for chromosome in source_genome:
-            for i in range(len(chromosome)):
-                if isinstance(chromosome[i],int):
-                    source_genome.append(int(chromosome[i]))
-                elif isinstance(chromosome[i],str) and "_" in chromosome[i]:
-                    if len(chromosome[i])==2:
-                        gene = chromosome[i]
-                        source_genome.append(int(gene[:1]))
-                    elif len(chromosome[i])==3:
-                        gene = chromosome[i]
-                        source_genome.append(int(gene[:2]))
-        
-        for chromosome in target_genome:
-            for i in range(len(chromosome)):
-                if isinstance(chromosome[i],int):
-                    target_genome.append(int(chromosome[i]))
+        difference = list(set(genomeB_flat) - set(genomeA_flat))
 
-       
-        difference = list(set(target_genome) - set(source_genome))
-
+        foreign_dna = []
         if len(difference) > 0:
-            # define the ratio (1/2)
-            number_of_random_ints = (len(difference) * 2) - (len(difference)) 
-            
-            foreign_dna = []
-            count = 0
-            while count < (number_of_random_ints):
-                gene = randint(1, 10)
-                if len(foreign_dna) >= 1:
-                    if gene not in foreign_dna:
-                        foreign_dna.append(gene)
-                        count += 1
-                else:
+            foreign_dna = difference[:]
+            while len(foreign_dna) < 2 * len(difference):
+                gene = random.randint(1, 10)
+                if gene not in foreign_dna:
                     foreign_dna.append(gene)
-
-           
-            foreign_dna = difference + foreign_dna
-            foreign_dna = list(set(foreign_dna))
-            if len(foreign_dna) < ((len(difference)) * 2):  
-                count = len(foreign_dna)
-                while (len(foreign_dna) < ((len(difference)) * 2)):
-                    gene = randint(1, 10)
-                    if gene not in foreign_dna:
-                        foreign_dna.append(gene)
-                        count += 1
-            
-            number_of_fragments = randint(1,10)
-            len_fragments = 1
-            
-           
-            list_of_fragments = []
-            fragment = []
-            for j in range(number_of_fragments):
-                for i in range(len_fragments):
-                    choice = randint(0,len(foreign_dna)-1)
-                    fragment.append(foreign_dna[choice])
-               
-                if j > 0 and fragment not in list_of_fragments:
-                    list_of_fragments.append(fragment)
-                else:
-                    j -= 1
-                fragment = []
-
-            check = True
-            for fragmt in list_of_fragments:
-                if difference in fragmt:
-                    check = False
-            if check == True:
-                final_fragment = difference[:]
-           
-                while len(final_fragment) <= len(difference)+1:
-                    selected_gene =  foreign_dna[randint(0, len(foreign_dna)-1)]
-                    if selected_gene not in final_fragment:
-                        final_fragment.append(selected_gene)
-                list_of_fragments.append(final_fragment)
-
-            for i in list_of_fragments:
-                fragment = i
-                for j in range(len(fragment)):
-                    fragment[j] = str(fragment[j])+"_"
-            return list_of_fragments
-
         else:
-           
-            number_of_random_ints = randint(1,10)
-
-            
-            foreign_dna = []
-            count = 0
-            while count < (number_of_random_ints):
-                gene = randint(1, 10)
-                if len(foreign_dna) >= 1:
-                    if gene not in foreign_dna:
-                        foreign_dna.append(gene)
-                        count += 1
-                else:
+            while len(foreign_dna) < num_fragments:
+                gene = random.randint(1, 10)
+                if gene not in foreign_dna:
                     foreign_dna.append(gene)
-            
-            number_of_fragments = randint(1,10)
-            len_fragments = 1
-            list_of_fragments = []
-            fragment = []
-            for j in range(number_of_fragments):
-                for i in range(len_fragments):
-                    choice = randint(0,len(foreign_dna)-1)
-                    fragment.append(foreign_dna[choice])
-                
-                if j > 0 and fragment not in list_of_fragments:
-                    list_of_fragments.append(fragment)
-                   
-                else:
-                    j -= 1
-                fragment = []
 
-            for i in list_of_fragments:
-                fragment = i
-                for j in range(len(fragment)):
-                    fragment[j] = str(fragment[j])+"_"
+        list_of_fragments = []
+        while len(list_of_fragments) < num_fragments:
+            fragment = random.sample(foreign_dna, 1)
+            fragment = [f"{fragment[0]}_"]
+            if fragment not in list_of_fragments:
+                list_of_fragments.append(fragment)
 
-            return list_of_fragments
-    
+        return list_of_fragments
 
-    
-    def insert_foreign_dna(self, source_genome, fragment):
+    def write_fragments_to_file(self, list_of_fragments, filepath):
         """
-        Adds/inserts a fragment of foreign DNA to the source genome. The foreign fragment is identified with an
-        underscore(_) attached to an integer. The path of foreign DNA fragments can be traced through the evolutionary
-        journey of the source genome into the target genome.
-        
-        :param source_genome: The source genome.
-        :param fragment: The foreign DNA fragment to insert.
-        :return: The updated source genome and information about the insertion.
+        Writes the list of fragments to a specified file.
+
+        :param list_of_fragments: The list of foreign DNA fragments.
+        :param filepath: The path to the file where fragments will be written.
         """
-        list_of_mutation_points = []
-        list_of_mutation_points_genome = []
+        with open(filepath, 'w') as file:
+            for fragment in list_of_fragments:
+                file.write(f"{fragment[0]}\n")
 
-        for genes_with_intergenic_approved in source_genome:
-            for i in range(len(genes_with_intergenic_approved)):
-                if (isinstance(genes_with_intergenic_approved[i], str) and len(genes_with_intergenic_approved[i]) > 1) and '*' in genes_with_intergenic_approved[i]:
-                    list_of_mutation_points.append(i+1)
+    def run(self, source_filepath, target_filepath, output_filepath, num_fragments=5):
+        """
+        Executes the process of reading genomes from files, finding foreign DNA fragments,
+        and writing them to an output file.
 
-            list_of_mutation_points_genome.append(list_of_mutation_points)
-            list_of_mutation_points = []
-        
-        fragment_with_intergenic_regions = []
-        length = len(fragment)
-        for j in range(len(fragment)):
-            if j == 0 :
-                random_bp = randint(6,10)
-                region = '*' + str(random_bp)
-                fragment_with_intergenic_regions.append(region)
-            random_bp = randint(6,10)
-            start = fragment[j]
-            region = '*' + str(random_bp)
-            fragment_with_intergenic_regions.append(start)
-            if j != length-1:
-                fragment_with_intergenic_regions.append(region)
+        :param source_filepath: The file path of the source genome.
+        :param target_filepath: The file path of the target genome.
+        :param output_filepath: The file path where the fragments will be written.
+        :param num_fragments: The number of fragments to produce.
+        """
+        def read_genome(filepath):
+            with open(filepath) as file:
+                return [list(map(int, line.strip().split(','))) for line in file]
 
-        
-        for i in range(len(fragment_with_intergenic_regions)):
-            if i % 2 == 0 or i == 0:
-                region = fragment_with_intergenic_regions[i]
-               
-                if len(region) > 2:
-                    value = region[1]+region[2]
-                else:
-                    value = region[1]
-                if int(value) < 5:
-                    fragment_with_intergenic_regions[i] = '*'
+        genomeA = read_genome(source_filepath)
+        genomeB = read_genome(target_filepath)
 
+        list_of_fragments = self.foreign_dna_pool(genomeA, genomeB, num_fragments)
+        self.write_fragments_to_file(list_of_fragments, output_filepath)
 
-        position_applicable_region_chromosome = []
-        source_chromosome = []
-        rand_chromosome = []
+def main():
+    parser = argparse.ArgumentParser(description='Process genomes and find foreign DNA fragments.')
+    parser.add_argument('source_genome', type=str, help='File name for the source genome')
+    parser.add_argument('target_genome', type=str, help='File name for the target genome')
+    parser.add_argument('output_file', type=str, help='File name to write the output fragments')
+    parser.add_argument('--num_fragments', type=int, default=5, help='Number of fragments to produce (default is 5)')
 
-        while len(position_applicable_region_chromosome) == 0 :
-            rand_chromosome = randint(0,len(list_of_mutation_points_genome)-1)
-            position_applicable_region_chromosome = list_of_mutation_points_genome[rand_chromosome]
-            source_chromosome = source_genome[rand_chromosome]
-        
+    args = parser.parse_args()
 
-        rand_position = randint(0, len(position_applicable_region_chromosome)-1)
-        position = position_applicable_region_chromosome[rand_position]
+    # Get the directory where the script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-        mutated = []
-        if position == 0: 
-            mutated = fragment_with_intergenic_regions + source_chromosome
-        else:  
-            mutated = source_chromosome + fragment_with_intergenic_regions
+    # Create full file paths
+    source_filepath = os.path.join(script_dir, args.source_genome)
+    target_filepath = os.path.join(script_dir, args.target_genome)
+    output_filepath = os.path.join(script_dir, args.output_file)
 
-        source_genome[rand_chromosome] = mutated
-        
-        operation = {
-                    "Mut": 'F_DNA',
-                    "Chr": rand_chromosome,
-                    "Gene": fragment_with_intergenic_regions,
-                    "Pos": position,
-                    #"Mutated Chromosome": fragment_with_intergenic_regions,
-                    "Genome after mutation": source_genome,
-                }
-        return source_genome,  [operation]
+    dna = Foreign_DNA()
+    dna.run(source_filepath, target_filepath, output_filepath, args.num_fragments)
+
+if __name__ == "__main__":
+    main()
 
 
-    
-
-
+# commandline use
+# python3 main.py T8_A.txt T8_B.txt output.txt --num_fragments 3 (omit fragments arguement to use default value)

@@ -103,12 +103,12 @@ def reverse_rearrangement_series(target_genome, rearrangement_series):
 
     return (target_genome, evolved_genome, reverse_scenario)
 
-target_genome = create_target_genome(23)
+target_genome = create_target_genome(25)
 start_genome = Evolve(target_genome)
-rearrangement_series = start_genome.evolve_with_random_rearrangements(9)
+rearrangement_series = start_genome.evolve_with_random_rearrangements(15)
 reverse_the_series = reverse_rearrangement_series(target_genome, rearrangement_series)
 source_genome = reverse_the_series[1]
 solution = reverse_the_series[2]
-
-print('Target_genome: ' , target_genome)
-print('source_genome:' , source_genome)
+print('target_genome: ' , target_genome)
+print('source_genome: ' , source_genome)
+#print('rearr: ' , rearrangement_series)

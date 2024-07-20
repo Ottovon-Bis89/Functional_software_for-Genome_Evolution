@@ -1,5 +1,4 @@
-# from Intergenic_region_generator import Constraint
-# nw = Constraints()
+
 class Node:
 
     def __init__(self, state=None):
@@ -12,10 +11,12 @@ class Node:
         self.next_operation = 0
         self.next_operation_weight = 1
         self.join_adjacency = 0 
+        
 
         get_chromosomes = Node.find_chromosomes(self, self.state)
         self.linear_chromosomes = get_chromosomes[0]
         self.circular_chromosomes = get_chromosomes[1]
+       
 
 
 
@@ -157,7 +158,8 @@ class Node:
                     chromosome = []
 
         while len(not_telomeres) > 0:
-            current = not_telomeres[0]
+            current = not_telomeres[0]  
+           
             not_telomeres.remove(current)
             chromosome.append(current)
 
@@ -181,10 +183,10 @@ class Node:
 
         return linear_chromosomes, circular_chromosomes
 
-    def get_legal_operations(self, adjacenciesB):
+    def get_legal_operations(self, adjacencies_genomeB):
         """
-        This method takes a list of adjacencies for genome B and returns a list of legal operations
-        to transform the adjacencies of genome A into genome B.
+        This method takes a list of adjacencies for genome B and returns a list of operations required
+        to transform genome A into genome B.
         
         Parameters:
         - adjacencies_genomeB (list): The list of adjacencies for genome B.
@@ -193,27 +195,21 @@ class Node:
         - list_of_legal_operations (list): A list of legal operations to transform genome A to genome B.
         """
         list_of_legal_operations = []
-        adjacenciesA = self.state
-        adjacenciesB = adjacenciesB
+        adjacencies_genomeA = self.state
+        adjacencies_genomeB = adjacencies_genomeB
+        
 
-        for element in adjacenciesB:
-            if isinstance(element, str) and '*' not in element:  
-                try:
-                    element = int(element)  
-
-                except ValueError:
-                    continue  
-
-            if isinstance(element, str) in adjacenciesA:
+        for element in adjacencies_genomeB:
+            if element in adjacencies_genomeA:
                 pass
             else:
-                adjacenciesA_copy = adjacenciesA[:]
+                adjacencies_genomeA_copy = adjacencies_genomeA[:]
                
                 if isinstance(element, tuple):
                     p , q = element
                     u = v = 0
                     
-                    for marker in adjacenciesA_copy:
+                    for marker in adjacencies_genomeA_copy:
                         if isinstance(marker, tuple):
                             if marker[0] == p or marker[1] == p:
                                 u = marker
@@ -227,9 +223,9 @@ class Node:
                         v = q
 
                     if u != v:
-                        adjacenciesA_copy.append((p, q))
-                        adjacenciesA_copy.remove(u)
-                        adjacenciesA_copy.remove(v)
+                        adjacencies_genomeA_copy.append((p, q))
+                        adjacencies_genomeA_copy.remove(u)
+                        adjacencies_genomeA_copy.remove(v)
 
                         if isinstance(u, tuple):
 
@@ -239,7 +235,7 @@ class Node:
                             if isinstance(v, tuple):
 
                                 v_not_q = v[1] if v[0] == q else  v[0]
-                                adjacenciesA_copy.append((u_not_p, v_not_q))
+                                adjacencies_genomeA_copy.append((u_not_p, v_not_q))
 
                                 op_1 = (u, v) if u[0] < v[0] else (v, u)
                                 op_2_1 = (p, q) if p < q else (q, p)
@@ -253,7 +249,7 @@ class Node:
                                     pass
 
                             else:
-                                adjacenciesA_copy.append(u_not_p)
+                                adjacencies_genomeA_copy.append(u_not_p)
 
                                 op_2_1 = (p, q) if p < q else (q,p)
                                 op_2 = (op_2_1, u_not_p)
@@ -268,7 +264,7 @@ class Node:
                             
                             if isinstance(v, tuple):
                                 v_not_q = v[1] if v[0] == q else v[0] 
-                                adjacenciesA_copy.append(v_not_q)
+                                adjacencies_genomeA_copy.append(v_not_q)
 
                                 op_2_1 = (p, q) if p < q else  (q,p)
                                 
@@ -293,7 +289,7 @@ class Node:
                     u = 0
                     p = element
 
-                    for marker in adjacenciesA_copy:
+                    for marker in adjacencies_genomeA_copy:
                         if isinstance(marker, tuple):
                             if marker[0] == p or marker[1] == p:
                                 u = marker
@@ -301,37 +297,25 @@ class Node:
                         u = p
 
                     if u != p:
-                        adjacenciesA_copy.append(u[0])
-                        adjacenciesA_copy.append(u[1])
-                        adjacenciesA_copy.remove(u)
+                        adjacencies_genomeA_copy.append(u[0])
+                        adjacencies_genomeA_copy.append(u[1])
+                        adjacencies_genomeA_copy.remove(u)
                         operation = ((u), (u[0]), (u[1]))
+                        
                         if operation not in list_of_legal_operations:
                             list_of_legal_operations.append((operation))
+                           
                         else:
                             pass
-
-                        
-                    # if u == p:
-                    #     adjacenciesA_copy.append(p)
-                    #     adjacenciesA_copy.append(u)
-                    #     operation = ((p), (u))
-                    #     #if operation not in list_of_legal_operations:
-                    #     list_of_legal_operations.append((operation))
-                    #     #else:
-                    #      #   pass
-
-                        
-
 
         return list_of_legal_operations
 
 
-    
-
     def take_action(self,operation):
         '''
         The method performs a series of operations on a given state based on the input operation.
-        it handles different types of operations, including fusion, fission, inversions, translocations, and transpositions.
+        it handles different types of operations, including fusion, fission, inversions, translocations, transpositions
+        insertions, deletions, and duplications
 
         Parameters:
         operation: A list representing the operation to be performed on the state.
@@ -347,50 +331,44 @@ class Node:
         result, operation_type = take_action(some_operation)
 
         '''
-        # constraint_instance = Constraint() 
-        # intergenic_regions = Constraint.inter_generator()
-        # operation = constraint_instance.operation_intergenic_regions(intergenic_regions)
-        
+
         state_copy = self.state.copy()
         operation_type = None
-        
-        # if it is a fusion, fission, insertion, deletion or duplication:
+
+        #fision and  fusion operations to occur
         if len(operation) == 3:
 
-            # fission
             if isinstance(operation[0], tuple):
 
                 state_copy.remove(operation[0])
                 state_copy.append(operation[1])
                 state_copy.append(operation[2])
+               
                 operation_type = 'fis'
             else:
                 state_copy.remove(operation[0])
                 state_copy.remove(operation[1])
+                operation_type = 'dele'
                 
-            # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[2][0] < operation[2][1]:
                     state_copy.append(operation[2])
                 else:
                     state_copy.append((operation[2][1], operation[2][0]))
+                    
+                                     
 
                 operation_type = 'fus'
 
-        # if the other rearrangements
+        #other rearrangements(inversions, transpositions, balanced translcations, insertions, deletions, duplications)
         elif len(operation) == 2:
-            # inversions, transpositions, balanced translcations, insertions, deletions :
+          
             if isinstance(operation[0][0], tuple) and isinstance(operation[0][1], tuple):
+                  
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
 
-                # for sub_operation in operation[1]:
-                #     if sub_operation[0] < sub_operation[1]:
-                #         state_copy.append(sub_operation)
-                #     else:
-                #         state_copy.append((sub_operation[1], sub_operation[0]))
-                # operation_type = 'ins'
-
                 if operation[1][0][0] < operation[1][0][1]:
+                   
                     state_copy.append(operation[1][0])
                 else:
                     state_copy.append((operation[1][0][1], operation[1][0][0]))
@@ -401,19 +379,12 @@ class Node:
                     state_copy.append((operation[1][1][1], operation[1][1][0]))
                 operation_type = 'ins'
                 
-                #transpositions happen in two steps
-                #balanced tranlocations - the adjacencies to cute are on different chromosomes
-                #inversions - the adjacencies to cut are on the same chromosome
-                #insertions - the adjacencies to cut are on the same chromosome
-                #deletions - the adjacencies to cut are on the same chromosome
-                #duplications - the adjacencies to cut can be on the same chromosome or different chromosomes
 
                 # transpositions occur in two steps
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
-                #transpotion to end of chromosome
-                if len(circular_chromosomes) != 0:
+                if circular_chromosomes:
                     operation_type = 'trp_reinsertion'
 
                 else:
@@ -422,6 +393,7 @@ class Node:
 
                     for chromosome in linear_chromosomes:
                         if operation[0][0] in chromosome:
+                            
                             test_chromosome = chromosome
             
                     if operation[0][1] in test_chromosome:
@@ -429,38 +401,47 @@ class Node:
 
                     else:
                         operation_type = 'b_trl'
-                    
+
+                        if operation_type == 'b_trl':
+                            if operation[0][0][1] > operation[0][1][1]:
+                                operation_type = 'ins'
+                            else:
+                                operation_type = 'b_trl'
+                                
+                    if operation[0][0] == operation[0][1]:
+                        operation_type = 'dup'
+                    else:
+                        pass
+                                        
 
             # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
             elif not isinstance(operation[0][0], tuple) or not isinstance(operation[0][-1], tuple):
 
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
-                operation_type = 'dele'
 
                 # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[1][0][0] < operation[1][0][1]:
 
                     state_copy.extend([(min(operation[1][0]), max(operation[1][0])), operation[1][1]])
 
-                #transpositions occur in two steps
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
                 #transpotion to end of chromosome
-                if len(circular_chromosomes) != 0:
+                if circular_chromosomes:
                     operation_type = 'trp_reinsertion'
-
                 else:
-
                     linear_chromosomes = chromosomes[0]
 
+                     # Identify adjacency and telomere from the operation element
+                    adjacency, telomere = None, None
                     for element in operation[0]:
                         if isinstance(element, tuple):
                             adjacency = element
                         else:
                             telomere = element
-                    
+
                     for chromosome in linear_chromosomes:
                         if adjacency in chromosome:
                             adjacency_index = chromosome.index(adjacency)
@@ -469,47 +450,28 @@ class Node:
                             else:
                                 operation_type = 'u_trl'
 
-                        elif chromosome.count(adjacency) > 1: 
+                        elif chromosome.count(adjacency) > 1:
                             operation_type = 'dup'
-
                         else:
-                            operation_type = 'dele'#changes here ins
+                            operation_type = 'dele'
 
                         if telomere in chromosome:
                             telomere_index = chromosome.index(telomere)
                             if telomere_index == 0 or telomere_index == len(chromosome) - 1:
-                                operation_type = 'u_trl'
+                                operation_type = 'inv'
                             else:
-                                operation_type = 'ins'
+                                operation_type = 'u_trl'
                         else:
-                            operation_type = 'dele' #changes here utrl
+                            operation_type = 'dele'
 
                         if adjacency not in chromosome:
                             chromosome.append(adjacency)
-                            if chromosome.index(adjacency) != 0 or chromosome.index(adjacency) != len(chromosome) - 1:
-                                operation_type = 'u_trl'
-                            else:
+                            adjacency_index = chromosome.index(adjacency)
+                            if adjacency_index != 0 and adjacency_index != len(chromosome) - 1:
                                 operation_type = 'ins'
+                            else:
+                                operation_type = 'u_trl'
 
-
-                    # for element in operation[0]:
-                    #     if isinstance(element, tuple):
-                    #         adjacency = element
-                    #     else:
-                    #         telomere = element
-                    # for chromosome in linear_chromosomes:
-
-                    #     if adjacency in chromosome:
-                    #         operation_type = 'ins'
-                    #     else:
-                    #         operation_type = 'dele'
-
-                    #     if telomere in chromosome:
-                    #         operation_type = 'ins'
-                    #     else:
-
-                    #         operation_type = 'u_trl'
-                            
         else:
             print("Error in take_action function")
 
@@ -518,7 +480,8 @@ class Node:
         return ordered_and_sorted, operation_type
 
 
-    def adjacencies_equivalent(self, adjacenciesB):
+
+    def adjacencies_equivalent(self, adjacencies_genomeB):
         """
         Checks if the adjacency lists of two genomes are equivalent.
 
@@ -528,21 +491,21 @@ class Node:
         Returns:
         - bool: True if the adjacency lists are equivalent, False otherwise.
         """
-        adjacenciesA = self.state.copy()
-        adjacenciesB = adjacenciesB
+        adjacencies_genomeA = self.state.copy()
+        adjacencies_genomeB = adjacencies_genomeB
 
-        ordered_adjacenciesA = []
-        for element in adjacenciesA:
+        ordered_adjacencies_genomeA = []
+        for element in adjacencies_genomeA:
             if isinstance(element, tuple):
                 if int(element[0]) < int(element[1]):
-                    ordered_adjacenciesA.append(element)
+                    ordered_adjacencies_genomeA.append(element)
                 else:
-                    ordered_adjacenciesA.append((element[1], element[0]))
+                    ordered_adjacencies_genomeA.append((element[1], element[0]))
             else:
-                ordered_adjacenciesA.append(element)
+                ordered_adjacencies_genomeA.append(element)
 
-        for element in adjacenciesB:
-            if element in ordered_adjacenciesA:
+        for element in adjacencies_genomeB:
+            if element in ordered_adjacencies_genomeA:
                 pass
             else:
                 return False
@@ -590,7 +553,7 @@ class Node:
         return sorted_adjacencies
     
 
-    def get_decircularization_operations(self, adjacenciesB):
+    def get_decircularization_operations(self, adjacencies_genomeB):
         """
         Retrieves a list of decircularization operations based on the provided adjacencies for Genome B.
 
@@ -622,7 +585,7 @@ class Node:
 
         """
 
-        operations = [operation for operation in self.get_legal_operations(adjacenciesB) if len(operation)==2]
+        operations = [operation for operation in self.get_legal_operations(adjacencies_genomeB) if len(operation)==2]
 
 
         decircularization_operations = []

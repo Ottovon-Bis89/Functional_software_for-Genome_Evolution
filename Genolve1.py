@@ -1,15 +1,7 @@
 from networkx import all_shortest_paths
-#from Rearrangement_Node import Node
-#from Class_wrDCJ_Node import Node
 from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
-#import Rearrangement_Network
-#import New_Network_wrDCJ
-from Intergenic_region_generator import Constraint
-from Spatial_weight import Spatial3DWeight 
-from Network_wrDCJ import Network
+from  New_Network_wrDCJ import  Network
 from new_Node import Node
-from Data_generator import DataGenerator
-import Intergenic_region_generator
 import time
 import argparse
 import sys
@@ -48,12 +40,7 @@ def run(args):
         element = list(map(int, element))
         weight_ratios.append(element)
         
-    #gen_obj = Intergenic_region_generator.IntergenicGenerator()
-    #data_gen = DataGenerator()
-    #genomeA = data_gen.check_genes(genomeA)
-    #genomeB = data_gen.check_genes(genomeB)
-    #genomeA = data_gen.generate_intergenic_regions(genomeA)
-    #genomeB = data_gen.generate_intergenic_regions(genomeB)
+    
 
     get_adjacencies = Extremities_and_adjacencies()
     networkDCJ = Network()

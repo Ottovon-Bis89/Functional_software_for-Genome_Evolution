@@ -13,9 +13,9 @@ randomized = 'Random weight ratios'
 one_to_one = 'One to one weight ratios'
 same_as_solution = 'Same as solution weight ratios'
 #####################
-number_of_simulations = 100
-number_of_sequence_blocks = 10
-number_of_rearrangements = 7
+number_of_simulations = 1
+number_of_sequence_blocks = 9
+number_of_rearrangements = 8
 type_of_weight_ratio = same_as_solution
 
 
@@ -38,8 +38,8 @@ for i in range(0, number_of_simulations):
     reverse_the_series = GenomeEvolver.reverse_rearrangement_series(target_genome, rearrangement_series)
     source_genome = reverse_the_series[1]
     solution = reverse_the_series[2]
-    target_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(target_genome)
-    source_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(source_genome)
+    target_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(target_genome)
+    source_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(source_genome)
 
     solution_operations = [d for (c, d) in solution]
     sol_inv = sol_trp = sol_b_trl = sol_u_trl = sol_fis = sol_fus = 0
@@ -79,8 +79,8 @@ for i in range(0, number_of_simulations):
         reverse_the_series = GenomeEvolver.reverse_rearrangement_series(target_genome, rearrangement_series)
         source_genome = reverse_the_series[1]
         solution = reverse_the_series[2]
-        target_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(target_genome)
-        source_adjacencies = get_adjacencies_and_genomes.ordered_and_sorted_adjacencies(source_genome)
+        target_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(target_genome)
+        source_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(source_genome)
 
 
     #create start and target node for network
@@ -177,7 +177,7 @@ for i in range(0, number_of_simulations):
 
             ###
             adjacencies = current_intermediate.state
-            genome = get_adjacencies.find_genome(adjacencies)
+            genome = get_adjacencies.adjacencies_to_genome(adjacencies)
             path_state.append((genome, (operation_type, operation)))
             ###
 

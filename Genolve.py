@@ -1,10 +1,8 @@
 from networkx import all_shortest_paths
-from Rearrangement_Node import Node
+from new_Node import Node
 from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
-import Rearrangement_Network
-#from new_Node import Node
-from Data_generator import DataGenerator
-import Intergenic_region_generator
+import New_Network_wrDCJ
+import random
 import time
 import argparse
 import sys
@@ -18,8 +16,8 @@ def run(args):
     weight_ratios = args.ratios
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
-    # outfile = open(args.output_file, 'w')
-    with open("/home/22204911/Documents/New_Test/T4_A.txt") as csv:
+    
+    with open("/home/22204911/Documents/Test_test/T8_A.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeA = []
 
@@ -27,7 +25,7 @@ def run(args):
         element = list(map(int, element))
         genomeA.append(element)
 
-    with open("/home/22204911/Documents/New_Test/T4_B.txt") as csv:
+    with open("/home/22204911/Documents/Test_test/T8_B.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeB = []
 
@@ -35,22 +33,22 @@ def run(args):
         element = list(map(int, element))
         genomeB.append(element)
 
-    with open("/home/22204911/Documents/New_Test/Weight_ratios.txt") as csv:
+    with open("/home/22204911/Documents/Test_test/Weight_ratios.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     weight_ratios = []
 
     for element in line:
         element = list(map(int, element))
         weight_ratios.append(element)
-    
-    # gen_obj = Intergenic_region_generator.IntergenicGenerator()
-    # data_gen = DataGenerator()
-    # genomeA = data_gen.check_genes(genomeA)
-    # genomeB = data_gen.check_genes(genomeB)
-    # genomeA = data_gen.generate_intergenic_regions(genomeA)
-    # genomeB = data_gen.generate_intergenic_regions(genomeB)
 
+    with open("/home/22204911/Documents/Test_test/frag.txt") as csv_file:
+        lines = [line.strip('\n').split(',') for line in csv_file]
+
+    fragments = [item for sublist in lines for item in sublist]
+
+    
     get_adjacencies = Extremities_and_adjacencies()
+    
     adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
 
     adjacencies_genomeB = get_adjacencies.ordered_and_sorted_adjacencies(genomeB)
@@ -74,18 +72,18 @@ def run(args):
         else:
             weights.append(max_number / element)
 
-    Rearrangement_Network.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights)
+    New_Network_wrDCJ.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights, genomeB, genomeA)
 
-    network = Rearrangement_Network.build_network(hash_table)
+    network = New_Network_wrDCJ.build_network(hash_table)
 
     shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
 
     j = 1
-    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins =tot_dele =tot_dup =tot_fDNA =0  # initialize counters for this path
+    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins =tot_dele =tot_dup  =0  
 
     Paths_state = []
     Paths_state_weight = []
-    # print(shortest_paths[0][4].children_weights[2])
+   
     for path in shortest_paths:
         path_state = []
         path_state_weight = []
@@ -117,7 +115,7 @@ def run(args):
     for path in shortest_paths:
 
         i = 0
-        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = ins = dele = dup = fDNA = 0   # initialize counters for this path
+        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = ins = dele = dup = 0   
         while i < len(path):
 
             current = path[i]
@@ -146,8 +144,6 @@ def run(args):
                     dele += 1
                 elif operation_type == 'dup':
                     dup += 1
-                elif operation_type == 'fDNA':
-                    fDNA += 1
             i += 1
 
         tot_b_trl += b_trl
@@ -160,43 +156,110 @@ def run(args):
         tot_ins  += ins
         tot_dele  += dele
         tot_dup += dup
-        tot_fDNA  += fDNA
         j += 1
 
-    print(
-        '*****************************************************************Genome Evolution Results*********************************************************')
-    print()
+    print('*****************************************************************************************Genome Evolution Analysis*******************************************************************************')
+    print('\n')
     print('Source Genome: ', genomeA)
     print('Target Genome: ', genomeB)
-    print()
-    print('Number of most parsimonious solutions: ', len(shortest_paths))
-    print()
+    print('\n')
+    print('Number of most likely biological paths (solutions): ', len(shortest_paths))
+    print('\n')
     print('Average number of evolutionary events per solution (Edit Distance): ',
           float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
               2 * (tot_trp2 / len(shortest_paths))) + float(tot_b_trl / len(shortest_paths)) + float(
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
-              tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)) + float(tot_fDNA/len(shortest_paths)))
-    print()
+              tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
+    print('\n')
     print('Average number of each operation per solution:')
     print('Inversions: ', float(tot_inv / len(shortest_paths)), '  Transpositions type 1: ',
           float(tot_trp1 / len(shortest_paths)), '  Transpositions type 2: ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
           float(tot_u_trl / len(shortest_paths)), '  Fusions: ', float(tot_fus / len(shortest_paths)), '  Fissions: ', float(tot_fis / len(shortest_paths)), 
-          'Insertions: ', float(tot_ins/len(shortest_paths)), 'Deletions: ', float(tot_dele/len(shortest_paths)), 'Duplications: ', float(tot_dup/len(shortest_paths)), 'Foreign DNA: ', float(tot_fDNA/len(shortest_paths)))
-    print()
-    print()
+          'Insertions: ', float(tot_ins/len(shortest_paths)), 'Deletions: ', float(tot_dele/len(shortest_paths)), 'Duplications: ', float(tot_dup/len(shortest_paths)))
+    
+    print('\n\n')
     print('Solutions: ')
-    print()
+    print('\n')
     path_counter = 1
     for path in Paths_state:
+        print('\n')
         print('#Solution number ', path_counter)
+        #print('\n')
+        inserted_fragment = None  
+        chosen_chromosome_index = None  
+
         for genome in path:
-            print(genome)
+            new_genome = genome[0]  
+            operation = genome[1]
+            
+            valid_chromosomes = [chrom for chrom in new_genome if isinstance(chrom, list)]
+            
+            # if valid_chromosomes:
+            #     if inserted_fragment is None:
+            #         chosen_chromosome_index = random.randint(0, len(valid_chromosomes) - 1) 
+            #         chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
+            #         fragment = random.choice(fragments)
+            #         position = random.randint(0, len(chosen_chromosome) - 1)
+            #         chosen_chromosome.insert(position, fragment)
+            #         inserted_fragment = fragment
+                
+            #     if 0 <= chosen_chromosome_index < len(valid_chromosomes) and 0 <= chosen_chromosome_index < len(new_genome):
+            #         chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
+            #         if inserted_fragment not in chosen_chromosome:
+            #             position = random.randint(0, len(chosen_chromosome))
+            #             chosen_chromosome.insert(position, inserted_fragment)
+            #         new_genome[chosen_chromosome_index] = chosen_chromosome
+            # else:
+            #     print("No valid chromosomes available.")
+                
+            
+            # new_genome = tuple(new_genome) if isinstance(genome, tuple) else new_genome
+            
+            # print(f"[{new_genome}], {operation}")
+            if valid_chromosomes:
+                
+                if inserted_fragment is None:
+                    num_fragments_to_insert = random.randint(1, 3) #change number of FDN fragments here
+                    num_fragments_to_insert = min(num_fragments_to_insert, len(valid_chromosomes))
+
+                    inserted_fragments = []
+                    chosen_chromosome_indices = random.sample(range(len(valid_chromosomes)), num_fragments_to_insert)
+
+                    for i in range(num_fragments_to_insert):
+                        chosen_chromosome_index = chosen_chromosome_indices[i]
+                        chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
+                        fragment = random.choice(fragments)
+                        
+                        while fragment in inserted_fragments:
+                            fragment = random.choice(fragments)
+                        
+                        inserted_fragments.append(fragment)
+                        position = random.randint(0, len(chosen_chromosome) - 1)
+                        chosen_chromosome.insert(position, fragment)
+                        new_genome[chosen_chromosome_index] = chosen_chromosome
+
+                    inserted_fragment = inserted_fragments
+
+                for i, chosen_chromosome_index in enumerate(chosen_chromosome_indices):
+                    if 0 <= chosen_chromosome_index < len(valid_chromosomes) and 0 <= chosen_chromosome_index < len(new_genome):
+                        chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
+                        fragment = inserted_fragments[i]
+                        if fragment not in chosen_chromosome:
+                            position = random.randint(0, len(chosen_chromosome))
+                            chosen_chromosome.insert(position, fragment)
+                        new_genome[chosen_chromosome_index] = chosen_chromosome
+            else:
+                print("No valid chromosomes available.")
+
+            new_genome = tuple(new_genome) if isinstance(new_genome, tuple) else new_genome
+            
+            print(f"({new_genome}, {operation})")
         path_counter += 1
-    print()
-    print()
-    print(
-        '***********************************************************************************End of Analysis*********************************************************')
+
+
+    print('\n\n')
+    print('***********************************************************************************End of Analysis*********************************************************************************************')
 
     sys.stdout.close()
     sys.stdout = stdoutOrigin
@@ -210,8 +273,9 @@ def main():
     parser.add_argument("-s", help="this is the set of genes representing the source genome",
                         dest='source_genome', required=True, )
     parser.add_argument("-r",
-                        help='the ratios in which each rearrangement is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions',
+                        help='the ratios in which each rearrangement is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions, insertions, deletions,duplications',
                         dest='ratios', required=True)
+    parser.add_argument("-f", help="this is the set of foreign DNA fragments that are to be inserted into the genome", dest= "fDNA", required=True)
     parser.add_argument("-o", help="the name of the output file that will contain the set of rearrangements",
                         dest='output_file', required=True)
     parser.set_defaults(func=run)

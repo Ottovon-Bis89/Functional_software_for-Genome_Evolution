@@ -4,7 +4,7 @@ class Node:
         self.state = state
         self.children = []
         self.children_weights = []
-        self.children_operations =[]
+        self.children_operations = []
         self.linear_chromosomes = []
         self.circular_chromosomes = []
         self.next_operation = 0
@@ -15,27 +15,7 @@ class Node:
         self.linear_chromosomes = get_chromosomes[0]
         self.circular_chromosomes = get_chromosomes[1]
 
-
-
     def find_next_extremity(self, current, next_extremity):
-        """
-        Finds the next extremity based on the current extremity and the target extremity.
-
-        Parameters:
-        - current (tuple): A tuple representing the current extremity, where current[0] is the x-coordinate and current[1] is the y-coordinate.
-        - next_extremity (int): The target extremity to be compared with the x-coordinate of the current extremity.
-
-        Returns:
-        - float: The next extremity coordinate.
-
-        Example:
-        ```python
-        current_extremity = (3, 4)
-        target_extremity = 3
-        result = find_next_extremity(current_extremity, target_extremity)
-        print(result)  # Output: 3.5
-        ```
-        """
         if current[0] == next_extremity:
             if current[1] % 1 == 0:
                 next = current[1] + 0.5
@@ -49,25 +29,6 @@ class Node:
         return next
 
     def find_next_adjacency(self, next_extremity, chromosome, not_telomeres):
-        """
-        Finds the next adjacency in a chromosome.
-
-        This method searches for the next adjacency in the chromosome given the current extremity, and updates
-        the chromosome and the list of non-telomeric elements accordingly.
-
-        :param next_extremity: The current extremity to find the next adjacency from.
-        :type next_extremity: YourExtremityType
-
-        :param chromosome: The chromosome to which the adjacency will be added.
-        :type chromosome: list
-
-        :param not_telomeres: List of non-telomeric elements.
-        :type not_telomeres: list
-
-        :return: A tuple containing the updated next_extremity, chromosome, and not_telomeres.
-                 If no adjacency is found, a list containing next_extremity is returned.
-        :rtype: tuple or list
-        """
         for element in not_telomeres:
             if element[0] == next_extremity or element[1] == next_extremity:
                 current = element
@@ -78,20 +39,6 @@ class Node:
         return [next_extremity]
 
     def find_adjacency_cycle(self, next_extremity, chromosome, not_telomeres):
-        """
-        Finds an adjacency cycle in the graph starting from a given extremity.
-
-        Parameters:
-        - next_extremity (object): The starting extremity for the adjacency cycle.
-        - chromosome (object): The chromosome related to the starting extremity.
-        - not_telomeres (list): List of extremities that are not telomeres.
-
-        Returns:
-        tuple: A tuple containing the following elements:
-            - next_extremity (object): The last extremity in the adjacency cycle.
-            - chromosome (object): The chromosome related to the adjacency cycle.
-            - not_telomeres (list): List of extremities that are not telomeres.
-        """
 
         next_adjacency = Node.find_next_adjacency(self, next_extremity, chromosome, not_telomeres)
 
@@ -104,15 +51,6 @@ class Node:
             return next_extremity, chromosome, not_telomeres
 
     def find_chromosomes(self, adjacencies):
-        """
-        Finds linear and circular chromosomes in a given set of adjacencies.
-
-        This method takes a list of adjacencies and identifies linear and circular chromosomes
-        based on the presence of telomeres and adjacency cycles.
-
-        :param adjacencies: A list of adjacencies to analyze.
-        :return: A tuple containing lists of linear and circular chromosomes.
-        """
 
         telomeres = [element for element in adjacencies if type(element) is not tuple]
         not_telomeres = [element for element in adjacencies if type(element) is tuple]
@@ -189,16 +127,6 @@ class Node:
         return linear_chromosomes, circular_chromosomes
 
     def get_legal_operations(self, adjacenciesB):
-        """
-        This method takes a list of adjacencies for genome B and returns a list of legal operations
-        to transform the adjacencies of genome A into genome B.
-        
-        Parameters:
-        - adjacencies_genomeB (list): The list of adjacencies for genome B.
-        
-        Returns:
-        - list_of_legal_operations (list): A list of legal operations to transform genome A to genome B.
-        """
         list_of_legal_operations = []
         adjacenciesA = self.state
         adjacenciesB = adjacenciesB
@@ -217,7 +145,7 @@ class Node:
                     u = 0
                     v = 0
 
-                    # if elements containing p and q respectively in A are adjacencies
+                    # if elements containing p and q respectively in a are adjacencies
                     for marker in adjacenciesA_copy:
                         if type(marker) is tuple:
                             if marker[0] == p or marker[1] == p:
@@ -236,6 +164,7 @@ class Node:
                     if u != v:
                         adjacenciesA_copy.append((p, q))
                         adjacenciesA_copy.remove(u)
+
                         adjacenciesA_copy.remove(v)
 
                         # if u is an adjacency:
@@ -276,7 +205,7 @@ class Node:
                                 ordered_operation = (op_1, op_2)
 
                                 if ordered_operation not in list_of_legal_operations:
-                                    list_of_legal_operations.append((ordered_operation))
+                                    list_of_legal_operations.append(ordered_operation)
                                 else:
                                     pass
 
@@ -317,7 +246,7 @@ class Node:
                                 ordered_operation = ((v, u), (op_2_1, v_not_q))
 
                                 if ordered_operation not in list_of_legal_operations:
-                                    list_of_legal_operations.append((ordered_operation))
+                                    list_of_legal_operations.append(ordered_operation)
                                 else:
                                     pass
 
@@ -359,31 +288,10 @@ class Node:
                             list_of_legal_operations.append((operation))
                         else:
                             pass
-                        #print("list of legal operations", list_of_legal_operations)
-
 
         return list_of_legal_operations
 
     def take_action(self, operation):
-        '''
-        The method performs a series of operations on a given state based on the input operation.
-        it handles different types of operations, including fusion, fission, inversions, translocations, and transpositions.
-
-        Parameters:
-        operation: A list representing the operation to be performed on the state.
-
-        Returns:
-        A tuple containing the ordered and sorted state after the operation and the type of operation performed.
-
-        Raises:
-        ValueError: If the provided operation type is invalid.
-
-        Example:
-        
-        result, operation_type = take_action(some_operation)
-
-        '''
-        
         state_copy = self.state.copy()
         operation_type = None
 
@@ -392,6 +300,7 @@ class Node:
 
             # fission
             if type(operation[0]) is tuple:
+
                 state_copy.remove(operation[0])
                 state_copy.append(operation[1])
                 state_copy.append(operation[2])
@@ -401,7 +310,8 @@ class Node:
             else:
                 state_copy.remove(operation[0])
                 state_copy.remove(operation[1])
-                
+
+                # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[2][0] < operation[2][1]:
                     state_copy.append(operation[2])
                 else:
@@ -427,9 +337,9 @@ class Node:
                 else:
                     state_copy.append((operation[1][1][1], operation[1][1][0]))
 
-                #transpositions happen in two steps
-                #balanced tranlocations - the adjacencies to cute are on different chromosomes
-                 #inversions - the adjacencies to cut are on the same chromosome
+                # transpositions happen in two steps
+                # balanced tranlocations - the adjacencies to cute are on different chromosomes
+                # inversions - the adjacencies to cut are on the same chromosome
 
                 # transpositions occur in two steps
                 chromosomes = self.find_chromosomes(self.state)
@@ -442,7 +352,6 @@ class Node:
                 else:
                     linear_chromosomes = self.find_chromosomes(self.state)[0]
 
-
                     for chromosome in linear_chromosomes:
 
                         if operation[0][0] in chromosome:
@@ -452,9 +361,8 @@ class Node:
                     else:
                         operation_type = 'b_trl'
 
-
-
-            # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
+            # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end
+            # of chromosome
             elif type(operation[0][0]) is not tuple or type(operation[0][-1]) is not tuple:
 
                 state_copy.remove(operation[0][0])
@@ -468,11 +376,11 @@ class Node:
 
                 state_copy.append(operation[1][1])
 
-                #transpositions occur in two steps
+                # transpositions occur in two steps
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
-                #transpotion to end of chromosome
+                # transpotion to end of chromosome
                 if len(circular_chromosomes) != 0:
                     operation_type = 'trp_reinsertion'
 
@@ -501,21 +409,11 @@ class Node:
             print("Error in take_action function")
 
         # order and sort
-        ordered_and_sorted = Node.sorted_adjacencies_and_telomeres(self, state_copy)
+        ordered_and_sorted = Node.order_and_sort(self, state_copy)
 
         return ordered_and_sorted, operation_type
 
-
-    def adjacencies_equivalent(self, adjacenciesB):
-        """
-        Checks if the adjacency lists of two genomes are equivalent.
-
-        Parameters:
-        - adjacencies_genomeB (list): The adjacency list of the second genome to compare.
-
-        Returns:
-        - bool: True if the adjacency lists are equivalent, False otherwise.
-        """
+    def is_equivalent(self, adjacenciesB):
         adjacenciesA = self.state.copy()
         adjacenciesB = adjacenciesB
 
@@ -536,86 +434,37 @@ class Node:
                 return False
         return True
 
-    def sorted_adjacencies_and_telomeres(self, adjacencies):
-        """
-        Sorts gene adjacencies and telomeres and returns the sorted list.
-
-        Args:
-        - adjacencies (list): A list containing tuples representing gene adjacencies and other elements representing telomeres.
-
-        Returns:
-        - list: A sorted list containing telomeres followed by sorted gene adjacencies.
-
-        Example:
-        instance = YourClassName()
-        result = instance.sorted_adjacencies_and_telomeres([(1, 2), (3, 1), 'telomere'])
-        print(result)
-        # Output: ['telomere', (1, 2), (1, 3)]
-        ```
-        """
+    def order_and_sort(self, adjacencies):
         telomeres = []
-        gene_adjacencies = []
+        adjs = []
         for element in adjacencies:
             if type(element) is tuple:
 
-                #if it is a single gene adjacency e.g. (4.5, 4.0)
+                # if it is a single gene adjacency e.g. (4.5, 4.0)
                 if int(element[0]) == int(element[1]):
-                    if element[0]%1 == 0:
-                       gene_adjacencies.append(element)
+                    if element[0] % 1 == 0:
+                        adjs.append(element)
                     else:
-                        gene_adjacencies.append((element[1], element[0]))
+                        adjs.append((element[1], element[0]))
 
                 elif int(element[0]) < int(element[1]):
-                   gene_adjacencies.append(element)
+                    adjs.append(element)
                 else:
-                   gene_adjacencies.append((element[1], element[0]))
+                    adjs.append((element[1], element[0]))
             else:
                 telomeres.append(element)
         telomeres.sort()
-        gene_adjacencies.sort()
+        adjs.sort()
 
-        sorted_adjacencies = telomeres + gene_adjacencies
+        sort = telomeres + adjs
 
-        return sorted_adjacencies
-    
+        return sort
 
-    def get_decircularization_operations(self, adjacenciesB):
-        """
-        Retrieves a list of decircularization operations based on the provided adjacencies for Genome B.
+    def get_reinsertion_operations(self, adjacenciesB):
 
-        This method analyzes legal operations for adjacencies_genomeB and identifies decircularization operations, 
-        which involve removing adjacency connections from circular chromosomes.
-
-        Parameters:
-        - adjacencies_genomeB (list of tuples): Adjacency information for Genome B.
-
-        Returns:
-        list: A list of decircularization operations, where each operation is represented as a tuple of two elements.
-
-        Example:
-        genome_A = [...]  # Adjacency information for Genome A
-        genome_B = [...]  # Adjacency information for Genome B
-        obj = YourClass(genome_A)
-        decircular_ops = obj.get_decircularization_operations(genome_B)
-        
-
-        Note:
-        Circular chromosomes are identified based on the circular_chromosomes attribute of the object.
-
-        Legal operations are obtained using the get_legal_operations method of the object.
-
-        Decircularization operations are those where at least one of the involved chromosomes is circular, 
-        and the adjacency connection is being removed.
-
-        The returned list contains tuples representing the decircularization operations.
-
-        """
-
-        operations = [operation for operation in self.get_legal_operations(adjacenciesB) if len(operation)==2]
-
+        operations = [operation for operation in self.get_legal_operations(adjacenciesB) if len(operation) == 2]
 
         decircularization_operations = []
-
 
         for operation in operations:
 

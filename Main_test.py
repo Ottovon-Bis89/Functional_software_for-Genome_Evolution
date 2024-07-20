@@ -1,21 +1,22 @@
-import GEN_NODE
-import Helper_Methods as HM
-from tqdm import tqdm
-import hashlib
-from logger import log
-from Cost_function import Cost
-from collections import defaultdict
-import networkx as nx
+# import GEN_NODE
+# import Helper_Methods as HM
+# from tqdm import tqdm
+# import hashlib
+# from logger import log
+# from Cost_function import Cost
+# from collections import defaultdict
+# import networkx as nx
+from ForeignDNA import Foreign_DNA
 
-itterations =2
+# itterations =2
 
-gen_n_obj = GEN_NODE.Node()
+# gen_n_obj = GEN_NODE.Node()
 
-# source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5','*9'], ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1','*9']]
-# target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '6', '*6', '7', '*6', '5','*7','8','*9'],['*9', '9','*8', '10', '*8', '11', '*9']]
+# # source_genome = [['*6', '1', '*7', '2', '*8', '3', '*7', '4', '*9', '1', '*7', '5','*9'], ['*8', '4', '*9', '1', '*8', '1', '*8', '2', '*6', '8', '*9', '7', '*10', '6', '*7', '5', '*5', '1','*9']]
+# # target_genome = [['*8', '1', '*6', '2', '*7', '3', '*9', '4','*8', '5', '*8' , '6', '*6', '7', '*6', '5','*7','8','*9'],['*9', '9','*8', '10', '*8', '11', '*9']]
 
-target_genome = [[1, 2],[3, 4, 5],[6, 7],[8, 9, 10],[11],[12, 13, 14],[15, 16, 17, 18],[19, 20],[21, 22, 23]]
-source_genome = [[1, 4, 2],[3, 5],[6],[8],[9, -13, 11],[12, 14],[15, 17, 22, 18],[19, 16, 20],[21, 7, 10, 23]]
+# target_genome = [[1, 2],[3, 4, 5],[6, 7],[8, 9, 10],[11],[12, 13, 14],[15, 16, 17, 18],[19, 20],[21, 22, 23]]
+# source_genome = [[1, 4, 2],[3, 5],[6],[8],[9, -13, 11],[12, 14],[15, 17, 22, 18],[19, 16, 20],[21, 7, 10, 23]]
 
 # log.debug("HELLO")
 
@@ -288,70 +289,70 @@ source_genome = [[1, 4, 2],[3, 5],[6],[8],[9, -13, 11],[12, 14],[15, 17, 22, 18]
 
 
 
-solution = {}
-solution_num = 1
-solution_cost = {}
-total_mutations = 0
-mutation_counts = defaultdict(int)  # Initialize counts for each mutation type
+# solution = {}
+# solution_num = 1
+# solution_cost = {}
+# total_mutations = 0
+# mutation_counts = defaultdict(int)  # Initialize counts for each mutation type
 
-HM.create_new_file('solution_set.txt')
+# HM.create_new_file('solution_set.txt')
 
-for _ in tqdm(range(itterations), total=itterations):
-    for _ in range(itterations):
-        list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
-        mutation_solution = ""
-        for item in list_of_operations:
+# for _ in tqdm(range(itterations), total=itterations):
+#     for _ in range(itterations):
+#         list_of_operations = gen_n_obj.get_operations(source_genome, target_genome)
+#         mutation_solution = ""
+#         for item in list_of_operations:
             
-            operation = item[0]
-            mutation_solution += str(operation['Mut'])
-            mutation_solution += str(operation['Chr'])
-            mutation_solution += str(operation['Pos'])
-            mutation_solution += str(operation['Gene'])
-            total_mutations += 1
-            # Increment counts for each mutation type in the solution
-            for mutation_type in ['ins', 'del', 'dup', 'F_DNA']:
-                mutation_counts[mutation_type] += 1 if operation['Mut'] == mutation_type else 0
+#             operation = item[0]
+#             mutation_solution += str(operation['Mut'])
+#             mutation_solution += str(operation['Chr'])
+#             mutation_solution += str(operation['Pos'])
+#             mutation_solution += str(operation['Gene'])
+#             total_mutations += 1
+#             # Increment counts for each mutation type in the solution
+#             for mutation_type in ['ins', 'del', 'dup', 'F_DNA']:
+#                 mutation_counts[mutation_type] += 1 if operation['Mut'] == mutation_type else 0
         
-        sha256_hash = hashlib.sha256(mutation_solution.encode()).hexdigest()
+#         sha256_hash = hashlib.sha256(mutation_solution.encode()).hexdigest()
 
-        if sha256_hash not in solution:
-            solution[sha256_hash] = list_of_operations
-            solution_cost[sha256_hash] = Cost().calc_cumulative_ratio(list_of_operations)
+#         if sha256_hash not in solution:
+#             solution[sha256_hash] = list_of_operations
+#             solution_cost[sha256_hash] = Cost().calc_cumulative_ratio(list_of_operations)
 
-# Sort solution sets based on the accumulated cost
-sorted_solution = sorted(solution.items(), key=lambda x: solution_cost[x[0]])
+# # Sort solution sets based on the accumulated cost
+# sorted_solution = sorted(solution.items(), key=lambda x: solution_cost[x[0]])
 
-# Write sorted solution sets to file
-with open('solution_set.txt', 'a') as file:
-    num_solutions = len(sorted_solution)
-    avg_mutations_per_solution = total_mutations / num_solutions
-    avg_mut_counts = {key: value / num_solutions for key, value in mutation_counts.items()}
+# # Write sorted solution sets to file
+# with open('solution_set.txt', 'a') as file:
+#     num_solutions = len(sorted_solution)
+#     avg_mutations_per_solution = total_mutations / num_solutions
+#     avg_mut_counts = {key: value / num_solutions for key, value in mutation_counts.items()}
     
-    file.write(f"Estimated number of solutions: {num_solutions}\n")
-    file.write(f"Average number of mutations per solution: {avg_mutations_per_solution}\n")
-    file.write("Average number of each mutation per solution:\n")
-    file.write(" ".join([f"{mutation_type}: {avg_count}" for mutation_type, avg_count in avg_mut_counts.items()]) + "\n")
+#     file.write(f"Estimated number of solutions: {num_solutions}\n")
+#     file.write(f"Average number of mutations per solution: {avg_mutations_per_solution}\n")
+#     file.write("Average number of each mutation per solution:\n")
+#     file.write(" ".join([f"{mutation_type}: {avg_count}" for mutation_type, avg_count in avg_mut_counts.items()]) + "\n")
     
-    for i, (sha256_hash, list_of_operations) in enumerate(sorted_solution, 1):
-        file.write(f"\nSolution {i}, Total Cost: {solution_cost[sha256_hash]}\n")
+#     for i, (sha256_hash, list_of_operations) in enumerate(sorted_solution, 1):
+#         file.write(f"\nSolution {i}, Total Cost: {solution_cost[sha256_hash]}\n")
         
-        for item in list_of_operations:
-            operations = item[0]
-            Mut = f"Mut: {operations['Mut']}, "
-            Chr = f"Chr: {operations['Chr']}, "
-            Pos = f"Pos: {operations['Pos']}, "
-            Gene = f"Gene: {operations['Gene']}"
-            Genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}\n"
+#         for item in list_of_operations:
+#             operations = item[0]
+#             Mut = f"Mut: {operations['Mut']}, "
+#             Chr = f"Chr: {operations['Chr']}, "
+#             Pos = f"Pos: {operations['Pos']}, "
+#             Gene = f"Gene: {operations['Gene']}"
+#             Genome_after_mutation = f"Genome after mutation: {operations['Genome after mutation']}\n"
 
-            file.write(Mut)
-            file.write(Chr)
-            file.write(Pos)
-            file.write(Gene)
-            file.write("\n")
-            file.write(Genome_after_mutation)
-            file.write("\n")
+#             file.write(Mut)
+#             file.write(Chr)
+#             file.write(Pos)
+#             file.write(Gene)
+#             file.write("\n")
+#             file.write(Genome_after_mutation)
+#             file.write("\n")
 
-HM.End_of_file()
+# HM.End_of_file()
 
 # import networkx as nx
 # from collections import defaultdict
@@ -465,3 +466,86 @@ HM.End_of_file()
 
 
 
+# Original tuples
+# tuple1 = (14.5, 21)
+# tuple2 = (15, 20.5)
+
+# # Function to create a rearranged tuple with elements in increasing order
+# def create_ordered_tuple(a, b, c):
+#     if a < b:
+#         return (a, '*new', b)
+#     else:
+#         return (b, '*new', a)
+
+# # Rearranging tuples
+# rearranged_tuple1 = create_ordered_tuple(tuple1[1], tuple2[1], '*new')  # (21, '*new', 20.5)
+# rearranged_tuple2 = create_ordered_tuple(tuple1[0], tuple2[0], '*new')  # (14.5, '*new', 15)
+
+# print(rearranged_tuple1)
+# print(rearranged_tuple2)
+
+# Original tuples in operation
+# operation = [((14.5, 21), (15, 20.5))]
+
+# # Assuming state_copy contains the original tuples
+# state_copy = list(operation[0])
+
+# # Initialize operation_type
+# operation_type = None
+
+# # Check if the elements in operation are tuples
+# if isinstance(operation[0][0], tuple) and isinstance(operation[0][1], tuple):
+#     # Print original tuples (for debugging)
+#     # print('opp1: ', operation[0][0], operation[0][1])
+    
+#     # Deletion operation: Remove the original tuples from state_copy
+#     state_copy.remove(operation[0][0])
+#     state_copy.remove(operation[0][1])
+    
+#     # Set the operation type to 'del' for deletion
+#     operation_type = 'del'
+#     print("Operation type (deletion):", operation_type)
+    
+#     # Insertion operation: Create new tuples and add to state_copy
+#     state_copy.append(operation[0][0][0], operation[0][1][0])  # (14.5, 15)
+#     state_copy.append(operation[0][1][1], operation[0][0][1])  # (20.5, 21)
+#     # state_copy.append(new_tuple1)
+#     # state_copy.append(new_tuple2)
+    
+#     # Set the operation type to 'ins' for insertion
+#     operation_type = 'ins'
+
+# # Print the updated state_copy
+# print(state_copy)
+# print("Operation type (insertion):", operation_type)
+
+
+
+
+#single DNA fragment insertion code
+
+            # if valid_chromosomes:
+            #     if inserted_fragment is None:
+            #         chosen_chromosome_index = random.randint(0, len(valid_chromosomes) - 1) 
+            #         chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
+            #         fragment = random.choice(fragments)
+            #         position = random.randint(0, len(chosen_chromosome) - 1)
+            #         chosen_chromosome.insert(position, fragment)
+            #         inserted_fragment = fragment
+                
+            #     if 0 <= chosen_chromosome_index < len(valid_chromosomes) and 0 <= chosen_chromosome_index < len(new_genome):
+            #         chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
+            #         if inserted_fragment not in chosen_chromosome:
+            #             position = random.randint(0, len(chosen_chromosome))
+            #             chosen_chromosome.insert(position, inserted_fragment)
+            #         new_genome[chosen_chromosome_index] = chosen_chromosome
+            # else:
+            #     print("No valid chromosomes available.")
+                
+            
+            # new_genome = tuple(new_genome) if isinstance(genome, tuple) else new_genome
+            
+            # print(f"[{new_genome}], {operation}")
+
+dna = Foreign_DNA()
+dna.run("/home/22204911/Documents/Test_test/T4_A.txt", "/home/22204911/Documents/Test_test/T4_B.txt", "/home/22204911/Documents/Test_test/fragg.txt")
