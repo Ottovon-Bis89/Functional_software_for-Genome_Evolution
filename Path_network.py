@@ -1,9 +1,11 @@
 
-from new_Node import Node
+from Path_node import Node
 from networkx import DiGraph
-from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
+import networkx as nx
+import matplotlib.pyplot as plt
+from Genome_extremities_and_adjacencies import Extremities_and_adjacencies
 from Biological_Constraints import  Constraints
-from ForeignDNA import Foreign_DNA
+from networkx.drawing.nx_agraph import graphviz_layout
 
 
 get_adjacencies = Extremities_and_adjacencies()
@@ -27,8 +29,6 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
     '''
     node = current_node
     intergen = Constraints(genomeB)
-    foreign_dna = Foreign_DNA()
-    fragments = foreign_dna.foreign_dna_pool(genomeA, genomeB)
     intergenic_regions = intergen.inter_generator(adjacencies_genomeB)
     adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(genomeA)
     operations_with_intergenic = intergen.operations_intergenic_regions(intergenic_regions, adjacencies_genomeA, adjacencies_genomeB)
@@ -177,9 +177,6 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                         op_weight = 0.05 * W2 * weights[3]
                         
                     
-                    elif op_type == 'fDNA':
-                        operation_type = op_type
-                        op_weight =  0.5 * W2 * weights[5]
                         
                     
 
@@ -280,9 +277,6 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                         op_weight = 0.05 * W2 * weights[3]
                         
                     
-                    elif op_type == 'fDNA':
-                        operation_type = op_type
-                        op_weight =  0.5 * W2 * weights[5]
                        
                         
                         
@@ -319,42 +313,114 @@ def check_hash_key(child_state, hash_table):
     return False, None
 
 
+# def build_network(hash_table):
+#     """
+#     Builds a directed graph network based on a given hash table.
+
+#     This function takes a hash table as input and constructs a directed graph (DiGraph) network. It extracts unique nodes and their children from the hash table, creating nodes in the network for each unique value. Weighted edges are added to represent the relationships between nodes and their children.
+
+#     Parameters:
+#         hash_table (dict): A hash table containing nodes and their children with associated weights.
+
+#     Returns:
+#         networkx.DiGraph: A directed graph representing the relationships between nodes and their children.
+#     """
+
+#     network = DiGraph()
+#     nodes = []
+#     weighted_edges = []
+#     weights = []
+
+#     list_of_values = hash_table.values()
+
+#     for value in list_of_values:
+#         if value not in nodes:
+#             nodes.append(value)
+#     for node in nodes:
+#         number_of_children = len(node.children)
+#         network.add_node(node)
+
+#         for i in range(0, number_of_children):
+#             weighted_edges.append((node, node.children[i], node.children_weights[i]))
+#             weights.append(node.children_weights[i])
+
+#     network.add_weighted_edges_from(weighted_edges)
+
+#     return network
+
+
+
+
+
 def build_network(hash_table):
     """
-    Builds a directed graph network based on a given hash table.
+    Builds a directed acyclic graph (DAG) based on a given hash table.
 
-    This function takes a hash table as input and constructs a directed graph (DiGraph) network. It extracts unique nodes and their children from the hash table, creating nodes in the network for each unique value. Weighted edges are added to represent the relationships between nodes and their children.
+    This function takes a hash table as input and constructs a directed acyclic graph (DiGraph). It extracts unique nodes and their children from the hash table, creating nodes in the network for each unique value. Weighted edges are added to represent the relationships between nodes and their children.
 
     Parameters:
         hash_table (dict): A hash table containing nodes and their children with associated weights.
 
     Returns:
-        networkx.DiGraph: A directed graph representing the relationships between nodes and their children.
+        networkx.DiGraph: A directed acyclic graph representing the relationships between nodes and their children.
     """
-
     network = DiGraph()
-    nodes = []
-    weighted_edges = []
-    weights = []
-
     list_of_values = hash_table.values()
 
-    for value in list_of_values:
-        if value not in nodes:
-            nodes.append(value)
-    for node in nodes:
-        number_of_children = len(node.children)
-        network.add_node(node)
+    for node in list_of_values:
+        network.add_node(str(node))  # Convert node to string
+        for i, child in enumerate(node.children):
+            network.add_edge(str(node), str(child), weight=node.children_weights[i])
 
-        for i in range(0, number_of_children):
-            weighted_edges.append((node, node.children[i], node.children_weights[i]))
-            weights.append(node.children_weights[i])
-
-    network.add_weighted_edges_from(weighted_edges)
+    # Check if the graph is a DAG
+    if not nx.is_directed_acyclic_graph(network):
+        raise ValueError("The constructed network is not a DAG.")
 
     return network
 
+def visualize_network(network, filename=None):
+    """
+    Visualizes the network using matplotlib and saves it to a file if a filename is provided.
 
+    Parameters:
+        network (networkx.DiGraph): The directed graph network to visualize.
+        filename (str, optional): The filename to save the visualization to. Defaults to None.
+    """
+    #pos = nx.spring_layout(network)
+    network.add_edges_from([(i, i + 1) for i in range(100)] + [(i, i + 2) for i in range(98)])
 
+    # Get the first 100 nodes (or fewer if the graph has less than 100 nodes)
+    nodes_to_include = list(network.nodes())[:100]
 
+    # Create a subgraph with only the specified nodes
+    H = network.subgraph(nodes_to_include).copy()
+    pos = graphviz_layout(H, prog='dot')
+    edge_labels = {(u, v): d['weight'] for u, v, d in network.edges(data=True)}
+    plt.figure(figsize=(12, 12))
+    #nx.draw(network, pos, with_labels=False, node_size=30, node_color='lightblue', font_size=10, font_weight='bold')
+    nx.draw(network, pos, with_labels=False, node_size=50, node_color='lightblue', font_size=10, font_weight='bold', arrows=True)
+    nx.draw_networkx_edge_labels(network, pos, edge_labels=edge_labels)
+    if filename:
+        plt.savefig(filename)
+    plt.show()
 
+def save_network_to_file(network, filename):
+    """
+    Saves the network to a file in GML or GraphML format based on the file extension.
+
+    Parameters:
+        network (networkx.DiGraph): The directed graph network to save.
+        filename (str): The filename to save the network to.
+    """
+    if filename.endswith('.gml'):
+        nx.write_gml(network, filename)
+    elif filename.endswith('.graphml'):
+        nx.write_graphml(network, filename)
+    else:
+        raise ValueError("Unsupported file format. Use .gml or .graphml.")
+
+# Example usage:
+# hash_table = {}  # This should be populated by build_hash_table function
+# network = build_network(hash_table)
+# visualize_network(network, "network_visualization.png")
+# save_network_to_file(network, "network.gml")

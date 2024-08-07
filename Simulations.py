@@ -1,148 +1,91 @@
-import GenomeEvolver
+
 from networkx import all_shortest_paths
-from Class_wrDCJ_Node import Node
-from Class_extremities_and_adjacencies import Extremities_and_adjacencies
-import New_Network_wrDCJ
-from Class_evolve import Evolve
-import time
-import sys
+from new_Node import Node
+from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
+import Path_network
 import random
-stdoutOrigin = sys.stdout
-sys.stdout = open("T3_same_as_solution_e2.txt","w")
-randomized = 'Random weight ratios'
-one_to_one = 'One to one weight ratios'
-same_as_solution = 'Same as solution weight ratios'
-#####################
-number_of_simulations = 1
-number_of_sequence_blocks = 9
-number_of_rearrangements = 8
-type_of_weight_ratio = same_as_solution
+import time
+import argparse
+import sys
+import tracemalloc
 
 
+def run_simulation(source_genome, target_genome, weight_ratios, fragments, output_file):
+    t0 = time.time()
+    tracemalloc.start()
 
+    stdoutOrigin = sys.stdout
+    sys.stdout = open(output_file, 'w')
 
-results = []
-t0 = time.time()
+    get_adjacencies = Extremities_and_adjacencies()
 
-get_adjacencies = Extremities_and_adjacencies()
+    adjacencies_genomeA = get_adjacencies.ordered_and_sorted_adjacencies(source_genome)
+    adjacencies_genomeB = get_adjacencies.ordered_and_sorted_adjacencies(target_genome)
 
-number_of_solutions_found = 0
-get_adjacencies_and_genomes = Extremities_and_adjacencies()
+    start_node = Node(adjacencies_genomeA)
+    target_node = Node(adjacencies_genomeB)
 
-for i in range(0, number_of_simulations):
-    #print('SIMULATION NUMBER: ', i, '*****************************************************************')
-   # print('num of sb, ', number_of_sequence_blocks)
-    target_genome = GenomeEvolver.create_target_genome(number_of_sequence_blocks)
-    evolving_genome = Evolve(target_genome)
-    rearrangement_series = evolving_genome.evolve_with_random_rearrangements(number_of_rearrangements)
-    reverse_the_series = GenomeEvolver.reverse_rearrangement_series(target_genome, rearrangement_series)
-    source_genome = reverse_the_series[1]
-    solution = reverse_the_series[2]
-    target_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(target_genome)
-    source_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(source_genome)
+    hash_table = {}
+    hash_key_start = hash(str(start_node.state))
+    hash_key_target = hash(str(target_node.state))
+    hash_table.update({hash_key_start: start_node})
+    hash_table.update({hash_key_target: target_node})
 
-    solution_operations = [d for (c, d) in solution]
-    sol_inv = sol_trp = sol_b_trl = sol_u_trl = sol_fis = sol_fus = 0
-    for element in solution_operations:
-        if element[0] == 'inv':
-            sol_inv += 1
-        elif element[0] == 'trp0':
-            sol_trp += 1
-        elif element[0] == 'b_trl':
-            sol_b_trl += 1
-        elif element[0] == 'u_trl':
-            sol_u_trl += 1
-        elif element[0] == 'fis':
-            sol_fis += 1
-        elif element[0] == 'fus':
-            sol_fus += 1
-
-
-    solution_ratios = [sol_inv, sol_trp, sol_b_trl, sol_u_trl, sol_fis, sol_fus]
-    one_to_one_ratios = [1,1,1,1,1,1]
-    random_ratios = []
-    for i in range(6):
-        random_ratios.append(random.randint(0,10))
-
-    if type_of_weight_ratio == randomized:
-        weight_ratios = random_ratios
-    elif type_of_weight_ratio == one_to_one:
-        weight_ratios =one_to_one_ratios
-    elif type_of_weight_ratio == same_as_solution:
-        weight_ratios = solution_ratios
-
-    #weight_ratios = solution_ratios
-    while hash(str(source_adjacencies)) == hash(str(target_adjacencies)):
-        target_genome = GenomeEvolver.create_target_genome(number_of_sequence_blocks)
-        evolving_genome = Evolve(target_genome)
-        rearrangement_series = evolving_genome.evolve_with_random_rearrangements(number_of_rearrangements)
-        reverse_the_series = GenomeEvolver.reverse_rearrangement_series(target_genome, rearrangement_series)
-        source_genome = reverse_the_series[1]
-        solution = reverse_the_series[2]
-        target_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(target_genome)
-        source_adjacencies = get_adjacencies_and_genomes.adjacencies_ordered_and_sorted(source_genome)
-
-
-    #create start and target node for network
-    source_node = Node(source_adjacencies)
-    target_node = Node(target_adjacencies)
-
-    #create dictionary of solutions
-    dictionary_of_intermediates = {}
-    source_key = hash(str(source_node.state))
-    target_key = hash(str(target_node.state))
-
-    dictionary_of_intermediates.update({source_key:source_node})
-    dictionary_of_intermediates.update({target_key:target_node})
-    # print('^^^^^^^^^^^^')
-    # print('source: ', source_node)
-    # print('target: ', target_node)
-    # print('source key: ', source_key)
-    # print('target_key: ', target_key)
-    # print('dict:')
-    # print(dictionary_of_intermediates)
-    # print('^^^^^^^^^^^^^^^')
-
-    #finding operation weights
-    max_number = max(weight_ratios)
+    max_number = max(weight_ratios[0])
     weights = []
-    for element in weight_ratios:
+    for element in weight_ratios[0]:
         if element == 0:
             weights.append(max_number ^ 2)
         else:
             weights.append(max_number / element)
 
-    New_Network_wrDCJ.build_hash_table(source_node, dictionary_of_intermediates, target_adjacencies, weights)
+    Path_network.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights, target_genome, source_genome)
+    network = Path_network.build_network(hash_table)
 
-    # print('*****************')
-    # print(dictionary_of_intermediates)
-    # print()
+    shortest_paths = list(all_shortest_paths(network, start_node, target_node, weight='weight'))
 
-    network = New_Network_wrDCJ.build_network(dictionary_of_intermediates)
+    tot_b_trl = tot_u_trl = tot_inv = tot_trp1 = tot_trp2 = tot_fus = tot_fis = tot_ins = tot_dele = tot_dup = 0
 
-
-    shortest_paths = (list(all_shortest_paths(network, source_node, target_node, weight='weight')))
-
-    number_of_shortest_paths = len(shortest_paths)
-
-    rearrangement_scenarios_found = []
-
-    j=1
-    tot_inv=tot_trp1=tot_trp2=tot_b_trl=tot_u_trl=tot_fus=tot_fis=0
+    Paths_state = []
+    Paths_state_weight = []
 
     for path in shortest_paths:
         path_state = []
+        path_state_weight = []
 
-        i=inv=trp1=trp2=b_trl=u_trl=fis=fus=0
-
+        i = 0
         while i < len(path):
-            current_intermediate = path[i]
+            current = path[i]
             if i == 0:
                 operation_type = 'none, this is the source genome'
-                # operation_weight = 'N/A'
+                operation_weight = 'N/A'
                 operation = 'N/A'
             else:
-                x = path[i - 1].children.index(current_intermediate)
+                x = path[i - 1].children.index(current)
+
+                operation_type = path[i - 1].children_operations[x][1]
+                operation_weight = path[i - 1].children_weights[x]
+                operation = path[i - 1].children_operations[x][0]
+
+            adjacencies = current.state
+            genome = get_adjacencies.find_genome(adjacencies)
+            path_state_weight.append((genome, ((operation_type, operation), operation_weight)))
+
+            path_state.append((genome, (operation_type, operation)))
+
+            i += 1
+        Paths_state.append((path_state))
+        Paths_state_weight.append(path_state_weight)
+
+    for path in shortest_paths:
+        i = 0
+        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = ins = dele = dup = 0
+        while i < len(path):
+            current = path[i]
+            if i == 0:
+                pass
+            else:
+                x = path[i - 1].children.index(current)
                 operation_type = path[i - 1].children_operations[x][1]
                 if operation_type == 'b_trl':
                     b_trl += 1
@@ -158,162 +101,90 @@ for i in range(0, number_of_simulations):
                     fus += 1
                 elif operation_type == 'fis':
                     fis += 1
-
-                ###
-                x = path[i - 1].children.index(current_intermediate)
-                operation_type = path[i - 1].children_operations[x][1]
-                operation = path[i - 1].children_operations[x][0]
-
-                ###
-
-            tot_b_trl += b_trl
-            tot_u_trl += u_trl
-            tot_inv += inv
-            tot_trp1 += trp1
-            tot_trp2 += trp2
-            tot_fus += fus
-            tot_fis += fis
-            j += 1
-
-            ###
-            adjacencies = current_intermediate.state
-            genome = get_adjacencies.adjacencies_to_genome(adjacencies)
-            path_state.append((genome, (operation_type, operation)))
-            ###
-
+                elif operation_type == 'ins':
+                    ins += 1
+                elif operation_type == 'dele':
+                    dele += 1
+                elif operation_type == 'dup':
+                    dup += 1
             i += 1
 
-        rearrangement_scenarios_found.append((path_state))
+        tot_b_trl += b_trl
+        tot_u_trl += u_trl
+        tot_inv += inv
+        tot_trp1 += trp1
+        tot_trp2 += trp2
+        tot_fus += fus
+        tot_fis += fis
+        tot_ins += ins
+        tot_dele += dele
+        tot_dup += dup
 
-    ave_b_trl = tot_b_trl / len(shortest_paths)
-    ave_u_trl = tot_u_trl / len(shortest_paths)
-    ave_inv = tot_inv / len(shortest_paths)
-    ave_trp1 = tot_trp1 / len(shortest_paths)
-    ave_trp2 = tot_trp2 / len(shortest_paths)
-    ave_fus = tot_fus / len(shortest_paths)
-    ave_fis = tot_fis / len(shortest_paths)
+    t1 = time.time()
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
 
-    ave_number_of_operations = 0
-    paths_operations = []
-   # print("*********", rearrangement_scenarios_found[0])
-    for element in rearrangement_scenarios_found:
-        path_operations = [y for (x, y) in element]
-        paths_operations.append(path_operations)
-        ave_num_of_ops_per_series=0
-        for element in path_operations:
-            if element[0] == 'trp1':
-                pass
-            elif element[0] == 'none, this is the source genome':
-                pass
-            else:
-                ave_num_of_ops_per_series+=1
-        ave_number_of_operations+=ave_num_of_ops_per_series
-    ave_number_of_operations = ave_number_of_operations/len(rearrangement_scenarios_found)
+    num_paths = len(shortest_paths)
+    avg_edit_distance = float(tot_inv / num_paths) + float(tot_trp1 / num_paths) + float(2 * (tot_trp2 / num_paths)) + float(tot_b_trl / num_paths) + float(tot_u_trl / num_paths) + float(tot_fis / num_paths) + float(tot_fus / num_paths) + float(tot_ins / num_paths) + float(tot_dele / num_paths) + float(tot_dup / num_paths)
 
+    print(f"Number of most likely biological paths (solutions): {num_paths}")
+    print(f"Average number of evolutionary events per solution (Edit Distance): {avg_edit_distance}")
+    print(f"Average number of each operation per solution:")
+    print(f"Inversions: {float(tot_inv / num_paths)}  Transpositions type 1: {float(tot_trp1 / num_paths)}  Transpositions type 2: {float(tot_trp2 / num_paths)}  Balanced translocations: {float(tot_b_trl / num_paths)}  Unbalanced translocations: {float(tot_u_trl / num_paths)}  Fusions: {float(tot_fus / num_paths)}  Fissions: {float(tot_fis / num_paths)}  Insertions: {float(tot_ins / num_paths)}  Deletions: {float(tot_dele / num_paths)}  Duplications: {float(tot_dup / num_paths)}")
+    print(f"Average time per simulation: {t1 - t0} seconds")
+    print(f"Average memory used: {current / 10**6} MB, Peak memory: {peak / 10**6} MB")
 
+    sys.stdout.close()
+    sys.stdout = stdoutOrigin
 
-
-
-    #number_of_operations = len(shortest_paths[0]) - 1
-    results.append(
-        [ave_number_of_operations, len(shortest_paths), ave_inv, ave_trp1, ave_trp2, ave_b_trl, ave_u_trl, ave_fus,
-         ave_fis])
-
-    network.clear()
-
-    # paths_operations = []
-    # for element in rearrangement_scenarios_found:
-    #     path_operations = [y for (x, y) in element]
-    #
-    #     paths_operations.append(path_operations)
+    return num_paths, avg_edit_distance, t1 - t0, current / 10**6, peak / 10**6
 
 
-    # solution_operations = [d for (c, d) in solution]
-    # sol_inv=sol_trp=sol_b_trl=sol_u_trl=sol_fis=sol_fus=0
-    # for element in solution_operations:
-    #     if element[0] == 'inv':
-    #         sol_inv+=1
-    #     elif element[0] == 'trp0':
-    #         sol_trp+=1
-    #     elif element[0] == 'b_trl':
-    #         sol_b_trl+=1
-    #     elif element[0] == 'u_trl':
-    #         sol_u_trl+=1
-    #     elif element[0] == 'fis':
-    #         sol_fis+=1
-    #     else:
-    #         sol_fus+=1
+def main():
+    parser = argparse.ArgumentParser(description='A program that outputs all the optimal set of rearrangement operations that can describe the evolution of one genome into another')
+    parser.add_argument("-r", help='the ratios in which each rearrangement is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions, insertions, deletions, duplications', dest='ratios', required=True)
+    parser.add_argument("-f", help="this is the set of foreign DNA fragments that are to be inserted into the genome", dest="fDNA", required=True)
+    args = parser.parse_args()
 
-    if solution_operations in paths_operations:
-        number_of_solutions_found += 1
+    with open(args.ratios) as f:
+        weight_ratios = [list(map(int, line.strip().split(','))) for line in f]
+    with open(args.fDNA) as f:
+        fragments = [line.strip() for line in f]
 
+    num_simulations = 10000
+    num_pairs = 15
 
-simulation_average = []
-average_number_of_operations = 0
-average_number_of_paths = 0
-average_number_of_inv = 0
-average_number_of_trp1 = 0
-average_number_of_trp2 = 0
-average_number_of_b_trl = 0
-average_number_of_u_trl = 0
-average_number_of_fus = 0
-average_number_of_fis = 0
-for element in results:
-    average_number_of_operations += element[0]
-    average_number_of_paths += element[1]
-    average_number_of_inv += element[2]
-    average_number_of_trp1 += element[3]
-    average_number_of_trp2 += element[4]
-    average_number_of_b_trl += element[5]
-    average_number_of_u_trl += element[6]
-    average_number_of_fus += element[7]
-    average_number_of_fis += element[8]
+    for pair_index in range(1, num_pairs + 1):
+        source_file = f"T{pair_index}_A.txt"
+        target_file = f"T{pair_index}_B.txt"
+        output_file = f"T{pair_index}_results.txt"
 
-average_number_of_operations = average_number_of_operations / number_of_simulations
-average_number_of_paths = average_number_of_paths / number_of_simulations
-average_number_of_inv = average_number_of_inv / number_of_simulations
-average_number_of_trp1 = average_number_of_trp1 / number_of_simulations
-average_number_of_trp2 = average_number_of_trp2 / number_of_simulations
-average_number_of_b_trl = average_number_of_b_trl / number_of_simulations
-average_number_of_u_trl = average_number_of_u_trl / number_of_simulations
-average_number_of_fus = average_number_of_fus / number_of_simulations
-average_number_of_fis = average_number_of_fis / number_of_simulations
+        with open(source_file) as f:
+            source_genome = [list(map(int, line.strip().split(','))) for line in f]
+        with open(target_file) as f:
+            target_genome = [list(map(int, line.strip().split(','))) for line in f]
 
-ave_number_per_op = [average_number_of_inv, average_number_of_trp1, average_number_of_b_trl, average_number_of_u_trl, average_number_of_fis, average_number_of_fus, average_number_of_trp2]
-num_per_op_ratios = []
-tot_ave_op_num = 0
-for element in ave_number_per_op:
-    tot_ave_op_num+= element
+        total_paths = 0
+        total_edit_distance = 0
+        total_time = 0
+        total_memory = 0
+        total_peak_memory = 0
 
-for element in ave_number_per_op:
-    ratio = element/tot_ave_op_num*average_number_of_operations
-    num_per_op_ratios.append(ratio)
+        for _ in range(num_simulations):
+            num_paths, avg_edit_distance, exec_time, memory_used, peak_memory = run_simulation(source_genome, target_genome, weight_ratios, fragments, output_file)
+            total_paths += num_paths
+            total_edit_distance += avg_edit_distance
+            total_time += exec_time
+            total_memory += memory_used
+            total_peak_memory += peak_memory
+
+        with open(output_file, 'w') as out_file:
+            out_file.write(f"Average number of most likely biological paths: {total_paths / num_simulations}\n")
+            out_file.write(f"Average number of evolutionary events per solution: {total_edit_distance / num_simulations}\n")
+            out_file.write(f"Average time per simulation: {total_time / num_simulations} seconds\n")
+            out_file.write(f"Average memory used per simulation: {total_memory / num_simulations} MB\n")
+            out_file.write(f"Average peak memory used per simulation: {total_peak_memory / num_simulations} MB\n")
 
 
-
-t1 = time.time()
-print('##########################################################################################################')
-print()
-print('time: ', t1-t0)
-print()
-print('number of simulations: ', number_of_simulations)
-print('number of sequence blocks: ', number_of_sequence_blocks)
-print('number of rearrangements: ', number_of_rearrangements)
-print('type of weighting ratio: ', type_of_weight_ratio)
-print()
-print('average number of solutions: ', average_number_of_paths)
-print()
-print('average solution length: ' ,average_number_of_operations)
-print()
-print('percentage time true solution was found: ',(number_of_solutions_found/number_of_simulations)*100)
-
-
-print()
-print('ratios as: inv:trp1:b_trl:u_trl:fis:fus:trp2')
-print(num_per_op_ratios)
-
-
-print('##########################################################################################################')
-
-sys.stdout.close()
-sys.stdout=stdoutOrigin
+if __name__ == "__main__":
+    main()

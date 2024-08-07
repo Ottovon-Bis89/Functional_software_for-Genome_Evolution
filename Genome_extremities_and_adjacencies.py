@@ -20,8 +20,8 @@ class Extremities_and_adjacencies:
         2. Iterate through each chromosome in the genome.
             a. Initialize an empty list `chromosome_gene_extremities` to store gene extremities for the current chromosome.
             b. Iterate through each marker in the chromosome.
-                i. If the marker is an integer and greater than or equal to 0, add (marker + 0.5) to the gene extremities.
-                ii. If the marker is a string and does not contain '*', add (abs(int(marker)) + 0.5) to the gene extremities.
+                i. If the marker is an integer and greater than or equal to 0, add (marker_int + 0.5) to the gene extremities.
+                ii. If the marker  does not meet the first condtion, add (abs(marker_int) + 0.5) to the gene extremities.
             c. Add the gene extremities for the current chromosome to `genome_gene_extremities`.
         3. Return the final list of gene extremities for each chromosome in the genome.
 
@@ -46,8 +46,9 @@ class Extremities_and_adjacencies:
             genome_gene_extremities.append(chromosome_gene_extremities)
                
             
-
         return genome_gene_extremities
+    
+
 
     def create_adjacency_list(self, genome):
 
@@ -101,22 +102,22 @@ class Extremities_and_adjacencies:
         - The input genome should be a valid sequence for accurate results.
         """
         adjacencies = Extremities_and_adjacencies.create_adjacency_list(self, genome)
-        adjs = []
+        adjacys = []
         telomeres = []
         for element in adjacencies:
             if isinstance(element, tuple):
                 if int(element[0]) < int(element[1]):
-                    adjs.append(element)
+                    adjacys.append(element)
                 else:
-                    adjs.append((element[1], element[0]))
+                    adjacys.append((element[1], element[0]))
             else:
                 telomeres.append(element)
 
        
-        adjs.sort()
+        adjacys.sort()
        
         telomeres.sort()
-        sorted_adjacencies = telomeres+adjs
+        sorted_adjacencies = telomeres+adjacys
 
 
         return sorted_adjacencies

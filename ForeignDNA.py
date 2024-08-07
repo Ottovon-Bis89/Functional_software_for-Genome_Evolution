@@ -105,4 +105,4 @@ if __name__ == "__main__":
 
 
 # commandline use
-# python3 main.py T8_A.txt T8_B.txt output.txt --num_fragments 3 (omit fragments arguement to use default value)
+# python3 scriptname source_genome.txt target_genome.txt outputfile.txt --num_fragments (omit fragments arguement to use default value)

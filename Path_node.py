@@ -466,11 +466,8 @@ class Node:
 
                         if adjacency not in chromosome:
                             chromosome.append(adjacency)
-                            adjacency_index = chromosome.index(adjacency)
-                            if adjacency_index != 0 and adjacency_index != len(chromosome) - 1:
-                                operation_type = 'ins'
-                            else:
-                                operation_type = 'u_trl'
+                            operation_type = 'u_trl'
+
 
         else:
             print("Error in take_action function")
@@ -486,7 +483,7 @@ class Node:
         Checks if the adjacency lists of two genomes are equivalent.
 
         Parameters:
-        - adjacencies_genomeB (list): The adjacency list of the second genome to compare.
+        - adjacencies_genomeB (list): The adjacency list of the second genome (target genome) to compare.
 
         Returns:
         - bool: True if the adjacency lists are equivalent, False otherwise.
@@ -557,7 +554,7 @@ class Node:
         """
         Retrieves a list of decircularization operations based on the provided adjacencies for Genome B.
 
-        This method analyzes legal operations for adjacencies_genomeB and identifies decircularization operations, 
+        This method analyzes legal operations for adjacencies from target genome (genomeB) and identifies decircularization operations, 
         which involve removing adjacency connections from circular chromosomes.
 
         Parameters:

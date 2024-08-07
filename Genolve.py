@@ -1,11 +1,12 @@
 from networkx import all_shortest_paths
-from new_Node import Node
-from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
-import New_Network_wrDCJ
+from Path_node import Node
+from Genome_extremities_and_adjacencies import Extremities_and_adjacencies
+import Path_network
 import random
 import time
 import argparse
 import sys
+from tqdm import tqdm
 
 t0 = time.time()
 
@@ -63,7 +64,7 @@ def run(args):
     hash_table.update({hash_key_start: start_node})
     hash_table.update({hash_key_target: target_node})
 
-    # finding rearrangement weights
+    # Events weights
     max_number = max(weight_ratios[0])
     weights = []
     for element in weight_ratios[0]:
@@ -72,11 +73,16 @@ def run(args):
         else:
             weights.append(max_number / element)
 
-    New_Network_wrDCJ.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights, genomeB, genomeA)
+    Path_network.build_hash_table(start_node, hash_table, adjacencies_genomeB, weights, genomeB, genomeA)
 
-    network = New_Network_wrDCJ.build_network(hash_table)
+    network = Path_network.build_network(hash_table)
 
-    shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
+    # Visualize and save the DAG using functions from Path_network
+    Path_network.visualize_network(network, "network_visualization.png")
+    Path_network.save_network_to_file(network, "network.gml")
+
+    #shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
+    shortest_paths = (list(all_shortest_paths(network, str(start_node), str(target_node), weight='weight')))
 
     j = 1
     tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins =tot_dele =tot_dup  =0  
@@ -84,7 +90,7 @@ def run(args):
     Paths_state = []
     Paths_state_weight = []
    
-    for path in shortest_paths:
+    for path in tqdm(shortest_paths, desc="Processing Shortest Paths"):
         path_state = []
         path_state_weight = []
 
@@ -112,7 +118,7 @@ def run(args):
         Paths_state.append((path_state))
         Paths_state_weight.append(path_state_weight)
 
-    for path in shortest_paths:
+    for path in tqdm(shortest_paths, desc="Calculating Evolutionary Events Metrics"):
 
         i = 0
         b_trl = u_trl = inv = trp1 = trp2 = fus = fis = ins = dele = dup = 0   
@@ -171,7 +177,7 @@ def run(args):
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print('\n')
-    print('Average number of each operation per solution:')
+    print('Average number of each event per solution:')
     print('Inversions: ', float(tot_inv / len(shortest_paths)), '  Transpositions type 1: ',
           float(tot_trp1 / len(shortest_paths)), '  Transpositions type 2: ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
@@ -180,7 +186,6 @@ def run(args):
     
     print('\n\n')
     print('Solutions: ')
-    print('\n')
     path_counter = 1
     for path in Paths_state:
         print('\n')
@@ -195,28 +200,6 @@ def run(args):
             
             valid_chromosomes = [chrom for chrom in new_genome if isinstance(chrom, list)]
             
-            # if valid_chromosomes:
-            #     if inserted_fragment is None:
-            #         chosen_chromosome_index = random.randint(0, len(valid_chromosomes) - 1) 
-            #         chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
-            #         fragment = random.choice(fragments)
-            #         position = random.randint(0, len(chosen_chromosome) - 1)
-            #         chosen_chromosome.insert(position, fragment)
-            #         inserted_fragment = fragment
-                
-            #     if 0 <= chosen_chromosome_index < len(valid_chromosomes) and 0 <= chosen_chromosome_index < len(new_genome):
-            #         chosen_chromosome = valid_chromosomes[chosen_chromosome_index]
-            #         if inserted_fragment not in chosen_chromosome:
-            #             position = random.randint(0, len(chosen_chromosome))
-            #             chosen_chromosome.insert(position, inserted_fragment)
-            #         new_genome[chosen_chromosome_index] = chosen_chromosome
-            # else:
-            #     print("No valid chromosomes available.")
-                
-            
-            # new_genome = tuple(new_genome) if isinstance(genome, tuple) else new_genome
-            
-            # print(f"[{new_genome}], {operation}")
             if valid_chromosomes:
                 
                 if inserted_fragment is None:
@@ -253,13 +236,14 @@ def run(args):
                 print("No valid chromosomes available.")
 
             new_genome = tuple(new_genome) if isinstance(new_genome, tuple) else new_genome
-            
+
             print(f"({new_genome}, {operation})")
         path_counter += 1
 
 
     print('\n\n')
-    print('***********************************************************************************End of Analysis*********************************************************************************************')
+    print('****************************************************************************************End of Analysis****************************************************************************************')
+    print('*** ins = insertion, dele = deletion, dup = duplication, inv = inversion, fis = fission, fus = fusion, u_trl = unbalance translocation, b_trl = balance translocation, trp = transposition ***')
 
     sys.stdout.close()
     sys.stdout = stdoutOrigin
@@ -267,20 +251,21 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='A program that outputs all the optimal set of rearrangment operations that can descripe the evolution of one genome into another')
-    parser.add_argument("-t", help="this is the set of genes representing the target genome", dest='target_genome',
+        description='A program that outputs all the likely biological pathways that describes the evolution of one genome into another')
+    parser.add_argument("-t", help="this is the set of genes(sequence blocks) representing the target genome", dest='target_genome',
                         required=True)
-    parser.add_argument("-s", help="this is the set of genes representing the source genome",
+    parser.add_argument("-s", help="this is the set of genes(sequence blocks) representing the source genome",
                         dest='source_genome', required=True, )
     parser.add_argument("-r",
-                        help='the ratios in which each rearrangement is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions, insertions, deletions,duplications',
+                        help='the ratios in which each evolutionary events is expected to occur in the order inversions, transpositions, balanced translocations, unbalanced translocations, fissions, fusions, insertions, deletions,duplications',
                         dest='ratios', required=True)
     parser.add_argument("-f", help="this is the set of foreign DNA fragments that are to be inserted into the genome", dest= "fDNA", required=True)
-    parser.add_argument("-o", help="the name of the output file that will contain the set of rearrangements",
+    parser.add_argument("-o", help="the name of the output file that will contain the set of evolutionary events that transformed the source genome into the target genome (solutions)",
                         dest='output_file', required=True)
     parser.set_defaults(func=run)
     args = parser.parse_args()
     args.func(args)
+
 
 
 if __name__ == "__main__":
