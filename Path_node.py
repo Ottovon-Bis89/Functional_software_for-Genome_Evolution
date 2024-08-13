@@ -354,9 +354,7 @@ class Node:
                     state_copy.append(operation[2])
                 else:
                     state_copy.append((operation[2][1], operation[2][0]))
-                    
-                                     
-
+                
                 operation_type = 'fus'
 
         #other rearrangements(inversions, transpositions, balanced translcations, insertions, deletions, duplications)
@@ -385,7 +383,7 @@ class Node:
                 circular_chromosomes = chromosomes[1]
 
                 if circular_chromosomes:
-                    operation_type = 'trp_reinsertion'
+                    operation_type = 'trp_reinsertion' # linearization of circular chromosome
 
                 else:
                     linear_chromosomes = self.find_chromosomes(self.state)[0]
@@ -430,7 +428,7 @@ class Node:
 
                 #transpotion to end of chromosome
                 if circular_chromosomes:
-                    operation_type = 'trp_reinsertion'
+                    operation_type = 'trp_reinsertion' #linearization of circular chromosome
                 else:
                     linear_chromosomes = chromosomes[0]
 

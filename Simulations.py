@@ -1,7 +1,7 @@
 
 from networkx import all_shortest_paths
-from new_Node import Node
-from Rearrangement_extremities_and_adjacencies import Extremities_and_adjacencies
+from Path_node import Node
+from Genome_extremities_and_adjacencies import Extremities_and_adjacencies
 import Path_network
 import random
 import time

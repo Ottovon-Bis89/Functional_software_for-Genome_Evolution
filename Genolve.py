@@ -77,15 +77,12 @@ def run(args):
 
     network = Path_network.build_network(hash_table)
 
-    # Visualize and save the DAG using functions from Path_network
-    Path_network.visualize_network(network, "network_visualization.png")
-    Path_network.save_network_to_file(network, "network.gml")
 
     #shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
-    shortest_paths = (list(all_shortest_paths(network, str(start_node), str(target_node), weight='weight')))
+    shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
 
     j = 1
-    tot_b_trl =tot_u_trl =tot_inv =tot_trp1 =tot_trp2 =tot_fus =tot_fis = tot_ins =tot_dele =tot_dup  =0  
+    tot_b_trl = tot_u_trl = tot_inv = tot_trp0 = tot_trp1 = tot_trp2 = tot_fus = tot_fis = tot_ins = tot_dele = tot_dup  = 0  
 
     Paths_state = []
     Paths_state_weight = []
@@ -100,7 +97,7 @@ def run(args):
             if i == 0:
                 operation_type = 'none, this is the source genome'
                 operation_weight = 'N/A'
-                operation = 'N/A'
+                operation = 'None'
             else:
                 x = path[i - 1].children.index(current)
 
@@ -118,10 +115,10 @@ def run(args):
         Paths_state.append((path_state))
         Paths_state_weight.append(path_state_weight)
 
-    for path in tqdm(shortest_paths, desc="Calculating Evolutionary Events Metrics"):
+    for path in tqdm(shortest_paths, desc="Calculating Genetic Events Metrics"):
 
         i = 0
-        b_trl = u_trl = inv = trp1 = trp2 = fus = fis = ins = dele = dup = 0   
+        b_trl = u_trl = inv = trp0 = trp1 = trp2 = fus = fis = ins = dele = dup = 0   
         while i < len(path):
 
             current = path[i]
@@ -136,6 +133,8 @@ def run(args):
                     u_trl += 1
                 elif operation_type == 'inv':
                     inv += 1
+                elif operation_type == 'trp0':
+                    trp0 += 1
                 elif operation_type == 'trp1':
                     trp1 += 1
                 elif operation_type == 'trp2':
@@ -155,6 +154,7 @@ def run(args):
         tot_b_trl += b_trl
         tot_u_trl += u_trl
         tot_inv += inv
+        tot_trp0 += trp0
         tot_trp1 += trp1
         tot_trp2 += trp2
         tot_fus += fus
@@ -172,14 +172,14 @@ def run(args):
     print('Number of most likely biological paths (solutions): ', len(shortest_paths))
     print('\n')
     print('Average number of evolutionary events per solution (Edit Distance): ',
-          float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
+          float(tot_inv / len(shortest_paths)) + float(tot_trp0 / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
               2 * (tot_trp2 / len(shortest_paths))) + float(tot_b_trl / len(shortest_paths)) + float(
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print('\n')
     print('Average number of each event per solution:')
-    print('Inversions: ', float(tot_inv / len(shortest_paths)), '  Transpositions type 1: ',
-          float(tot_trp1 / len(shortest_paths)), '  Transpositions type 2: ', float(tot_trp2 / len(shortest_paths)),
+    print('Inversions: ', float(tot_inv / len(shortest_paths)), 'Transpositions_type 0 (circularization):' , float(tot_trp0 / len(shortest_paths)),  'Transpositions_type 1 (Linearization): ',
+          float(tot_trp1 / len(shortest_paths)), '  Transpositions_type 2 (Block_interchange): ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
           float(tot_u_trl / len(shortest_paths)), '  Fusions: ', float(tot_fus / len(shortest_paths)), '  Fissions: ', float(tot_fis / len(shortest_paths)), 
           'Insertions: ', float(tot_ins/len(shortest_paths)), 'Deletions: ', float(tot_dele/len(shortest_paths)), 'Duplications: ', float(tot_dup/len(shortest_paths)))
@@ -203,7 +203,7 @@ def run(args):
             if valid_chromosomes:
                 
                 if inserted_fragment is None:
-                    num_fragments_to_insert = random.randint(1, 3) #change number of FDN fragments here
+                    num_fragments_to_insert = random.randint(1, 3) #change number of FDNA fragments here
                     num_fragments_to_insert = min(num_fragments_to_insert, len(valid_chromosomes))
 
                     inserted_fragments = []
