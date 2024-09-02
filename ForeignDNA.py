@@ -31,7 +31,7 @@ class Foreign_DNA:
         if len(difference) > 0:
             foreign_dna = difference[:]
             while len(foreign_dna) < 2 * len(difference):
-                gene = random.randint(1, 10)
+                gene = random.randint(1, 10) # change number of random integers here
                 if gene not in foreign_dna:
                     foreign_dna.append(gene)
         else:
@@ -102,7 +102,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 # commandline use
 # python3 scriptname source_genome.txt target_genome.txt outputfile.txt --num_fragments (omit fragments arguement to use default value)

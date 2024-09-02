@@ -125,7 +125,8 @@ class Node:
         chromosome = []
         i = 0
 
-        while len(telomeres) > 0:
+        # Process telomeres to form linear chromosomes
+        while telomeres:
 
             i += 1
             current = telomeres[0]
@@ -156,8 +157,8 @@ class Node:
                     chromosome.append(current)
                     linear_chromosomes.append(chromosome)
                     chromosome = []
-
-        while len(not_telomeres) > 0:
+        # Process non-telomeric adjacencies to form circular chromosomes
+        while not_telomeres:
             current = not_telomeres[0]  
            
             not_telomeres.remove(current)
@@ -209,18 +210,16 @@ class Node:
                     p , q = element
                     u = v = 0
                     
+                # Find markers in genome A that match either p or q
                     for marker in adjacencies_genomeA_copy:
                         if isinstance(marker, tuple):
-                            if marker[0] == p or marker[1] == p:
+                            if p in marker:
                                 u = marker
-
-                            if marker[0] == q or marker[1] == q:
+                            if q in marker:
                                 v = marker
 
-                    if u == 0:
-                        u = p
-                    if v == 0:
-                        v = q
+                    u = p if u == 0 else u
+                    v = q if v == 0 else v
 
                     if u != v:
                         adjacencies_genomeA_copy.append((p, q))
@@ -241,8 +240,9 @@ class Node:
                                 op_2_1 = (p, q) if p < q else (q, p)
                                 op_2_2 = (u_not_p, v_not_q) if u_not_p < v_not_q else (v_not_q, u_not_p)
                                 op_2 = (op_2_1, op_2_2) if op_2_1[0] < op_2_2[0] else (op_2_2, op_2_1)
-                                ordered_operation = (op_1, op_2)
 
+                                # Determine the operation and ensure it is unique
+                                ordered_operation = (op_1, op_2)
                                 if ordered_operation not in list_of_legal_operations:
                                     list_of_legal_operations.append((ordered_operation))
                                 else:
@@ -253,8 +253,9 @@ class Node:
 
                                 op_2_1 = (p, q) if p < q else (q,p)
                                 op_2 = (op_2_1, u_not_p)
-                                ordered_operation = ((u, v), op_2)
 
+                                # Determine the operation and ensure it is unique
+                                ordered_operation = ((u, v), op_2)
                                 if ordered_operation not in list_of_legal_operations:
                                     list_of_legal_operations.append((ordered_operation))
                                 else:
@@ -335,21 +336,25 @@ class Node:
         state_copy = self.state.copy()
         operation_type = None
 
-        #fision and  fusion operations to occur
+        # Handling fusion and fission operations
         if len(operation) == 3:
 
             if isinstance(operation[0], tuple):
 
+                 # Fission operation: splitting a tuple into two elements
                 state_copy.remove(operation[0])
                 state_copy.append(operation[1])
                 state_copy.append(operation[2])
-               
                 operation_type = 'fis'
+
             else:
+                
+                # Deletion operation: removing elements from the tuple
                 state_copy.remove(operation[0])
                 state_copy.remove(operation[1])
                 operation_type = 'dele'
                 
+                # Fusion operation: merging two elements into a tuple
                 if operation[2][0] < operation[2][1]:
                     state_copy.append(operation[2])
                 else:
@@ -357,11 +362,13 @@ class Node:
                 
                 operation_type = 'fus'
 
-        #other rearrangements(inversions, transpositions, balanced translcations, insertions, deletions, duplications)
+
+        # Handling rearrangements like inversion, transpositions, translocations
         elif len(operation) == 2:
           
             if isinstance(operation[0][0], tuple) and isinstance(operation[0][1], tuple):
                   
+                  # Removing old adjacencies and adding new ones
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
 
@@ -412,13 +419,13 @@ class Node:
                         pass
                                         
 
-            # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
+            #Handling rearrangements like unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
             elif not isinstance(operation[0][0], tuple) or not isinstance(operation[0][-1], tuple):
 
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
 
-                # ensure gene extremities in correct order for downstream comparisions with genome B extremities
+                # ensure gene extremities are  in correct order for downstream comparisions with genome B extremities
                 if operation[1][0][0] < operation[1][0][1]:
 
                     state_copy.extend([(min(operation[1][0]), max(operation[1][0])), operation[1][1]])
@@ -426,7 +433,7 @@ class Node:
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
-                #transpotion to end of chromosome
+                #Handling transpotion to end of chromosome
                 if circular_chromosomes:
                     operation_type = 'trp_reinsertion' #linearization of circular chromosome
                 else:
@@ -596,3 +603,5 @@ class Node:
                 pass
 
         return decircularization_operations
+
+

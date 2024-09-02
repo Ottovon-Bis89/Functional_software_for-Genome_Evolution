@@ -78,7 +78,6 @@ def run(args):
     network = Path_network.build_network(hash_table)
 
 
-    #shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
     shortest_paths = (list(all_shortest_paths(network, start_node, target_node, weight='weight')))
 
     j = 1
@@ -87,7 +86,7 @@ def run(args):
     Paths_state = []
     Paths_state_weight = []
    
-    for path in tqdm(shortest_paths, desc="Processing Shortest Paths"):
+    for path in tqdm(shortest_paths, desc="Estimating number of Shortest Paths"):
         path_state = []
         path_state_weight = []
 
@@ -115,54 +114,44 @@ def run(args):
         Paths_state.append((path_state))
         Paths_state_weight.append(path_state_weight)
 
-    for path in tqdm(shortest_paths, desc="Calculating Genetic Events Metrics"):
+    for path in tqdm(shortest_paths, desc="Calculating solution Metrics"):
+        # Initialize counters for all operation types
+        operation_counts = {
+            'b_trl': 0, 'u_trl': 0, 'inv': 0, 'trp0': 0, 'trp1': 0, 
+            'trp2': 0, 'fus': 0, 'fis': 0, 'ins': 0, 'dele': 0, 'dup': 0
+        }
 
-        i = 0
-        b_trl = u_trl = inv = trp0 = trp1 = trp2 = fus = fis = ins = dele = dup = 0   
-        while i < len(path):
-
+        # Iterate through path starting from the second element
+        for i in range(1, len(path)):
             current = path[i]
-            if i == 0:
-                pass
-            else:
-                x = path[i - 1].children.index(current)
-                operation_type = path[i - 1].children_operations[x][1]
-                if operation_type == 'b_trl':
-                    b_trl += 1
-                elif operation_type == 'u_trl':
-                    u_trl += 1
-                elif operation_type == 'inv':
-                    inv += 1
-                elif operation_type == 'trp0':
-                    trp0 += 1
-                elif operation_type == 'trp1':
-                    trp1 += 1
-                elif operation_type == 'trp2':
-                    trp2 += 1
-                elif operation_type == 'fus':
-                    fus += 1
-                elif operation_type == 'fis':
-                    fis += 1
-                elif operation_type == 'ins':
-                    ins += 1
-                elif operation_type == 'dele':
-                    dele += 1
-                elif operation_type == 'dup':
-                    dup += 1
-            i += 1
+            previous = path[i - 1]
 
-        tot_b_trl += b_trl
-        tot_u_trl += u_trl
-        tot_inv += inv
-        tot_trp0 += trp0
-        tot_trp1 += trp1
-        tot_trp2 += trp2
-        tot_fus += fus
-        tot_fis += fis
-        tot_ins  += ins
-        tot_dele  += dele
-        tot_dup += dup
+            # Get the index of the current node in the previous node's children
+            x = previous.children.index(current)
+            
+            # Get the operation type associated with this transition
+            operation_type = previous.children_operations[x][1]
+
+            # Increment the respective counter
+            if operation_type in operation_counts:
+                operation_counts[operation_type] += 1
+
+        # Update the totals by adding the counts from this path
+        tot_b_trl += operation_counts['b_trl']
+        tot_u_trl += operation_counts['u_trl']
+        tot_inv += operation_counts['inv']
+        tot_trp0 += operation_counts['trp0']
+        tot_trp1 += operation_counts['trp1']
+        tot_trp2 += operation_counts['trp2']
+        tot_fus += operation_counts['fus']
+        tot_fis += operation_counts['fis']
+        tot_ins += operation_counts['ins']
+        tot_dele += operation_counts['dele']
+        tot_dup += operation_counts['dup']
+
+        # Increment j after the loop
         j += 1
+
 
     print('*****************************************************************************************Genome Evolution Analysis*******************************************************************************')
     print('\n')
@@ -178,8 +167,8 @@ def run(args):
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print('\n')
     print('Average number of each event per solution:')
-    print('Inversions: ', float(tot_inv / len(shortest_paths)), 'Transpositions_type 0 (circularization):' , float(tot_trp0 / len(shortest_paths)),  'Transpositions_type 1 (Linearization): ',
-          float(tot_trp1 / len(shortest_paths)), '  Transpositions_type 2 (Block_interchange): ', float(tot_trp2 / len(shortest_paths)),
+    print('Inversions: ', float(tot_inv / len(shortest_paths)), 'Transpositions_type 0:' , float(tot_trp0 / len(shortest_paths)),  'Transpositions_type 1: ',
+          float(tot_trp1 / len(shortest_paths)), '  Transpositions_type 2: ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
           float(tot_u_trl / len(shortest_paths)), '  Fusions: ', float(tot_fus / len(shortest_paths)), '  Fissions: ', float(tot_fis / len(shortest_paths)), 
           'Insertions: ', float(tot_ins/len(shortest_paths)), 'Deletions: ', float(tot_dele/len(shortest_paths)), 'Duplications: ', float(tot_dup/len(shortest_paths)))
