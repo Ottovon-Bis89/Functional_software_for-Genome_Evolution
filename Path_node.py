@@ -363,7 +363,7 @@ class Node:
                 operation_type = 'fus'
 
 
-        # Handling rearrangements like inversion, transpositions, translocations
+        # Handling rearrangements like inversion, transpositions, translocations, insertions
         elif len(operation) == 2:
           
             if isinstance(operation[0][0], tuple) and isinstance(operation[0][1], tuple):
@@ -385,7 +385,7 @@ class Node:
                 operation_type = 'ins'
                 
 
-                # transpositions occur in two steps
+                #transpositions occur in two steps
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 

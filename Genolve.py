@@ -18,7 +18,7 @@ def run(args):
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
     
-    with open("/home/22204911/Documents/Test_test/T8_A.txt") as csv:
+    with open("/home/22204911/Documents/Test_test/FJSA.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeA = []
 
@@ -26,7 +26,7 @@ def run(args):
         element = list(map(int, element))
         genomeA.append(element)
 
-    with open("/home/22204911/Documents/Test_test/T8_B.txt") as csv:
+    with open("/home/22204911/Documents/Test_test/MTZ.txt") as csv:
         line = [element.strip('\n').split(',') for element in csv]
     genomeB = []
 
@@ -161,13 +161,13 @@ def run(args):
     print('Number of most likely biological paths (solutions): ', len(shortest_paths))
     print('\n')
     print('Average number of evolutionary events per solution (Edit Distance): ',
-          float(tot_inv / len(shortest_paths)) + float(tot_trp0 / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
+          float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
               2 * (tot_trp2 / len(shortest_paths))) + float(tot_b_trl / len(shortest_paths)) + float(
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print('\n')
     print('Average number of each event per solution:')
-    print('Inversions: ', float(tot_inv / len(shortest_paths)), 'Transpositions_type 0:' , float(tot_trp0 / len(shortest_paths)),  'Transpositions_type 1: ',
+    print('Inversions: ', float(tot_inv / len(shortest_paths)),  'Transpositions_type 1: ',
           float(tot_trp1 / len(shortest_paths)), '  Transpositions_type 2: ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
           float(tot_u_trl / len(shortest_paths)), '  Fusions: ', float(tot_fus / len(shortest_paths)), '  Fissions: ', float(tot_fis / len(shortest_paths)), 
