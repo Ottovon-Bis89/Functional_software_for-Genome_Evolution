@@ -80,7 +80,6 @@ class Constraints:
             # result will be [(0.8, 0.8), (0.2, 0.2), (0.8, 0.8)]
         """
         W1, W2 = 1.0, 1.0
-        # Multiply the weight by the probabilities of recombination at that loop depending on the loop size.
         self.loop_weights = [(W1 * 0.8, W2 * 0.8) if size <= 0.4 else (W1 * 0.2, W2 * 0.2) for size in sizes]
         return self.loop_weights
 
@@ -127,7 +126,6 @@ class Constraints:
 
         for operation in list_of_legal_operations:
             if isinstance(operation, tuple):
-                # If the operation is made up of 3 tuples of adjacencies.
                 if len(operation) == 3:
                     if isinstance(operation[0], tuple):
                         start_tuple, start, end = operation
@@ -145,8 +143,6 @@ class Constraints:
                             end_tuple[1]
                         )
                         operations_with_intergenic.append((start, end, end_tuple_with_intergenic))
-
-                        # If the operation is made up of 2 tuples of adjacencies.
                 elif len(operation) == 2 and isinstance(operation[0][1], tuple):
                     start, end = operation
                     new_start = (

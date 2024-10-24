@@ -1,63 +1,46 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Read the data from your file into a DataFrame
+file_path = '/home/22204911/Documents/chrom_mutations/hypergeometric_output11.txt'  # file path
+df = pd.read_csv(file_path, sep='\t')  #
 
-def load_and_preprocess_data(file_path):
-    """Loads the data and preprocesses the Probability column."""
-    # Read the data from the file
-    df = pd.read_csv(file_path, sep='\t')
-    
-    # Convert 'Probability' column to numeric and filter out NaN and negative values
-    df['Probability'] = pd.to_numeric(df['Probability'], errors='coerce')
-    df = df[df['Probability'] >= 0].reset_index(drop=True)
-    
-    return df
+# Define the list of bin widths with a step 
+bin_widths = list(range(500, 5000, 10))
+average_p_values = []
+current_bin_p_values = []
 
+# Iterate through the rows
+for index, row in df.iterrows():
+    if index % 257 == 0:
+        # Calculate the average p-value for the previous bin width
+        if current_bin_p_values:
+            # Filter out negative values from the current bin's p-values
+            non_negative_p_values = [p for p in current_bin_p_values if p >= 0]
+            if non_negative_p_values:
+                average_p_value = sum(non_negative_p_values) / len(non_negative_p_values)
+                average_p_values.append(average_p_value)
+                # print(len(average_p_values))
+            else:
+                average_p_values.append(0)  # If all values were negative, set the average to 0
+        current_bin_p_values = []
+    else:
+        # Convert the 'Probability' column to numeric, handling missing values
+        probability = pd.to_numeric(row['Probability'], errors='coerce')
+        if not pd.isna(probability):
+            current_bin_p_values.append(probability)
 
-def calculate_average_p_values(df, bin_size):
-    """Groups the data into bins of size `bin_size` and calculates average p-values."""
-    # Add bin column based on the index and bin size
-    df['bin'] = df.index // bin_size
-    
-    # Group by bin and calculate the average Probability per bin
-    average_p_values = df.groupby('bin')['Probability'].mean().tolist()
-    
-    return average_p_values
+# Check if there are any empty bins and remove them
+bin_widths, average_p_values = zip(*[(bw, avg) for bw, avg in zip(bin_widths, average_p_values) if avg])
 
+# Create a plot
+plt.figure(figsize=(10, 6))
+plt.plot(bin_widths, average_p_values, marker='.', linestyle='-')
+plt.title('A graph of Bin widths against p-values of Hi-C contact points interactions with Recombination points in the Saccharromyces cerevisiae genome')
+plt.xlabel('Bin Width(nt)')
+plt.ylabel('p-values')
+plt.grid(False)
 
-def generate_bin_widths(start, stop, step, num_bins):
-    """Generates a list of bin widths, ensuring it matches the number of bins."""
-    return list(range(start, stop, step))[:num_bins]
-
-
-def plot_average_p_values(bin_widths, average_p_values):
-    """Generates and displays a plot of bin widths against average p-values."""
-    plt.figure(figsize=(10, 6))
-    plt.plot(bin_widths, average_p_values, marker='.', linestyle='-')
-    plt.title('title of graph')
-    plt.xlabel('X-axis label ')
-    plt.ylabel('Y-axis label')
-    plt.grid(False)
-    plt.show()
-
-
-def main(file_path, bin_size=257, start=500, stop=5000, step=10):
-    """Main function to execute the workflow."""
-    # Load and preprocess the data
-    df = load_and_preprocess_data(file_path)
-    
-    # Calculate average p-values for each bin
-    average_p_values = calculate_average_p_values(df, bin_size)
-    
-    # Generate bin widths matching the number of bins
-    bin_widths = generate_bin_widths(start, stop, step, len(average_p_values))
-    
-    # Plot the average p-values against bin widths
-    plot_average_p_values(bin_widths, average_p_values)
-
-
-# File path (you can change this as needed)
-file_path = '/home/22204911/Documents/chrom_mutations/hypergeometric_output11.txt'
-
-# Run the main function with the file path
-main(file_path)
+# Show the plot or save it to a file
+plt.show()

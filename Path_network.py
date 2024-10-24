@@ -1,8 +1,11 @@
 
 from Path_node import Node
 from networkx import DiGraph
+import networkx as nx
+import matplotlib.pyplot as plt
 from Genome_extremities_and_adjacencies import Extremities_and_adjacencies
 from Biological_Constraints import  Constraints
+from networkx.drawing.nx_agraph import graphviz_layout
 
 
 get_adjacencies = Extremities_and_adjacencies()
@@ -36,6 +39,10 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
     W2 = inner_dict['W2']
     
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of f5d57a2... annotations
     if node.join_adjacency != 0:
 
         operations = node.get_decircularization_operations(adjacencies_genomeB)
@@ -131,29 +138,49 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     child.join_adjacency = 0
                     if op_type == 'fis':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[4]
+=======
+                        op_weight = 1 * W2 * weights[4]
+>>>>>>> parent of f5d57a2... annotations
                         
 
                     elif op_type == 'fus':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[5]
+=======
+                        op_weight = 1 * W2 * weights[5]
+>>>>>>> parent of f5d57a2... annotations
                        
                         
                     elif op_type == 'u_trl':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[3]
+=======
+                        op_weight = 1 * W2 * weights[3]
+>>>>>>> parent of f5d57a2... annotations
                         
                         
 
                     elif op_type == 'b_trl':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[2]
+=======
+                        op_weight = 1 * W2 * weights[2]
+>>>>>>> parent of f5d57a2... annotations
                         
                         
 
                     elif op_type == 'inv':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[0]
+=======
+                        op_weight = 1 * W2 * weights[0]
+>>>>>>> parent of f5d57a2... annotations
                         
                         
                     
@@ -183,7 +210,11 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     node.children_operations.append((operation, operation_type))
 
 
+<<<<<<< HEAD
             else:  # if the child is not in the hash table, add it
+=======
+            else:  # if the child is not in the hash table
+>>>>>>> parent of f5d57a2... annotations
                 child = Node(child_state)
                 child.find_chromosomes(child.state)
 
@@ -210,6 +241,10 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
 
                     else:
                         if operation[-1] in child.circular_chromosomes[0]:
+<<<<<<< HEAD
+=======
+                            #child.join_adjacency = operation[-1][0]
+>>>>>>> parent of f5d57a2... annotations
                             child.join_adjacency = operation[-1]
                         else:
                             print('error')
@@ -232,29 +267,50 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
 
                     if op_type == 'fis':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[4]
+=======
+                        op_weight = 1 * W2 * weights[4]
+>>>>>>> parent of f5d57a2... annotations
                         
                       
 
                     elif op_type == 'fus':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[5]
+=======
+                        op_weight = 1 * W2 * weights[5]
+>>>>>>> parent of f5d57a2... annotations
                         
 
                     elif op_type == 'u_trl':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[3]
+=======
+                        op_weight = 1 * W2 * weights[3]
+>>>>>>> parent of f5d57a2... annotations
                         
 
                     elif op_type == 'inv':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[0]
+=======
+                        op_weight = 1 * W2 * weights[0]
+>>>>>>> parent of f5d57a2... annotations
                         
 
                     elif op_type == 'b_trl':
                         operation_type = op_type
+<<<<<<< HEAD
                         op_weight = W2 * weights[2]
                        
+=======
+                        op_weight = 1 * W2 * weights[2]
+                        
+>>>>>>> parent of f5d57a2... annotations
                         
                     elif op_type == 'ins':
                         operation_type = op_type
@@ -271,8 +327,12 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                         operation_type = op_type
                         op_weight = 0.05 * W2 * weights[3]
                         
+<<<<<<< HEAD
                        
                         
+=======
+                            
+>>>>>>> parent of f5d57a2... annotations
                         
                     else:
                         print("There's a problem at the .find_op_type node function")
@@ -282,7 +342,10 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     node.children_operations.append((operation, operation_type))
 
                     build_hash_table(child, hash_table, adjacencies_genomeB, weights, genomeB, genomeA)
+<<<<<<< HEAD
                     
+=======
+>>>>>>> parent of f5d57a2... annotations
 
 def check_hash_key(child_state, hash_table):
     """

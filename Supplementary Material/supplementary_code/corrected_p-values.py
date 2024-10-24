@@ -1,44 +1,33 @@
-def filter_p_values(input_filepath, output_filepath, threshold=0.003):
-    """
-    Filters rows from the input file based on a p-value threshold and writes them to the output file.
-    
-    Parameters:
-    - input_filepath (str): Path to the input file containing p-values.
-    - output_filepath (str): Path to the output file where filtered rows will be written.
-    - threshold (float): P-value threshold for filtering rows. Defaults to 0.003.
-    """
-
-    try:
-        # Open the input and output files
-        with open(input_filepath, 'r') as input_file, open(output_filepath, 'w') as output_file:
-            # Write the header to the output file
-            header = input_file.readline()
-            output_file.write(header)
-
-            for line in input_file:
-                columns = line.strip().split()
-
-                # Attempt to parse the p-value from the last column
-                try:
-                    p_value = float(columns[-1])
-
-                    if 0 <= p_value <= threshold:
-                        # Write the row to the output file if it meets the threshold condition
-                        output_file.write('\t'.join(columns) + '\n')
-                        
-                except ValueError:
-                    # Handle any lines where the last column is not a valid float
-                    print(f"Warning: Unable to parse p-value in line: {line.strip()}")
-                    
-        print(f"Filtered p-values written to '{output_filepath}'")
-
-    except FileNotFoundError:
-        print(f"Error: Input file '{input_filepath}' not found.")
-    except IOError as e:
-        print(f"IO Error: {e}")
+# Open the input file with seven columns
+with open('/home/22204911/Documents/chrom_mutations/hypergeometric_output14.txt', 'r') as input_file:
+    # Open a new file for writing the filtered rows
+    with open('corrected_p-value.txt2', 'w') as output_file:
+        # Define the threshold for p-values
+        threshold = 0.003
 
 
-# Example usage
-input_filepath = 'path_to_input_file.txt'  # Replace with actual path
-output_filepath = 'corrected_p-values.txt'  # Replace with actual path
-filter_p_values(input_filepath, output_filepath)
+        # Read and write the header row
+        header = input_file.readline()
+        output_file.write(header)
+
+        # Iterate through each line in the input file
+        for line in input_file:
+            # Split the line into columns
+            columns = line.strip().split()
+
+            # # Check if the p-value in the last column is less than the threshold
+            # if float(columns[-1]) <= threshold:
+            #     # If it is, write the entire row to the output file
+            #     output_file.write('\t'.join(columns) + '\n')
+
+            # Check if the p-value in the last column is a positive number
+
+            p_value = float(columns[-1])
+            if p_value >= 0:
+                # Check if the p-value is less than the threshold
+                if p_value <= threshold:
+                    # If it is, write the entire row to the output file
+                    output_file.write('\t'.join(columns) + '\n')
+
+
+print("Filtered p-values written to 'corrected_p-values.txt2'")
