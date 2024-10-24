@@ -178,8 +178,8 @@ def run(args):
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print('\n')
     print('Average number of each event per solution:')
-    print('Inversions: ', float(tot_inv / len(shortest_paths)),  'Transpositions_type 1: ',
-          float(tot_trp1 / len(shortest_paths)), '  Transpositions_type 2: ', float(tot_trp2 / len(shortest_paths)),
+    print('Inversions: ', float(tot_inv / len(shortest_paths)), 'Transpositions_type 0 (circularization):' , float(tot_trp0 / len(shortest_paths)),  'Transpositions_type 1 (Linearization): ',
+          float(tot_trp1 / len(shortest_paths)), '  Transpositions_type 2 (Block_interchange): ', float(tot_trp2 / len(shortest_paths)),
           '  Balanced translocations: ', float(tot_b_trl / len(shortest_paths)), '  Unbalanced translocations: ',
           float(tot_u_trl / len(shortest_paths)), '  Fusions: ', float(tot_fus / len(shortest_paths)), '  Fissions: ', float(tot_fis / len(shortest_paths)), 
           'Insertions: ', float(tot_ins/len(shortest_paths)), 'Deletions: ', float(tot_dele/len(shortest_paths)), 'Duplications: ', float(tot_dup/len(shortest_paths)))

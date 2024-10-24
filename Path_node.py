@@ -126,6 +126,7 @@ class Node:
         i = 0
 
         while len(telomeres) > 0:
+        while len(telomeres) > 0:
 
             i += 1
             current = telomeres[0]
@@ -156,6 +157,8 @@ class Node:
                     chromosome.append(current)
                     linear_chromosomes.append(chromosome)
                     chromosome = []
+
+        while len(not_telomeres) > 0:
 
         while len(not_telomeres) > 0:
             current = not_telomeres[0]  
@@ -212,11 +215,18 @@ class Node:
                     for marker in adjacencies_genomeA_copy:
                         if isinstance(marker, tuple):
                             if marker[0] == p or marker[1] == p:
+                            if marker[0] == p or marker[1] == p:
                                 u = marker
+
+                            if marker[0] == q or marker[1] == q:
 
                             if marker[0] == q or marker[1] == q:
                                 v = marker
 
+                    if u == 0:
+                        u = p
+                    if v == 0:
+                        v = q
                     if u == 0:
                         u = p
                     if v == 0:
@@ -243,6 +253,7 @@ class Node:
                                 op_2 = (op_2_1, op_2_2) if op_2_1[0] < op_2_2[0] else (op_2_2, op_2_1)
                                 ordered_operation = (op_1, op_2)
 
+
                                 if ordered_operation not in list_of_legal_operations:
                                     list_of_legal_operations.append((ordered_operation))
                                 else:
@@ -254,6 +265,7 @@ class Node:
                                 op_2_1 = (p, q) if p < q else (q,p)
                                 op_2 = (op_2_1, u_not_p)
                                 ordered_operation = ((u, v), op_2)
+
 
                                 if ordered_operation not in list_of_legal_operations:
                                     list_of_legal_operations.append((ordered_operation))
@@ -336,6 +348,7 @@ class Node:
         operation_type = None
 
         #fision and  fusion operations to occur
+        #fision and  fusion operations to occur
         if len(operation) == 3:
 
             if isinstance(operation[0], tuple):
@@ -343,6 +356,7 @@ class Node:
                 state_copy.remove(operation[0])
                 state_copy.append(operation[1])
                 state_copy.append(operation[2])
+               
                
                 operation_type = 'fis'
             else:
@@ -415,11 +429,13 @@ class Node:
                                         
 
             # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
+            # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
             elif not isinstance(operation[0][0], tuple) or not isinstance(operation[0][-1], tuple):
 
                 state_copy.remove(operation[0][0])
                 state_copy.remove(operation[0][1])
 
+                # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[1][0][0] < operation[1][0][1]:
 
@@ -428,6 +444,7 @@ class Node:
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
+                #transpotion to end of chromosome
                 #transpotion to end of chromosome
                 if circular_chromosomes:
                     operation_type = 'trp_reinsertion' #linearization of circular chromosome
