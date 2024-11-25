@@ -9,43 +9,37 @@ import sys
 from tqdm import tqdm
 
 t0 = time.time()
+bar_format = '{l_bar}{bar}| {n_fmt}/{total_fmt}'
 
+
+def read_csv(file_path):
+    """
+    Reads a CSV file and returns a list of lists, where each inner list represents a row.
+    Assumes the file is comma-separated.
+    """
+    with open(file_path, 'r') as file:
+        return [list(map(int, line.strip().split(','))) for line in file]
+
+def flatten_csv(file_path):
+    """
+    Reads a CSV file and flattens all rows into a single list of strings.
+    """
+    with open(file_path, 'r') as file:
+        return [item for line in file for item in line.strip().split(',')]
 
 def run(args):
-    genomeA = args.source_genome
-    genomeB = args.target_genome
-    weight_ratios = args.ratios
+    """
+    Main function to process genomes, weight ratios, and fragments.
+    Redirects output to the specified file.
+    """
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
-    
-    with open("/home/22204911/Documents/Functional_software_for-Genome_Evolution/FJSA.txt") as csv:
-        line = [element.strip('\n').split(',') for element in csv]
-    genomeA = []
 
-    for element in line:
-        element = list(map(int, element))
-        genomeA.append(element)
+    genomeA = read_csv("/home/22204911/Documents/Run_1/FJSA.txt")
+    genomeB = read_csv("/home/22204911/Documents/Run_1/MTZ.txt")
+    weight_ratios = read_csv("/home/22204911/Documents/Run_1/Weight_ratios.txt")
+    fragments = flatten_csv("/home/22204911/Documents/Run_1/frag.txt")
 
-    with open("/home/22204911/Documents/Functional_software_for-Genome_Evolution/MTZ.txt") as csv:
-        line = [element.strip('\n').split(',') for element in csv]
-    genomeB = []
-
-    for element in line:
-        element = list(map(int, element))
-        genomeB.append(element)
-
-    with open("/home/22204911/Documents/Functional_software_for-Genome_Evolution/Weight_ratios.txt") as csv:
-        line = [element.strip('\n').split(',') for element in csv]
-    weight_ratios = []
-
-    for element in line:
-        element = list(map(int, element))
-        weight_ratios.append(element)
-
-    with open("/home/22204911/Documents/Functional_software_for-Genome_Evolution/frag.txt") as csv_file:
-        lines = [line.strip('\n').split(',') for line in csv_file]
-
-    fragments = [item for sublist in lines for item in sublist]
 
     
     get_adjacencies = Extremities_and_adjacencies()
@@ -64,7 +58,6 @@ def run(args):
     hash_table.update({hash_key_start: start_node})
     hash_table.update({hash_key_target: target_node})
 
-    # Events weights
     max_number = max(weight_ratios[0])
     weights = []
     for element in weight_ratios[0]:
@@ -86,7 +79,7 @@ def run(args):
     Paths_state = []
     Paths_state_weight = []
    
-    for path in tqdm(shortest_paths, desc="Processing Shortest Paths"):
+    for path in tqdm(shortest_paths, desc="Printing Shortest Paths", bar_format=bar_format, ascii='-*'):
         path_state = []
         path_state_weight = []
 
@@ -113,55 +106,47 @@ def run(args):
             i += 1
         Paths_state.append((path_state))
         Paths_state_weight.append(path_state_weight)
+        #time.sleep(0.00001)
 
-    for path in tqdm(shortest_paths, desc="Calculating Genetic Events Metrics"):
+    for path in tqdm(shortest_paths, desc="Calculating Paths Metrics", bar_format=bar_format, ascii='-*'):
 
-        i = 0
-        b_trl = u_trl = inv = trp0 = trp1 = trp2 = fus = fis = ins = dele = dup = 0   
-        while i < len(path):
+        operation_counters = {
+            'b_trl': 0,
+            'u_trl': 0,
+            'inv': 0,
+            'trp0': 0,
+            'trp1': 0,
+            'trp2': 0,
+            'fus': 0,
+            'fis': 0,
+            'ins': 0,
+            'dele': 0,
+            'dup': 0
+        }
 
+        for i in range(len(path)):
             current = path[i]
-            if i == 0:
-                pass
-            else:
+            if i > 0:
                 x = path[i - 1].children.index(current)
                 operation_type = path[i - 1].children_operations[x][1]
-                if operation_type == 'b_trl':
-                    b_trl += 1
-                elif operation_type == 'u_trl':
-                    u_trl += 1
-                elif operation_type == 'inv':
-                    inv += 1
-                elif operation_type == 'trp0':
-                    trp0 += 1
-                elif operation_type == 'trp1':
-                    trp1 += 1
-                elif operation_type == 'trp2':
-                    trp2 += 1
-                elif operation_type == 'fus':
-                    fus += 1
-                elif operation_type == 'fis':
-                    fis += 1
-                elif operation_type == 'ins':
-                    ins += 1
-                elif operation_type == 'dele':
-                    dele += 1
-                elif operation_type == 'dup':
-                    dup += 1
-            i += 1
 
-        tot_b_trl += b_trl
-        tot_u_trl += u_trl
-        tot_inv += inv
-        tot_trp0 += trp0
-        tot_trp1 += trp1
-        tot_trp2 += trp2
-        tot_fus += fus
-        tot_fis += fis
-        tot_ins  += ins
-        tot_dele  += dele
-        tot_dup += dup
+                if operation_type in operation_counters:
+                    operation_counters[operation_type] += 1
+
+        tot_b_trl += operation_counters['b_trl']
+        tot_u_trl += operation_counters['u_trl']
+        tot_inv += operation_counters['inv']
+        tot_trp0 += operation_counters['trp0']
+        tot_trp1 += operation_counters['trp1']
+        tot_trp2 += operation_counters['trp2']
+        tot_fus += operation_counters['fus']
+        tot_fis += operation_counters['fis']
+        tot_ins += operation_counters['ins']
+        tot_dele += operation_counters['dele']
+        tot_dup += operation_counters['dup']
+
         j += 1
+        # time.sleep(0.00001)
 
     print('*****************************************************************************************Genome Evolution Analysis*******************************************************************************')
     print('\n')
@@ -172,7 +157,7 @@ def run(args):
     print('\n')
     print('Average number of evolutionary events per solution (Edit Distance): ',
           float(tot_inv / len(shortest_paths)) + float(tot_trp1 / len(shortest_paths)) + float(
-              2 * (tot_trp2 / len(shortest_paths))) + float(tot_b_trl / len(shortest_paths)) + float(
+              2 * (tot_trp1 / len(shortest_paths))) + float(tot_b_trl / len(shortest_paths)) + float(
               tot_u_trl / len(shortest_paths)) + float(tot_fis / len(shortest_paths)) + float(
               tot_fus / len(shortest_paths)) + float(tot_ins/len(shortest_paths)) + float(tot_dele/len(shortest_paths)) + float(tot_dup/len(shortest_paths)))
     print('\n')
@@ -189,7 +174,7 @@ def run(args):
     for path in Paths_state:
         print('\n')
         print('#Solution number ', path_counter)
-        #print('\n')
+        
         inserted_fragment = None  
         chosen_chromosome_index = None  
 
@@ -246,6 +231,7 @@ def run(args):
 
     sys.stdout.close()
     sys.stdout = stdoutOrigin
+
 
 
 def main():

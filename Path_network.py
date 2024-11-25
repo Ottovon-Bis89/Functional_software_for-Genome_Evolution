@@ -1,19 +1,11 @@
 
 from Path_node import Node
 from networkx import DiGraph
-import networkx as nx
-import matplotlib.pyplot as plt
 from Genome_extremities_and_adjacencies import Extremities_and_adjacencies
 from Biological_Constraints import  Constraints
-from networkx.drawing.nx_agraph import graphviz_layout
 
 
 get_adjacencies = Extremities_and_adjacencies()
-
-
-
-
-
 
 def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, genomeB, genomeA):
     '''
@@ -276,7 +268,9 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                         operation_type = op_type
                         op_weight = 0.05 * W2 * weights[3]
                         
-                            
+                    
+                       
+                        
                         
                     else:
                         print("There's a problem at the .find_op_type node function")
@@ -348,5 +342,32 @@ def build_network(hash_table):
 
 
 
+
+
+# def build_network(hash_table):
+#     """
+#     Builds a directed acyclic graph (DAG) based on a given hash table.
+
+#     This function takes a hash table as input and constructs a directed acyclic graph (DiGraph). It extracts unique nodes and their children from the hash table, creating nodes in the network for each unique value. Weighted edges are added to represent the relationships between nodes and their children.
+
+#     Parameters:
+#         hash_table (dict): A hash table containing nodes and their children with associated weights.
+
+#     Returns:
+#         networkx.DiGraph: A directed acyclic graph representing the relationships between nodes and their children.
+#     """
+#     network = DiGraph()
+#     list_of_values = hash_table.values()
+
+#     for node in list_of_values:
+#         network.add_node(str(node))  # Convert node to string
+#         for i, child in enumerate(node.children):
+#             network.add_edge(str(node), str(child), weight=node.children_weights[i])
+
+#     # Check if the graph is a DAG
+#     if not nx.is_directed_acyclic_graph(network):
+#         raise ValueError("The constructed network is not a DAG.")
+
+#     return network
 
 
