@@ -35,14 +35,11 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
     operation_weights_dict = intergen.intergenic_weight(intergenic_regions, operations_with_intergenic)
     inner_dict = list(operation_weights_dict.values())[0]
     W1 = inner_dict['W1']
-    
     W2 = inner_dict['W2']
+   
     
 
-<<<<<<< HEAD
-=======
 
-    # Check if the node has a circular chromosome to linearize (join_adjacency
     if node.join_adjacency != 0:
 
         operations = node.get_decircularization_operations(adjacencies_genomeB)
@@ -136,21 +133,46 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
 
                 else:
                     child.join_adjacency = 0
+                    if op_type == 'fis':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[4]
+                        
 
-                    # Define the dictionary to map op_type to (weight_multiplier, index) tuple
-                    op_type_mapping = {
-                        'fis': (W2, weights[4]),
-                        'fus': (W2, weights[5]),
-                        'u_trl': (W2, weights[3]),
-                        'b_trl': (W2, weights[2]),
-                        'inv': (W2, weights[0]),
-                        'ins': (0.15 * W2, weights[5]),
-                        'dup': (0.3 * W2, weights[4]),
-                        'dele': (0.05 * W2, weights[3])
-                    }
+                    elif op_type == 'fus':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[5]
+                       
+                        
+                    elif op_type == 'u_trl':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[3]
+                        
+                        
 
-                    if op_type in op_type_mapping:
-                        # Retrieve the operation's weight and corresponding values from the dictionary
+                    elif op_type == 'b_trl':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[2]
+                        
+                        
+
+                    elif op_type == 'inv':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[0]
+                        
+                        
+                    
+                    elif op_type == 'ins':
+                        operation_type = op_type
+                        op_weight = 0.15 * W2 * weights[5]
+                        
+                        
+                    
+                    elif op_type == 'dup':
+                        operation_type = op_type
+                        op_weight = 0.3 * W2 * weights[4]
+                        
+                        
+                    elif op_type == 'dele':
                         operation_type = op_type
                         op_weight = 0.05 * W2 * weights[3]
                         
@@ -159,12 +181,13 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     
 
                     else:
-                        print('You have got a problem, the op type is: ', op_type)
+                        print('You have got a problem, the op type is: ', op_type, '')
+
+                    node.children_weights.append(op_weight)
+                    node.children_operations.append((operation, operation_type))
 
 
-             # Create new child node and check for circular chromosomes  
-             # if the child is not already in the hash table  
-            else:  
+            else:  # if the child is not in the hash table
                 child = Node(child_state)
                 child.find_chromosomes(child.state)
 
@@ -191,8 +214,7 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
 
                     else:
                         if operation[-1] in child.circular_chromosomes[0]:
-
-                        #child.join_adjacency = operation[-1][0]
+                            #child.join_adjacency = operation[-1][0]
                             child.join_adjacency = operation[-1]
                         else:
                             print('error')
@@ -201,7 +223,7 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     hash_table.update({hash_key: child})
                     node.children.append(child)
                     node.children_operations.append((operation, 'trp0'))
-                    node.children_weights.append(0.5 * W1 * weights[1])
+                    node.children_weights.append(0.5 * weights[1])
                     
 
                     build_hash_table(child, hash_table, adjacencies_genomeB, weights, genomeB, genomeA)
@@ -213,21 +235,49 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     hash_table.update({hash_key: child})
                     node.children.append(child)
 
-                    # Define a dictionary that maps each op_type to a tuple of (operation_type, op_weight_multiplier)
-                    op_type_mapping = {
-                        'fis':  (op_type, W2 * weights[4]),
-                        'fus':  (op_type, W2 * weights[5]),
-                        'u_trl': (op_type, W2 * weights[3]),
-                        'inv':  (op_type, W2 * weights[0]),
-                        'b_trl': (op_type, W2 * weights[2]),
-                        'ins':  (op_type, 0.15 * W2 * weights[5]),
-                        'dup':  (op_type, 0.3 * W2 * weights[4]),
-                        'dele': (op_type, 0.05 * W2 * weights[3])
-                    }
+                    if op_type == 'fis':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[4]
+                        
+                      
 
-                    # Get operation_type and op_weight from the dictionary
-                    if op_type in op_type_mapping:
-                        operation_type, op_weight = op_type_mapping[op_type]
+                    elif op_type == 'fus':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[5]
+                        
+
+                    elif op_type == 'u_trl':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[3]
+                        
+
+                    elif op_type == 'inv':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[0]
+                        
+
+                    elif op_type == 'b_trl':
+                        operation_type = op_type
+                        op_weight = 1 * W2 * weights[2]
+                        
+                        
+                    elif op_type == 'ins':
+                        operation_type = op_type
+                        op_weight = 0.15 * W2 * weights[5]
+                        
+                       
+                        
+                    elif op_type == 'dup':
+                        operation_type = op_type
+                        op_weight = 0.3 * W2 * weights[4]
+                        
+                        
+                    elif op_type == 'dele':
+                        operation_type = op_type
+                        op_weight = 0.05 * W2 * weights[3]
+                        
+                            
+                        
                     else:
                         print("There's a problem at the .find_op_type node function")
                         print('You have got a problem, the op_type is: ', op_type, '')
@@ -236,7 +286,6 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     node.children_operations.append((operation, operation_type))
 
                     build_hash_table(child, hash_table, adjacencies_genomeB, weights, genomeB, genomeA)
-
 
 def check_hash_key(child_state, hash_table):
     """

@@ -4,6 +4,10 @@ import argparse
 import os
 
 class Foreign_DNA:
+	"""
+	A class that creates and insert a fragment of foreign DNA into the source genome
+	"""
+	
     def __init__(self):
         pass
 

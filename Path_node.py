@@ -18,8 +18,6 @@ class Node:
         self.circular_chromosomes = get_chromosomes[1]
        
 
-
-
     def find_next_extremity(self, current, next_extremity):
         """
         Finds the next extremity based on the current extremity and the target extremity.
@@ -31,13 +29,6 @@ class Node:
         Returns:
         - float: The next extremity coordinate.
 
-        Example:
-        ```python
-        current_extremity = (3, 4)
-        target_extremity = 3
-        result = find_next_extremity(current_extremity, target_extremity)
-        print(result)  # Output: 3.5
-        ```
         """
         if current[0] == next_extremity:
             if current[1] % 1 == 0:
@@ -117,20 +108,18 @@ class Node:
         :return: A tuple containing lists of linear and circular chromosomes.
         """
 
-        telomeres = [element for element in adjacencies if type(element) is not tuple]
-        not_telomeres = [element for element in adjacencies if type(element) is tuple]
+        telomeres = [element for element in adjacencies if not isinstance(element, tuple)]
+        not_telomeres = [element for element in adjacencies if isinstance(element, tuple)]
 
         linear_chromosomes = []
         circular_chromosomes = []
         chromosome = []
         i = 0
 
-        while len(telomeres) > 0:
-        while len(telomeres) > 0:
+        while telomeres:
 
             i += 1
             current = telomeres[0]
-
             telomeres.remove(current)
             chromosome.append(current)
 
@@ -158,11 +147,9 @@ class Node:
                     linear_chromosomes.append(chromosome)
                     chromosome = []
 
-        while len(not_telomeres) > 0:
+        while not_telomeres:
 
-        while len(not_telomeres) > 0:
             current = not_telomeres[0]  
-           
             not_telomeres.remove(current)
             chromosome.append(current)
 
@@ -215,18 +202,11 @@ class Node:
                     for marker in adjacencies_genomeA_copy:
                         if isinstance(marker, tuple):
                             if marker[0] == p or marker[1] == p:
-                            if marker[0] == p or marker[1] == p:
                                 u = marker
-
-                            if marker[0] == q or marker[1] == q:
 
                             if marker[0] == q or marker[1] == q:
                                 v = marker
 
-                    if u == 0:
-                        u = p
-                    if v == 0:
-                        v = q
                     if u == 0:
                         u = p
                     if v == 0:
@@ -261,11 +241,9 @@ class Node:
 
                             else:
                                 adjacencies_genomeA_copy.append(u_not_p)
-
                                 op_2_1 = (p, q) if p < q else (q,p)
                                 op_2 = (op_2_1, u_not_p)
                                 ordered_operation = ((u, v), op_2)
-
 
                                 if ordered_operation not in list_of_legal_operations:
                                     list_of_legal_operations.append((ordered_operation))
@@ -281,7 +259,6 @@ class Node:
                                 op_2_1 = (p, q) if p < q else  (q,p)
                                 
                                 ordered_operation = ((v, u), (op_2_1, v_not_q))
-
                                 if ordered_operation not in list_of_legal_operations:
                                     list_of_legal_operations.append((ordered_operation))
                                 else:
@@ -338,16 +315,12 @@ class Node:
         Raises:
         ValueError: If the provided operation type is invalid.
 
-        Example:
-        
-        result, operation_type = take_action(some_operation)
 
         '''
 
         state_copy = self.state.copy()
         operation_type = None
 
-        #fision and  fusion operations to occur
         #fision and  fusion operations to occur
         if len(operation) == 3:
 
@@ -373,7 +346,6 @@ class Node:
 
 
         # Handling rearrangements like inversion, transpositions, translocations, insertions
-        #other rearrangements(inversions, transpositions, balanced translcations, insertions, deletions, duplications)
         elif len(operation) == 2:
           
             if isinstance(operation[0][0], tuple) and isinstance(operation[0][1], tuple):
@@ -428,7 +400,6 @@ class Node:
                         pass
                                         
 
-            # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
             # unbalanced translocations and intrachromosoma transpositions to end of chromosome or inversion at end of chromosome
             elif not isinstance(operation[0][0], tuple) or not isinstance(operation[0][-1], tuple):
 
@@ -534,13 +505,7 @@ class Node:
 
         Returns:
         - list: A sorted list containing telomeres followed by sorted gene adjacencies.
-
-        Example:
-        instance = YourClassName()
-        result = instance.sorted_adjacencies_and_telomeres([(1, 2), (3, 1), 'telomere'])
-        print(result)
-        # Output: ['telomere', (1, 2), (1, 3)]
-        ```
+        
         """
         telomeres = []
         gene_adjacencies = []
@@ -586,9 +551,6 @@ class Node:
         obj = YourClass(genome_A)
         decircular_ops = obj.get_decircularization_operations(genome_B)
         
-
-        Note:
-        Circular chromosomes are identified based on the circular_chromosomes attribute of the object.
 
         Legal operations are obtained using the get_legal_operations method of the object.
 
