@@ -12,4 +12,4 @@ Example of running program on command line:python3 Genolve+.py -t MTZ.txt -s FJS
 
 
 # Acknowledgement
-Helene Fouche -for designing and implementing the first part of Genolve+
+Helene Fouche -for your immense contribution to the design and implementation of the first part of Genolve+
