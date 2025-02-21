@@ -35,6 +35,7 @@ def run(args):
     stdoutOrigin = sys.stdout
     sys.stdout = open(args.output_file, 'w')
 
+    # change filepath to your working directory
     genomeA = read_csv("/home/22204911/Documents/Run_1/FJSA.txt")
     genomeB = read_csv("/home/22204911/Documents/Run_1/MTZ.txt")
     weight_ratios = read_csv("/home/22204911/Documents/Run_1/Weight_ratios.txt")

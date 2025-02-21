@@ -127,29 +127,29 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     child.join_adjacency = 0
                     if op_type == 'fis':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[4]
+                        op_weight = W2 * weights[4]
                         
 
                     elif op_type == 'fus':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[5]
+                        op_weight = W2 * weights[5]
                        
                         
                     elif op_type == 'u_trl':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[3]
+                        op_weight = W2 * weights[3]
                         
                         
 
                     elif op_type == 'b_trl':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[2]
+                        op_weight = W2 * weights[2]
                         
                         
 
                     elif op_type == 'inv':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[0]
+                        op_weight = W2 * weights[0]
                         
                         
                     
@@ -167,8 +167,6 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
                     elif op_type == 'dele':
                         operation_type = op_type
                         op_weight = 0.05 * W2 * weights[3]
-                        
-                    
                         
                     
 
@@ -229,28 +227,28 @@ def build_hash_table(current_node, hash_table, adjacencies_genomeB, weights, gen
 
                     if op_type == 'fis':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[4]
+                        op_weight = W2 * weights[4]
                         
                       
 
                     elif op_type == 'fus':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[5]
+                        op_weight = W2 * weights[5]
                         
 
                     elif op_type == 'u_trl':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[3]
+                        op_weight = W2 * weights[3]
                         
 
                     elif op_type == 'inv':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[0]
+                        op_weight = W2 * weights[0]
                         
 
                     elif op_type == 'b_trl':
                         operation_type = op_type
-                        op_weight = 1 * W2 * weights[2]
+                        op_weight = W2 * weights[2]
                         
                         
                     elif op_type == 'ins':
@@ -341,33 +339,5 @@ def build_network(hash_table):
     return network
 
 
-
-
-
-# def build_network(hash_table):
-#     """
-#     Builds a directed acyclic graph (DAG) based on a given hash table.
-
-#     This function takes a hash table as input and constructs a directed acyclic graph (DiGraph). It extracts unique nodes and their children from the hash table, creating nodes in the network for each unique value. Weighted edges are added to represent the relationships between nodes and their children.
-
-#     Parameters:
-#         hash_table (dict): A hash table containing nodes and their children with associated weights.
-
-#     Returns:
-#         networkx.DiGraph: A directed acyclic graph representing the relationships between nodes and their children.
-#     """
-#     network = DiGraph()
-#     list_of_values = hash_table.values()
-
-#     for node in list_of_values:
-#         network.add_node(str(node))  # Convert node to string
-#         for i, child in enumerate(node.children):
-#             network.add_edge(str(node), str(child), weight=node.children_weights[i])
-
-#     # Check if the graph is a DAG
-#     if not nx.is_directed_acyclic_graph(network):
-#         raise ValueError("The constructed network is not a DAG.")
-
-#     return network
 
 

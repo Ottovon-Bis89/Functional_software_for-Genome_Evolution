@@ -8,10 +8,10 @@ class Foreign_DNA:
 	A class that creates and insert a fragment of foreign DNA into the source genome
 	"""
 	
-    def __init__(self):
+def __init__(self):
         pass
 
-    def foreign_dna_pool(self, genomeA, genomeB, num_fragments=5):
+def foreign_dna_pool(self, genomeA, genomeB, num_fragments=5):
         """
         Finds the difference in genes between the source and target genomes. Creates a pool of random integers and
         generates foreign DNA fragments from the pool. Fragments are tagged with an underscore (_) for identification.
@@ -53,7 +53,7 @@ class Foreign_DNA:
 
         return list_of_fragments
 
-    def write_fragments_to_file(self, list_of_fragments, filepath):
+def write_fragments_to_file(self, list_of_fragments, filepath):
         """
         Writes the list of fragments to a specified file.
 
@@ -64,7 +64,7 @@ class Foreign_DNA:
             for fragment in list_of_fragments:
                 file.write(f"{fragment[0]}\n")
 
-    def run(self, source_filepath, target_filepath, output_filepath, num_fragments=5):
+def run(self, source_filepath, target_filepath, output_filepath, num_fragments=5):
         """
         Executes the process of reading genomes from files, finding foreign DNA fragments,
         and writing them to an output file.
@@ -85,27 +85,27 @@ class Foreign_DNA:
         self.write_fragments_to_file(list_of_fragments, output_filepath)
 
 def main():
-    parser = argparse.ArgumentParser(description='Process genomes and find foreign DNA fragments.')
-    parser.add_argument('source_genome', type=str, help='File name for the source genome')
-    parser.add_argument('target_genome', type=str, help='File name for the target genome')
-    parser.add_argument('output_file', type=str, help='File name to write the output fragments')
-    parser.add_argument('--num_fragments', type=int, default=5, help='Number of fragments to produce (default is 5)')
+        parser = argparse.ArgumentParser(description='Process genomes and find foreign DNA fragments.')
+        parser.add_argument('source_genome', type=str, help='File name for the source genome')
+        parser.add_argument('target_genome', type=str, help='File name for the target genome')
+        parser.add_argument('output_file', type=str, help='File name to write the output fragments')
+        parser.add_argument('--num_fragments', type=int, default=5, help='Number of fragments to produce (default is 5)')
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    # Get the directory where the script is located
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Get the directory where the script is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Create full file paths
-    source_filepath = os.path.join(script_dir, args.source_genome)
-    target_filepath = os.path.join(script_dir, args.target_genome)
-    output_filepath = os.path.join(script_dir, args.output_file)
+        # Create full file paths
+        source_filepath = os.path.join(script_dir, args.source_genome)
+        target_filepath = os.path.join(script_dir, args.target_genome)
+        output_filepath = os.path.join(script_dir, args.output_file)
 
-    dna = Foreign_DNA()
-    dna.run(source_filepath, target_filepath, output_filepath, args.num_fragments)
+        dna = Foreign_DNA()
+        dna.run(source_filepath, target_filepath, output_filepath, args.num_fragments)
 
 if __name__ == "__main__":
-    main()
+        main()
 
 
 # commandline use
