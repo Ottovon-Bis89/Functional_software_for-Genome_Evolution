@@ -407,7 +407,6 @@ class Node:
                 state_copy.remove(operation[0][1])
 
                 # ensure gene extremities in correct order for downstream comparisions with genome B extremities
-                # ensure gene extremities in correct order for downstream comparisions with genome B extremities
                 if operation[1][0][0] < operation[1][0][1]:
 
                     state_copy.extend([(min(operation[1][0]), max(operation[1][0])), operation[1][1]])
@@ -415,7 +414,6 @@ class Node:
                 chromosomes = self.find_chromosomes(self.state)
                 circular_chromosomes = chromosomes[1]
 
-                #transpotion to end of chromosome
                 #transpotion to end of chromosome
                 if circular_chromosomes:
                     operation_type = 'trp_reinsertion' #linearization of circular chromosome
